@@ -1,0 +1,38 @@
+{
+  "id": "LaWalletPWA",
+  "name": "LaWallet",
+  "description": "La Wallet WebApp",
+  "short_name": "LaWallet",
+  "display": "standalone",
+  "homepage_url": "https://app.lawallet.ar",
+  "orientation": "portrait",
+  "theme_color": "#56B68C",
+  "background_color": "#1C1C1C",
+  "start_url": "/",
+  "scope": "/",
+  "screenshots": [
+    {
+      "src": "./icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "providedBy": {
+    "name": "LaWallet",
+    "url": "https://lawallet.ar"
+  },
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
