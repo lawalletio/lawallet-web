@@ -35,7 +35,7 @@ export default function Page() {
   const identity = useIdentity();
   const notifications = useNotifications();
 
-  const [isOpenSheet, setIsOpenSheet] = useState<boolean>(false);
+  const [isOpenSheet, setIsOpenSheet] = useState<boolean>(Boolean(identity.username.length));
 
   const handleCopy = (text: string) => {
     copy(text).then((res) => {
@@ -60,7 +60,7 @@ export default function Page() {
     <>
       <Navbar showBackPage={true} title={t('DEPOSIT')} />
 
-      {identity.username.length ? (
+      {!isOpenSheet ? (
         <>
           <Flex flex={1} justify="center" align="center">
             <QRCode
