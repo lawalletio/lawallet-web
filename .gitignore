@@ -35,6 +35,8 @@ yarn-error.log*
 next-env.d.ts
 
 # pwa
+public/sw*
+public/swe-worker*
 public/sw.js
 public/sw.js.map
 public/workbox-*.js

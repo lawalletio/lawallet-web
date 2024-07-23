@@ -69,8 +69,8 @@ export default function Component({ transaction }: ComponentProps) {
     if (transaction.metadata) {
       const username: string =
         transaction.direction === TransactionDirection.INCOMING
-          ? transaction.metadata.sender ?? defaultTransferText
-          : transaction.metadata.receiver ?? defaultTransferText;
+          ? (transaction.metadata.sender ?? defaultTransferText)
+          : (transaction.metadata.receiver ?? defaultTransferText);
 
       setLudInfo({
         loading: false,

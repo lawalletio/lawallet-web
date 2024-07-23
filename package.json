@@ -1,6 +1,6 @@
 {
   "name": "lawallet-front",
-  "version": "0.6.58",
+  "version": "0.7.0",
   "prettier": "@lacrypta/prettier-config",
   "private": true,
   "scripts": {
@@ -17,9 +17,7 @@
     "@lawallet/react": "*",
     "@lawallet/ui": "*",
     "@nostr-dev-kit/ndk": "^2.8.2",
-    "@serwist/next": "^8.4.4",
-    "@serwist/precaching": "^8.4.4",
-    "@serwist/sw": "^8.4.4",
+    "@serwist/next": "^9.0.5",
     "confetti-js": "^0.0.18",
     "date-fns": "^3.6.0",
     "idb-keyval": "^6.2.1",
@@ -36,6 +34,7 @@
     "styled-components": "^6.1.8"
   },
   "devDependencies": {
+    "@lacrypta/prettier-config": "^1.0.0",
     "@types/node": "20.11.17",
     "@types/react": "18.3.3",
     "@types/react-dom": "18.2.19",
@@ -47,6 +46,7 @@
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.1.3",
     "prettier": "^3.2.5",
+    "serwist": "^9.0.5",
     "typescript": "5.3.3"
   },
   "overrides": {
