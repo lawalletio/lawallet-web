@@ -72,14 +72,14 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           return false;
         }
 
-        const parsedIdentity: StoragedIdentityInfo = parseContent(localStorageKey as string);
+        const parsedIdentity: StoragedIdentityInfo & { hexpub: string } = parseContent(localStorageKey as string);
         const auth: boolean = await authenticate(parsedIdentity.privateKey);
 
         if (auth) {
           const IdentityToSave: StoragedIdentityInfo[] = [
             {
               username: parsedIdentity.username,
-              pubkey: parsedIdentity.pubkey,
+              pubkey: parsedIdentity.hexpub,
               privateKey: parsedIdentity.privateKey,
             },
           ];
@@ -87,7 +87,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           await config.storage.setItem(STORAGE_IDENTITY_KEY, JSON.stringify(IdentityToSave));
 
           // Backup account
-          const localStorageBackup = localStorage.getItem(`${CACHE_BACKUP_KEY}_${parsedIdentity.pubkey}`);
+          const localStorageBackup = localStorage.getItem(`${CACHE_BACKUP_KEY}_${parsedIdentity.hexpub}`);
           if (localStorageBackup) await config.storage.setItem(`${CACHE_BACKUP_KEY}_${parsedIdentity.pubkey}`, '1');
         }
         return auth;
