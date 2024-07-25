@@ -88,7 +88,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
           // Backup account
           const localStorageBackup = localStorage.getItem(`${CACHE_BACKUP_KEY}_${parsedIdentity.hexpub}`);
-          if (localStorageBackup) await config.storage.setItem(`${CACHE_BACKUP_KEY}_${parsedIdentity.pubkey}`, '1');
+          if (localStorageBackup) await config.storage.setItem(`${CACHE_BACKUP_KEY}_${parsedIdentity.hexpub}`, '1');
         }
         return auth;
         // ******************************************
