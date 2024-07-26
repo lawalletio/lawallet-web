@@ -12,14 +12,14 @@ dependencies:
     specifier: ^0.5.4
     version: 0.5.4
   '@lawallet/react':
-    specifier: '*'
-    version: 0.2.0(react@18.2.0)(typescript@5.3.3)
+    specifier: latest
+    version: 0.2.1(react@18.2.0)(typescript@5.3.3)
   '@lawallet/ui':
-    specifier: '*'
+    specifier: latest
     version: 0.2.0(react-dom@18.2.0)(react@18.2.0)
   '@nostr-dev-kit/ndk':
-    specifier: ^2.8.2
-    version: 2.8.2(typescript@5.3.3)
+    specifier: 2.4.0
+    version: 2.4.0(typescript@5.3.3)
   '@serwist/next':
     specifier: ^9.0.5
     version: 9.0.5(next@14.1.0)(typescript@5.3.3)
@@ -265,13 +265,13 @@ packages:
       typescript: 5.3.3
     dev: false
 
-  /@lawallet/react@0.2.0(react@18.2.0)(typescript@5.3.3):
-    resolution: {integrity: sha512-+FErirhVh9CalJFCmjazj8Cmsja9KHptsNAyHLo7F0QQPCm8G+prdl51rqV0kjKBCszzN6AnP9WJNacp9dM9Wg==}
+  /@lawallet/react@0.2.1(react@18.2.0)(typescript@5.3.3):
+    resolution: {integrity: sha512-OYaegHzjzROHz77+RiH7Aild0R1ruMkbElzQjsOwsfmuSnBDJmHmgupl9a2cBnsX1cspZMtjDaMthc7+WGBWsw==}
     peerDependencies:
       react: ^18.2.0
     dependencies:
       '@lawallet/utils': 0.2.0(typescript@5.3.3)
-      '@nostr-dev-kit/ndk': 2.8.2(typescript@5.3.3)
+      '@nostr-dev-kit/ndk': 2.4.0(typescript@5.3.3)
       nostr-tools: /@lawallet/nostr-tools@1.17.0(typescript@5.3.3)
       react: 18.2.0
     transitivePeerDependencies:
@@ -450,6 +450,25 @@ packages:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.17.1
     dev: true
+
+  /@nostr-dev-kit/ndk@2.4.0(typescript@5.3.3):
+    resolution: {integrity: sha512-IdL6F/o0p1oVmII6om5ErJ+LarO2hjbRoqYfz8DlSBWVNT/uAx/GdtlJG0qlAdg5PPzDyf3Unrk0Pi/WermVjw==}
+    dependencies:
+      '@noble/hashes': 1.4.0
+      '@noble/secp256k1': 2.1.0
+      '@scure/base': 1.1.7
+      debug: 4.3.5
+      light-bolt11-decoder: 3.1.1
+      node-fetch: 3.3.2
+      nostr-tools: 1.17.0(typescript@5.3.3)
+      tseep: 1.2.2
+      typescript-lru-cache: 2.0.0
+      utf8-buffer: 1.0.0
+      websocket-polyfill: 0.0.3
+    transitivePeerDependencies:
+      - supports-color
+      - typescript
+    dev: false
 
   /@nostr-dev-kit/ndk@2.8.2(typescript@5.3.3):
     resolution: {integrity: sha512-+dOEyuYvO5/MoI5iTi8C5HifmvfeEvpybNesluVYyu+o+koFdfc+WSYH050V8+9KlOgx8nOZAaqXnHz0KY1gBA==}
