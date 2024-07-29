@@ -113,16 +113,16 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const cardParameter: string = params.get('c') || '';
 
       switch (true) {
+        case userConnected && Boolean(cardParameter.length):
+          router.push(`/settings/cards?c=${cardParameter}`);
+          break;
+
         case !userConnected && requireAuth:
           router.push('/');
           break;
 
         case userConnected && requireDisconnectedUser:
           router.push('/dashboard');
-          break;
-
-        case userConnected && Boolean(cardParameter.length):
-          router.push(`/settings/cards?c=${cardParameter}`);
           break;
       }
     }
