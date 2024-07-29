@@ -110,6 +110,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const requireDisconnectedUser = isProtectedRoute(pathSegment, AppRouter.disconnectedPaths);
 
       const userConnected: boolean = Boolean(identity.pubkey.length);
+      const cardParameter: string = params.get('c') || '';
 
       switch (true) {
         case !userConnected && requireAuth:
@@ -120,11 +121,9 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           router.push('/dashboard');
           break;
 
-        default: {
-          const card: string = params.get('c') || '';
-          if (userConnected && card) router.push(`/settings/cards?c=${card}`);
+        case userConnected && Boolean(cardParameter.length):
+          router.push(`/settings/cards?c=${cardParameter}`);
           break;
-        }
       }
     }
   }, [pathname, isLoading]);
