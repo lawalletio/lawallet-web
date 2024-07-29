@@ -122,7 +122,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
         default: {
           const card: string = params.get('c') || '';
-          if (card) router.push(`/settings/cards?c=${card}`);
+          if (userConnected && card) router.push(`/settings/cards?c=${card}`);
           break;
         }
       }
