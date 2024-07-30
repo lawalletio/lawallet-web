@@ -49,7 +49,13 @@
     "serwist": "^9.0.5",
     "typescript": "5.3.3"
   },
+  "packageManager": "pnpm@8.14.1",
   "overrides": {
     "nostr-tools": "npm:@lawallet/nostr-tools"
+  },
+  "pnpm": {
+    "overrides": {
+      "nostr-tools": "npm:@lawallet/nostr-tools"
+    }
   }
 }
