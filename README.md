@@ -1,6 +1,6 @@
 # LaWallet Front
 
-LaWallet front is the webapp that provides the UI for **LaWallet Stack**
+LaWallet front is the webapp that provides the UI for **LaWallet Stack**.
 
 ## Stack
 
