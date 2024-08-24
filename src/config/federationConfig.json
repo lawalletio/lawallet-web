@@ -1,8 +1,8 @@
 {
-  "federationId": "lawallet.ar",
+  "federationId": "xplorers.ar",
   "endpoints": {
     "gateway": "https://api.lawallet.ar",
-    "lightningDomain": "https://xplorers.ar"
+    "lightningDomain": "https://lawallet.ar"
   },
   "relaysList": [
     "wss://relay.damus.io",
