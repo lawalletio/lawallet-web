@@ -2,7 +2,7 @@
   "federationId": "lawallet.ar",
   "endpoints": {
     "gateway": "https://api.lawallet.ar",
-    "lightningDomain": "https://lawallet.ar"
+    "lightningDomain": "https://xplorers.ar"
   },
   "relaysList": [
     "wss://relay.damus.io",
