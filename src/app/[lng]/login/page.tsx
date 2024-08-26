@@ -12,6 +12,7 @@ import { Button, Container, Divider, Feedback, Flex, Heading, Textarea } from '@
 import { useTranslations } from 'next-intl';
 import { getPublicKey } from 'nostr-tools';
 import { ChangeEvent, useState } from 'react';
+import { hexToBytes } from '@noble/hashes/utils';
 
 export default function Page() {
   const { initializeSigner } = useNostr();
@@ -39,7 +40,7 @@ export default function Page() {
     setLoading(true);
 
     try {
-      const pubkey: string = getPublicKey(keyInput);
+      const pubkey: string = getPublicKey(hexToBytes(keyInput));
       const username: string = await getUsername(pubkey, config);
 
       if (!username.length) {

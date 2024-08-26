@@ -91,18 +91,14 @@ export default function Page() {
           </ButtonSetting>
         </Flex>
 
-        {Boolean(identity.signer) && (
-          <>
-            <Divider y={16} />
-            <Text size="small" color={appTheme.colors.gray50}>
-              {t('SECURITY')}
-            </Text>
-            <Divider y={8} />
-            <Flex direction="column" gap={4}>
-              <LinkSetting onClick={() => router.push('/settings/recovery')}>{t('BACKUP_ACCOUNT')}</LinkSetting>
-            </Flex>
-          </>
-        )}
+        <Divider y={16} />
+        <Text size="small" color={appTheme.colors.gray50}>
+          {t('SECURITY')}
+        </Text>
+        <Divider y={8} />
+        <Flex direction="column" gap={4}>
+          <LinkSetting onClick={() => router.push('/settings/recovery')}>{t('BACKUP_ACCOUNT')}</LinkSetting>
+        </Flex>
 
         <Divider y={16} />
         <Text size="small" color={appTheme.colors.gray50}>
