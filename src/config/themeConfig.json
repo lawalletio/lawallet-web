@@ -21,7 +21,7 @@
     "text": "#f1f1f1"
   },
   "borders": {
-    "buttonRadius": "50px"
+    "buttonRadius": "8px"
   },
   "font": {
     "primary": "var(--font-primary)",
