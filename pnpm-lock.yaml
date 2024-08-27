@@ -15,8 +15,8 @@ dependencies:
     specifier: ^0.5.4
     version: 0.5.4
   '@lawallet/react':
-    specifier: 0.2.3
-    version: 0.2.3(react@18.2.0)(typescript@5.3.3)
+    specifier: latest
+    version: 0.2.36(react@18.2.0)(typescript@5.3.3)
   '@lawallet/ui':
     specifier: latest
     version: 0.2.0(react-dom@18.2.0)(react@18.2.0)
@@ -273,12 +273,12 @@ packages:
       nostr-wasm: 0.1.0
     dev: false
 
-  /@lawallet/react@0.2.3(react@18.2.0)(typescript@5.3.3):
-    resolution: {integrity: sha512-1yn8HpGb/TQKC3wxaJ9ogAtDgxq6kK9HcBWk5dBfotuq+6ZUjGOqm9ZlHWBHydn6GSWw4hzZ+9QOEXuX3NMNqw==}
+  /@lawallet/react@0.2.36(react@18.2.0)(typescript@5.3.3):
+    resolution: {integrity: sha512-2VEYusGpBOXVoQNav0e6NlGvDsm60wouPqV5/3AhDhoLWCHxydl1S/RmBAgsrfoPBfZb6DFQ3kOIslanYJcOaQ==}
     peerDependencies:
       react: ^18.2.0
     dependencies:
-      '@lawallet/utils': 0.2.3(typescript@5.3.3)
+      '@lawallet/utils': 0.2.35(typescript@5.3.3)
       '@nostr-dev-kit/ndk': 2.10.0(typescript@5.3.3)
       nostr-tools: /@lawallet/nostr-tools@2.7.2(typescript@5.3.3)
       react: 18.2.0
@@ -296,8 +296,8 @@ packages:
       - react-dom
     dev: false
 
-  /@lawallet/utils@0.2.3(typescript@5.3.3):
-    resolution: {integrity: sha512-ubTeEsDrdl6nd02raPGy2DmwtlNdwS/O8z9umr2occlEDbUWTSksgS8jLztzSt2mhvcnpHPjAgH6QdwqDNTpeg==}
+  /@lawallet/utils@0.2.35(typescript@5.3.3):
+    resolution: {integrity: sha512-LY4ZGwpbQVVsBFEzeUJOBIaMtB1dEmkIt4OJ6SvpGjB8NBt7YI3c3Vqu73MprCVU5nv/L6l8BDLaCsDCG6GFMg==}
     dependencies:
       '@nostr-dev-kit/ndk': 2.10.0(typescript@5.3.3)
       date-fns: 3.6.0
