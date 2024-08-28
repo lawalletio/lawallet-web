@@ -15,8 +15,8 @@ dependencies:
     specifier: ^0.5.4
     version: 0.5.4
   '@lawallet/react':
-    specifier: 0.2.37
-    version: 0.2.37(react@18.2.0)(typescript@5.3.3)
+    specifier: 0.2.38
+    version: 0.2.38(react@18.2.0)(typescript@5.3.3)
   '@lawallet/ui':
     specifier: latest
     version: 0.2.0(react-dom@18.2.0)(react@18.2.0)
@@ -273,12 +273,12 @@ packages:
       nostr-wasm: 0.1.0
     dev: false
 
-  /@lawallet/react@0.2.37(react@18.2.0)(typescript@5.3.3):
-    resolution: {integrity: sha512-wtidz60EOk4eKyqK8s/HV0r4KqjJkOnex93/Q3zhwT4tdyQBY0TjKJWcwiy6L5ujm+wEEQngJkr6xGrXlbXZVA==}
+  /@lawallet/react@0.2.38(react@18.2.0)(typescript@5.3.3):
+    resolution: {integrity: sha512-IDTsRlhqiGcQxGiBpksuCXT7oG3vFFapuhukAGVn4pBHJXqSbWOiuPh121Luvsz/Kq7BngQkOZS68Oblc+VlFw==}
     peerDependencies:
       react: ^18.2.0
     dependencies:
-      '@lawallet/utils': 0.2.37(typescript@5.3.3)
+      '@lawallet/utils': 0.2.38(typescript@5.3.3)
       '@nostr-dev-kit/ndk': 2.10.0(typescript@5.3.3)
       nostr-tools: /@lawallet/nostr-tools@2.7.2(typescript@5.3.3)
       react: 18.2.0
@@ -296,10 +296,11 @@ packages:
       - react-dom
     dev: false
 
-  /@lawallet/utils@0.2.37(typescript@5.3.3):
-    resolution: {integrity: sha512-5dKxH9BJ/lhyqtXbHrqOvIK25i9D3ZmkFocWO5BdWaFwPpA0356YQ5UEFrheWh2AjzpEYV3kP09DBLikrq+S3w==}
+  /@lawallet/utils@0.2.38(typescript@5.3.3):
+    resolution: {integrity: sha512-n5MOruU3Ge09UPQM/Xtr48j1qShwc5AoWLixH9xtuYBIO3SMcglSUaa5pA1O+2Yy13UXbfw7oVo1nlvNaKVBPg==}
     dependencies:
       '@nostr-dev-kit/ndk': 2.10.0(typescript@5.3.3)
+      crypto-js: 4.2.0
       date-fns: 3.6.0
     transitivePeerDependencies:
       - supports-color
@@ -1265,6 +1266,10 @@ packages:
       path-key: 3.1.1
       shebang-command: 2.0.0
       which: 2.0.2
+
+  /crypto-js@4.2.0:
+    resolution: {integrity: sha512-KALDyEYgpY+Rlob/iriUtjV6d5Eq+Y191A5g4UqLAi8CyGP9N1+FdVbkc1SxKc2r4YAYqG8JzO2KGL+AizD70Q==}
+    dev: false
 
   /css-color-keywords@1.0.0:
     resolution: {integrity: sha512-FyyrDHZKEjXDpNJYvVsV960FiqQyXc/LlYmsxl2BcdMb2WPx0OGRVgTg55rPSyLSNMqP52R9r8geSp7apN3Ofg==}
