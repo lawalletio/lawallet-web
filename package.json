@@ -1,6 +1,6 @@
 {
   "name": "lawallet-front",
-  "version": "0.7.16",
+  "version": "0.7.17",
   "prettier": "@lacrypta/prettier-config",
   "private": true,
   "scripts": {
@@ -14,7 +14,7 @@
   "dependencies": {
     "@bitcoin-design/bitcoin-icons-react": "^0.1.10",
     "@formatjs/intl-localematcher": "^0.5.4",
-    "@lawallet/react": "0.2.42",
+    "@lawallet/react": "0.2.43",
     "@lawallet/ui": "latest",
     "@nostr-dev-kit/ndk": "2.10.0",
     "@serwist/next": "^9.0.5",
