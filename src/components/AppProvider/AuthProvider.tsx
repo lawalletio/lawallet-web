@@ -33,7 +33,7 @@ const isProtectedRoute = (path: string, paths: string[]): boolean => {
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const identity = useIdentity();
-  const { initializeSigner } = useNostr();
+  const { validateRelaysStatus, initializeSigner } = useNostr();
 
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
 
@@ -101,6 +101,18 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     loadIdentityFromStorage();
+
+    const verifyRelaysConnection = () => {
+      if (document.visibilityState === 'visible') {
+        validateRelaysStatus();
+      }
+    };
+
+    document.addEventListener('visibilitychange', verifyRelaysConnection);
+
+    return () => {
+      document.removeEventListener('visibilitychange', verifyRelaysConnection);
+    };
   }, []);
 
   useEffect(() => {
