@@ -12,7 +12,7 @@ interface RouterInfo {
 
 const AppRouter: RouterInfo = {
   disconnectedPaths: ['/', '/start', '/signup', '/login', '/reset'],
-  connectedPaths: ['/dashboard', '/deposit', '/extensions', '/scan', '/settings', '/transactions', '/transfer'],
+  connectedPaths: ['/dashboard', '/deposit', '/extensions', '/scan', '/settings', '/transactions', '/transfer', '/p'],
 };
 
 export type StoragedIdentityInfo = {
