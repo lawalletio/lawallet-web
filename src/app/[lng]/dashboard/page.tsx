@@ -7,7 +7,6 @@ import TransactionItem from '@/components/TransactionItem';
 // Libraries
 import { GearIcon, HiddenIcon, SatoshiV2Icon, SendIcon, VisibleIcon } from '@bitcoin-design/bitcoin-icons-react/filled';
 import {
-  Avatar,
   BannerAlert,
   BtnLoader,
   Button,
@@ -22,6 +21,7 @@ import {
 } from '@lawallet/ui';
 import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/UI/avatar';
 
 // Theme
 import { appTheme } from '@/config/exports';
@@ -88,23 +88,26 @@ export default function Page() {
     <>
       <HeroCard>
         <Navbar>
-          <Flex align="center" gap={8}>
-            <Avatar>
-              <Text size="small">{identity.username ? extractFirstTwoChars(identity.username) : 'AN'}</Text>
-            </Avatar>
-            <Flex direction="column">
-              <Text size="small" color={appTheme.colors.gray50}>
-                {t('HELLO')},
-              </Text>
-              <Flex
-                onClick={() => {
-                  if (identity.lud16) copy(identity.lud16);
-                }}
-              >
-                <Text>{loading ? '--' : identity.lud16 ? identity.lud16 : t('ANONYMOUS')}</Text>
+          <div className="cursor-pointer">
+            <Flex align="center" gap={8} onClick={() => router.push('/p/test')} style={{ cursor: 'pointer' }}>
+              <Avatar className="w-8 h-8">
+                <AvatarImage src="https://placehold.co/32" />
+                <AvatarFallback>{identity.username ? extractFirstTwoChars(identity.username) : 'AN'}</AvatarFallback>
+              </Avatar>
+              <Flex direction="column">
+                <Text size="small" color={appTheme.colors.gray50}>
+                  {t('HELLO')},
+                </Text>
+                <Flex
+                  onClick={() => {
+                    if (identity.lud16) copy(identity.lud16);
+                  }}
+                >
+                  <Text>{loading ? '--' : identity.lud16 ? identity.lud16 : t('ANONYMOUS')}</Text>
+                </Flex>
               </Flex>
             </Flex>
-          </Flex>
+          </div>
           <Flex gap={4} justify="end">
             <Button variant="bezeled" size="small" onClick={toggleHideBalance}>
               <Icon size="small">{hideBalance ? <HiddenIcon /> : <VisibleIcon />}</Icon>
