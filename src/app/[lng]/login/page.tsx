@@ -8,7 +8,7 @@ import useErrors from '@/hooks/useErrors';
 import { saveIdentityToStorage } from '@/utils';
 import { useConfig, useIdentity, useNostr } from '@lawallet/react';
 import { getUsername } from '@lawallet/react/actions';
-import { Button, Container, Divider, Feedback, Flex, Heading, Textarea, Input } from '@lawallet/ui';
+import { Button, Container, Divider, Feedback, Flex, Heading, Input } from '@lawallet/ui';
 import { useTranslations } from 'next-intl';
 import { getPublicKey } from 'nostr-tools';
 import { ChangeEvent, useState } from 'react';
