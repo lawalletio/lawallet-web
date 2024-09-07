@@ -1,6 +1,6 @@
 {
   "name": "lawallet-front",
-  "version": "0.7.19",
+  "version": "0.7.20",
   "prettier": "@lacrypta/prettier-config",
   "private": true,
   "scripts": {
