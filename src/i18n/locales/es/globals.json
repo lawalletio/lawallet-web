@@ -208,5 +208,6 @@
   "TRANSFERS": "Transferencias",
   "DISABLED": "deshabilitado",
   "PLUGINS_NOT_ENABLED": "Extensiones deshabilitadas",
-  "SIGN_UP_NOT_ENABLED": "Registro deshabilitado"
+  "SIGN_UP_NOT_ENABLED": "Registro deshabilitado",
+  "FREE": "Gratis"
 }
