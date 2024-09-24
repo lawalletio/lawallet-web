@@ -43,11 +43,11 @@ export default function Page() {
       const pubkey: string = getPublicKey(hexToBytes(keyInput));
       const username: string = await getUsername(pubkey, config);
 
-      if (!username.length) {
-        errors.modifyError('NOT_FOUND_PUBKEY');
-        setLoading(false);
-        return;
-      }
+      // if (!username.length) {
+      //   errors.modifyError('NOT_FOUND_PUBKEY');
+      //   setLoading(false);
+      //   return;
+      // }
 
       identity.initializeFromPrivateKey(keyInput, username).then((res) => {
         if (res) {

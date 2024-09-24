@@ -144,6 +144,7 @@
   "SECURITY": "Seguridad",
   "ACCOUNT": "Cuenta",
   "MY_CARDS": "Mis tarjetas",
+  "ADD_TO_ALBY": "Agregar a Alby extension",
   "ANONYMOUS": "Anonimo",
   "PRESS_TO_COPY": "Presioname para copiar!",
   "MESSAGE": "Mensaje",
@@ -207,5 +208,6 @@
   "TRANSFERS": "Transferencias",
   "DISABLED": "deshabilitado",
   "PLUGINS_NOT_ENABLED": "Extensiones deshabilitadas",
-  "SIGN_UP_NOT_ENABLED": "Registro deshabilitado"
+  "SIGN_UP_NOT_ENABLED": "Registro deshabilitado",
+  "FREE": "Gratis"
 }
