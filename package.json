@@ -14,7 +14,7 @@
   "dependencies": {
     "@bitcoin-design/bitcoin-icons-react": "^0.1.10",
     "@formatjs/intl-localematcher": "^0.5.4",
-    "@lawallet/react": "0.2.46",
+    "@lawallet/react": "0.2.47",
     "@lawallet/ui": "latest",
     "@nostr-dev-kit/ndk": "2.10.0",
     "@radix-ui/react-avatar": "^1.1.0",

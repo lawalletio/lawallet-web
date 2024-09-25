@@ -15,8 +15,8 @@ dependencies:
     specifier: ^0.5.4
     version: 0.5.4
   '@lawallet/react':
-    specifier: 0.2.46
-    version: 0.2.46(react@18.2.0)(typescript@5.3.3)
+    specifier: 0.2.47
+    version: 0.2.47(react@18.2.0)(typescript@5.3.3)
   '@lawallet/ui':
     specifier: latest
     version: 0.2.0(react-dom@18.2.0)(react@18.2.0)
@@ -350,8 +350,8 @@ packages:
       nostr-wasm: 0.1.0
     dev: false
 
-  /@lawallet/react@0.2.46(react@18.2.0)(typescript@5.3.3):
-    resolution: {integrity: sha512-uy1lrb5acwFZ6eZ5H+p+T2E6PKtJloejC9Oo//TuxUDPzmLtRrOjZ3+WF6U4yhN9g0S+eDpvz9NjaQ6+FsaJJA==}
+  /@lawallet/react@0.2.47(react@18.2.0)(typescript@5.3.3):
+    resolution: {integrity: sha512-WEq4WFna//rpEVmaoZEFglHwi+z+CvG98Hu9LIwa5pX9XRB4kCxcmOlmHRI7Qz/dWu3gNyhmAYP+jxywlhmK7Q==}
     peerDependencies:
       react: ^18.2.0
     dependencies:

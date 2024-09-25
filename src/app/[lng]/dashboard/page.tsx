@@ -5,6 +5,7 @@ import Navbar from '@/components/Layout/Navbar';
 import { TokenList } from '@/components/TokenList';
 import TransactionItem from '@/components/TransactionItem';
 // Libraries
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/UI/avatar';
 import { GearIcon, HiddenIcon, SatoshiV2Icon, SendIcon, VisibleIcon } from '@bitcoin-design/bitcoin-icons-react/filled';
 import {
   BannerAlert,
@@ -21,7 +22,6 @@ import {
 } from '@lawallet/ui';
 import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/UI/avatar';
 
 // Theme
 import { appTheme } from '@/config/exports';
@@ -41,6 +41,7 @@ import {
   useConfig,
   useCurrencyConverter,
   useIdentity,
+  useProfile,
   useSettings,
   useTransactions,
 } from '@lawallet/react';
@@ -56,6 +57,7 @@ export default function Page() {
   const [showBanner, setShowBanner] = useState<'backup' | 'none'>('none');
 
   const identity = useIdentity();
+  const profile = useProfile();
   const balance = useBalance();
   const transactions = useTransactions();
 
@@ -89,9 +91,14 @@ export default function Page() {
       <HeroCard>
         <Navbar>
           <div className="cursor-pointer">
-            <Flex align="center" gap={8} onClick={() => router.push('/p/test')} style={{ cursor: 'pointer' }}>
+            <Flex
+              align="center"
+              gap={8}
+              onClick={() => router.push(`/p/${identity.pubkey}`)}
+              style={{ cursor: 'pointer' }}
+            >
               <Avatar className="w-8 h-8">
-                <AvatarImage src="https://placehold.co/32" />
+                {profile && profile.nip05Avatar && <AvatarImage src={profile.nip05Avatar} />}
                 <AvatarFallback>{identity.username ? extractFirstTwoChars(identity.username) : 'AN'}</AvatarFallback>
               </Avatar>
               <Flex direction="column">

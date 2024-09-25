@@ -1,5 +1,5 @@
-import { useState } from 'react';
 import { Container } from '@lawallet/ui';
+import React, { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
 
 import { Button } from '@/components/UI/button';
 import {
@@ -14,12 +14,63 @@ import {
 import { Input } from '@/components/UI/input';
 import { Label } from '@/components/UI/label';
 import { Textarea } from '@/components/UI/textarea';
+import { nowInSeconds, useIdentity, useNostr, useProfile } from '@lawallet/react';
+import { NDKEvent } from '@nostr-dev-kit/ndk';
+import { NostrEvent } from 'nostr-tools';
 // import { Skeleton } from '@/components/UI/skeleton';
 
-export function DrawerEditProfile(props: any) {
-  const { profile } = props;
+const DEFAULT_PROFILE = {
+  kind: 0,
+  content: {},
+};
 
+interface ProfileProps {
+  displayName: string;
+  about: string;
+  website: string;
+  [key: string]: string;
+}
+
+export function DrawerEditProfile() {
+  const { ndk } = useNostr();
+  const identity = useIdentity();
+  const profile = useProfile();
+
+  const profileEvent: NostrEvent = useMemo(() => {
+    const profileEvent: NostrEvent =
+      profile.nip05 && profile.nip05.profileEvent ? JSON.parse(profile.nip05.profileEvent) : DEFAULT_PROFILE;
+
+    return profileEvent;
+  }, [profile]);
+
+  const [profileContent, setProfileContent] = useState<ProfileProps>({
+    displayName: '',
+    about: '',
+    website: '',
+  });
   const [open, setOpen] = useState(false);
+
+  const handleSaveProfile = React.useCallback(async () => {
+    const newProfileEvent = {
+      pubkey: identity.pubkey,
+      kind: 0,
+      content: JSON.stringify(profileContent),
+      created_at: nowInSeconds(),
+      tags: profileEvent.tags,
+    };
+
+    const eventToSign = new NDKEvent(ndk, newProfileEvent);
+
+    await eventToSign.sign();
+    await eventToSign.publish();
+
+    profile.loadProfileFromPubkey(identity.pubkey);
+  }, [profileContent]);
+
+  useEffect(() => {
+    const content = typeof profileEvent.content === 'string' ? JSON.parse(profileEvent.content) : profileEvent.content;
+    setProfileContent(content);
+  }, [profileEvent]);
 
   return (
     <Drawer open={open} onOpenChange={setOpen}>
@@ -33,10 +84,12 @@ export function DrawerEditProfile(props: any) {
           <DrawerHeader className="flex justify-between items-center text-left">
             <DrawerTitle>Edit profile</DrawerTitle>
             <div>
-              <Button size="sm">Save</Button>
+              <Button size="sm" onClick={handleSaveProfile}>
+                Save
+              </Button>
             </div>
           </DrawerHeader>
-          <ProfileForm profile={profile} />
+          <ProfileForm profileContent={profileContent} setProfileContent={setProfileContent} />
           <DrawerFooter className="pt-2">
             <DrawerClose asChild>
               <Button variant="secondary">Cancel</Button>
@@ -48,15 +101,20 @@ export function DrawerEditProfile(props: any) {
   );
 }
 
-function ProfileForm(props: any) {
-  const { className, profile } = props;
+interface ProfileFormProps {
+  profileContent: ProfileProps;
+  setProfileContent: Dispatch<SetStateAction<ProfileProps>>;
+}
+
+function ProfileForm(props: ProfileFormProps) {
+  const { profileContent, setProfileContent } = props;
 
   const [open, setOpen] = useState(false);
 
   // Flow
-  const [name, setName] = useState(profile?.displayName || '');
-  const [description, setDescription] = useState(profile?.about || '');
-  const [link, setLink] = useState(profile?.website || null);
+  // const [name, setName] = useState(profile?.displayName || '');
+  // const [description, setDescription] = useState(profile?.about || '');
+  // const [link, setLink] = useState(profile?.website || null);
   // const [profilePhoto, setProfilePhoto] = useState(profile?.image);
   // const [coverPhoto, setCoverPhoto] = useState(profile?.banner);
 
@@ -125,20 +183,42 @@ function ProfileForm(props: any) {
 
         <div className="flex flex-col gap-2">
           <Label htmlFor="name">Name</Label>
-          <Input id="name" name="name" value={name} onChange={(e) => setName(e.target.value)} />
+          <Input
+            id="name"
+            name="name"
+            value={profileContent.displayName}
+            onChange={(e) =>
+              setProfileContent({
+                ...profileContent,
+                displayName: e.target.value,
+                display_name: e.target.value,
+                name: e.target.value,
+              })
+            }
+          />
         </div>
         <div className="flex flex-col gap-2">
           <Label htmlFor="description">Description</Label>
           <Textarea
             id="description"
             name="description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            value={profileContent.about}
+            onChange={(e) =>
+              setProfileContent({
+                ...profileContent,
+                about: e.target.value,
+              })
+            }
           />
         </div>
         <div className="flex flex-col gap-2">
           <Label htmlFor="website">Website</Label>
-          <Input id="website" name="website" value={link} onChange={(e) => setLink(e.target.value)} />
+          <Input
+            id="website"
+            name="website"
+            value={profileContent.website}
+            onChange={(e) => setProfileContent({ ...profileContent, website: e.target.value })}
+          />
         </div>
       </div>
     </>
