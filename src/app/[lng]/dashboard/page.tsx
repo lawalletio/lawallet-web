@@ -57,7 +57,7 @@ export default function Page() {
   const [showBanner, setShowBanner] = useState<'backup' | 'none'>('none');
 
   const identity = useIdentity();
-  const profile = useProfile();
+  const { nip05Avatar, nip05 } = useProfile();
   const balance = useBalance();
   const transactions = useTransactions();
 
@@ -98,7 +98,7 @@ export default function Page() {
               style={{ cursor: 'pointer' }}
             >
               <Avatar className="w-8 h-8">
-                {profile && profile.nip05Avatar && <AvatarImage src={profile.nip05Avatar} />}
+                {nip05Avatar && <AvatarImage src={nip05Avatar} />}
                 <AvatarFallback>{identity.username ? extractFirstTwoChars(identity.username) : 'AN'}</AvatarFallback>
               </Avatar>
               <Flex direction="column">
@@ -110,7 +110,15 @@ export default function Page() {
                     if (identity.lud16) copy(identity.lud16);
                   }}
                 >
-                  <Text>{loading ? '--' : identity.lud16 ? identity.lud16 : t('ANONYMOUS')}</Text>
+                  <p className="text-md whitespace-nowrap">
+                    {loading
+                      ? '--'
+                      : nip05?.name || nip05?.displayName
+                        ? nip05?.name || nip05?.displayName
+                        : nip05?.lud16
+                          ? nip05?.lud16
+                          : t('ANONYMOUS')}
+                  </p>
                 </Flex>
               </Flex>
             </Flex>
