@@ -152,9 +152,9 @@ export function Profile(props: { pubkey: string }) {
                       key={badge?.id}
                       className="overflow-hidden group relative flex flex-col bg-card border-[1px] border-card rounded-xl"
                     >
-                      <div className="relative w-full max-w-full transition-transform group-hover:scale-105">
+                      <div className="relative w-full max-w-full transition-transform group-hover:scale-105 aspect-square">
                         {badge?.image ? (
-                          <img src={badge?.image} alt={badge?.name} className="w-full rounded-lg" />
+                          <Image className="object-cover object-center" src={badge?.image} alt={badge?.name} fill />
                         ) : (
                           <Skeleton className={`w-full min-h-[130px] h-full bg-border`} />
                         )}
@@ -165,7 +165,7 @@ export function Profile(props: { pubkey: string }) {
                           )}
                         />
                       </div>
-                      <div className="w-full p-2">
+                      <div className="w-full h-full p-2">
                         <p className="overflow-hidden text-sm font-bold truncate">{badge?.name}</p>
                       </div>
                       {/* Action */}
