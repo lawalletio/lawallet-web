@@ -7,6 +7,9 @@ import { getTranslations, unstable_setRequestLocale } from 'next-intl/server';
 import Script from 'next/script';
 import { ReactNode } from 'react';
 
+// Style
+import '@/index.css';
+
 interface ProviderProps {
   children: ReactNode;
   params: { lng: AvailableLanguages };

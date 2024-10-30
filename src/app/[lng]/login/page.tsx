@@ -8,7 +8,7 @@ import useErrors from '@/hooks/useErrors';
 import { saveIdentityToStorage } from '@/utils';
 import { useConfig, useIdentity, useNostr } from '@lawallet/react';
 import { getUsername } from '@lawallet/react/actions';
-import { Button, Container, Divider, Feedback, Flex, Heading, Textarea } from '@lawallet/ui';
+import { Button, Container, Divider, Feedback, Flex, Heading, Input } from '@lawallet/ui';
 import { useTranslations } from 'next-intl';
 import { getPublicKey } from 'nostr-tools';
 import { ChangeEvent, useState } from 'react';
@@ -80,7 +80,7 @@ export default function Page() {
           <Heading as="h2">{t('LOGIN_TITLE')}</Heading>
 
           <Divider y={8} />
-          <Textarea placeholder={t('INSERT_PRIVATE_KEY')} onChange={handleChangeInput} />
+          <Input type="password" placeholder={t('INSERT_PRIVATE_KEY')} onChange={handleChangeInput} />
 
           <Feedback show={errors.errorInfo.visible} status={'error'}>
             {errors.errorInfo.text}

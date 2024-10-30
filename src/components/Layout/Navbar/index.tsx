@@ -2,8 +2,7 @@
 
 import { ReactNode } from 'react';
 import { useTranslations } from 'next-intl';
-import { Flex, Container, Icon, Heading, Text } from '@lawallet/ui';
-import { CaretLeftIcon } from '@bitcoin-design/bitcoin-icons-react/filled';
+import { Flex, Container, Heading, Text } from '@lawallet/ui';
 
 import { useRouter } from '@/navigation';
 import { appTheme } from '@/config/exports';
@@ -11,7 +10,9 @@ import { appTheme } from '@/config/exports';
 // Constans
 import { EMERGENCY_LOCK_DEPOSIT, EMERGENCY_LOCK_TRANSFER } from '@/utils/constants';
 
-import { Navbar, BackButton, Left, Right, AlertSystemStyle } from './style';
+import { Navbar, Left, Right, AlertSystemStyle } from './style';
+import { Button } from '@/components/UI/button';
+import { ArrowLeft } from 'lucide-react';
 
 interface ComponentProps {
   children?: ReactNode;
@@ -49,16 +50,15 @@ export default function Component(props: ComponentProps) {
             {onlyChildren && (
               <Left>
                 {showBackPage && (
-                  <BackButton
+                  <Button
+                    size="icon"
+                    variant="secondary"
                     onClick={() => {
                       overrideBack ? router.push(overrideBack) : router.back();
                     }}
                   >
-                    <Icon size="small">
-                      <CaretLeftIcon />
-                    </Icon>
-                    {t('BACK')}
-                  </BackButton>
+                    <ArrowLeft className="w-4 h-4" />
+                  </Button>
                 )}
               </Left>
             )}
