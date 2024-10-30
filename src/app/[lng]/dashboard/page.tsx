@@ -91,12 +91,7 @@ export default function Page() {
       <HeroCard>
         <Navbar>
           <div className="cursor-pointer">
-            <Flex
-              align="center"
-              gap={8}
-              onClick={() => router.push(`/p/${identity.pubkey}`)}
-              style={{ cursor: 'pointer' }}
-            >
+            <Flex align="center" gap={8} onClick={() => router.push(`/profile`)} style={{ cursor: 'pointer' }}>
               <Avatar className="w-8 h-8">
                 {nip05Avatar && <AvatarImage src={nip05Avatar} />}
                 <AvatarFallback>{identity.username ? extractFirstTwoChars(identity.username) : 'AN'}</AvatarFallback>
