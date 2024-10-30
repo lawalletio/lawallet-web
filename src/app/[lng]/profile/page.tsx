@@ -5,15 +5,16 @@ import { useParams } from 'next/navigation';
 import Navbar from '@/components/Layout/Navbar';
 
 import { Profile } from '@/features/profile';
+import { useIdentity } from '@lawallet/react';
 
 export default function Page() {
-  const params = useParams();
+  const identity = useIdentity();
 
   return (
     <>
       <Navbar showBackPage={true} overrideBack="/dashboard" />
 
-      <Profile pubkey={params?.pubkey as string} />
+      <Profile pubkey={identity?.pubkey as string} />
     </>
   );
 }
