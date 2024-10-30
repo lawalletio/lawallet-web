@@ -39,7 +39,13 @@ export default function Page() {
         <Divider y={16} />
 
         <Flex>
-          <Button onClick={() => router.push('/login')}>{t('LOGIN_ACCOUNT')}</Button>
+          <Button onClick={() => router.push('/signup')}>{t('CREATE_ACCOUNT')}</Button>
+        </Flex>
+        <Divider y={8} />
+        <Flex>
+          <Button variant="bezeled" onClick={() => router.push('/login')}>
+            {t('LOGIN_ACCOUNT')}
+          </Button>
         </Flex>
       </Flex>
       <Divider y={32} />
