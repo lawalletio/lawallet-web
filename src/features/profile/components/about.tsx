@@ -24,7 +24,7 @@ export const About = (props: { value: string | undefined }) => {
             return <br key={i} />;
           } else if (isTopic(parsed)) {
             return (
-              <Button variant="link" size="lg" className="p-0 h-auto" key={i}>
+              <Button variant="link" size="lg" className="p-0 h-auto text-white" key={i}>
                 #{parsed.value}
               </Button>
             );

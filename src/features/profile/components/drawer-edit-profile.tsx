@@ -4,6 +4,7 @@ import { NDKEvent } from '@nostr-dev-kit/ndk';
 import { NostrEvent } from 'nostr-tools';
 import { Container } from '@lawallet/ui';
 import { useIdentity, useNostr, useProfile } from '@lawallet/react';
+import { useTranslations } from 'next-intl';
 
 // Generic components
 import { Button } from '@/components/UI/button';
@@ -33,6 +34,7 @@ interface ProfileProps {
 }
 
 export function DrawerEditProfile() {
+  const t = useTranslations();
   const { ndk } = useNostr();
   const identity = useIdentity();
   const profile = useProfile();
@@ -51,8 +53,10 @@ export function DrawerEditProfile() {
   });
 
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleSaveProfile = React.useCallback(async () => {
+    setLoading(true);
     const newProfileEvent = {
       created_at: profile?.nip05?.created_at as number,
       content: JSON.stringify(profileContent),
@@ -67,7 +71,9 @@ export function DrawerEditProfile() {
     await eventToSign.publish();
 
     profile.loadProfileFromPubkey(identity.pubkey);
-  }, [profileContent]);
+    setOpen(false);
+    setLoading(false);
+  }, [profileContent, open]);
 
   useEffect(() => {
     const content = typeof profileEvent.content === 'string' ? JSON.parse(profileEvent.content) : profileEvent.content;
@@ -78,23 +84,23 @@ export function DrawerEditProfile() {
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
         <Button size="sm" variant="secondary">
-          Edit Profile
+          {t('EDIT')}
         </Button>
       </DrawerTrigger>
       <DrawerContent>
         <Container>
           <DrawerHeader className="flex justify-between items-center text-left px-0">
-            <DrawerTitle>Edit profile</DrawerTitle>
+            <DrawerTitle>{t('EDIT_PROFILE')}</DrawerTitle>
             <div>
-              <Button size="sm" onClick={handleSaveProfile}>
-                Save
+              <Button size="sm" disabled={loading} onClick={handleSaveProfile}>
+                {loading ? t('LOADING') : t('SAVE')}
               </Button>
             </div>
           </DrawerHeader>
           <ProfileForm profileContent={profileContent} setProfileContent={setProfileContent} />
           <DrawerFooter className="pt-2 px-0">
             <DrawerClose asChild>
-              <Button variant="secondary">Cancel</Button>
+              <Button variant="secondary">{t('CANCEL')}</Button>
             </DrawerClose>
           </DrawerFooter>
         </Container>
@@ -108,6 +114,8 @@ function ProfileForm(props: {
   setProfileContent: Dispatch<SetStateAction<ProfileProps>>;
 }) {
   const { profileContent, setProfileContent } = props;
+
+  const t = useTranslations();
 
   return (
     <>
@@ -164,7 +172,7 @@ function ProfileForm(props: {
         </div> */}
 
         <div className="flex flex-col gap-2">
-          <Label htmlFor="name">Name</Label>
+          <Label htmlFor="name">{t('NAME')}</Label>
           <Input
             id="name"
             name="name"
@@ -180,7 +188,7 @@ function ProfileForm(props: {
           />
         </div>
         <div className="flex flex-col gap-2">
-          <Label htmlFor="description">Description</Label>
+          <Label htmlFor="description">{t('DESCRIPTION')}</Label>
           <Textarea
             id="description"
             name="description"
@@ -194,7 +202,7 @@ function ProfileForm(props: {
           />
         </div>
         <div className="flex flex-col gap-2">
-          <Label htmlFor="website">Website</Label>
+          <Label htmlFor="website">{t('WEBSITE')}</Label>
           <Input
             id="website"
             name="website"

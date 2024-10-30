@@ -21,9 +21,7 @@ export function Mention(props: { value: any }) {
           @<Skeleton className="inline-flex w-12 h-4 bg-card rounded-full" />
         </>
       ) : (
-        <Link href={`/p/${paramPubkey}`} tabIndex={-1}>
-          @{nip05?.name || nip05?.displayName}
-        </Link>
+        <>@{nip05?.name || nip05?.displayName}</>
       )}
     </Button>
   );

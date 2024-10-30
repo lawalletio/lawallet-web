@@ -92,6 +92,10 @@ export default function Page() {
         </Text>
         <Divider y={8} />
         <Flex direction="column" gap={8}>
+          <LinkSetting onClick={() => router.push('/profile')}>{t('MY_PROFILE')}</LinkSetting>
+        </Flex>
+        <Divider y={8} />
+        <Flex direction="column" gap={8}>
           <LinkSetting onClick={() => router.push('/settings/cards')}>{t('MY_CARDS')}</LinkSetting>
           {window?.alby && <LinkSetting onClick={() => addToAlby()}>{t('ADD_TO_ALBY')}</LinkSetting>}
         </Flex>
