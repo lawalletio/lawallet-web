@@ -149,7 +149,7 @@ const InvoiceSheet = ({ isOpen, handleCopy, onClose }: InvoiceSheetTypes) => {
       {sheetStep === 'qr' && (
         <>
           <Flex flex={1} justify="center" align="center">
-            <QRCode size={300} value={`${invoice.bolt11.toUpperCase()}`} />
+            <QRCode size={300} value={`${invoice.bolt11}`} />
           </Flex>
           <Divider y={24} />
           <Container size="small">
