@@ -75,13 +75,21 @@ export default function Page() {
   const handleScan = (result: NimiqQrScanner.ScanResult) => {
     if (!result || !result.data) return;
 
-    const isURL: boolean = regexURL.test(result.data);
+    let dataScanned = result.data;
+    const isURL: boolean = regexURL.test(dataScanned);
 
     if (isURL) {
-      handleScanURL(result.data);
+      handleScanURL(dataScanned);
       return;
     } else {
-      const cleanScan: string = removeLightningStandard(result.data);
+      const isBitcoinSchema: boolean = dataScanned.startsWith('bitcoin:');
+
+      if (isBitcoinSchema) {
+        const lightningInvoice: string | undefined = dataScanned.match(/lightning=([^&]+)/)?.[1];
+        if (lightningInvoice) dataScanned = lightningInvoice;
+      }
+
+      const cleanScan: string = removeLightningStandard(dataScanned);
       const scanType: TransferTypes = detectTransferType(cleanScan);
       if (scanType === TransferTypes.NONE) return;
 
