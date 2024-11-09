@@ -15,8 +15,8 @@ dependencies:
     specifier: ^0.5.4
     version: 0.5.7
   '@lawallet/react':
-    specifier: 0.2.47
-    version: 0.2.47(react@18.2.0)(typescript@5.3.3)
+    specifier: 0.2.48
+    version: 0.2.48(react@18.2.0)(typescript@5.3.3)
   '@lawallet/ui':
     specifier: latest
     version: 0.2.0(react-dom@18.2.0)(react@18.2.0)
@@ -266,6 +266,11 @@ packages:
       tslib: 2.8.1
     dev: false
 
+  /@getalby/lightning-tools@5.1.0:
+    resolution: {integrity: sha512-KhLnKu6hboNYxVmmegRi06ufW3J0o/5gZ5vMe4e94tKC1o8glN/fDn1fTL4hRIqgZjfzvDPPmV1A3YUkNtQttA==}
+    engines: {node: '>=14'}
+    dev: false
+
   /@humanwhocodes/config-array@0.11.14:
     resolution: {integrity: sha512-3T8LkOmg45BV5FICb15QQMsyUSWrQ8AygVfC7ZG32zOalnqrilm018ZVCw0eapXux8FtA33q8PSRSstjee3jSg==}
     engines: {node: '>=10.10.0'}
@@ -352,12 +357,12 @@ packages:
       nostr-wasm: 0.1.0
     dev: false
 
-  /@lawallet/react@0.2.47(react@18.2.0)(typescript@5.3.3):
-    resolution: {integrity: sha512-WEq4WFna//rpEVmaoZEFglHwi+z+CvG98Hu9LIwa5pX9XRB4kCxcmOlmHRI7Qz/dWu3gNyhmAYP+jxywlhmK7Q==}
+  /@lawallet/react@0.2.48(react@18.2.0)(typescript@5.3.3):
+    resolution: {integrity: sha512-uI0wzEmXYflWNLeKcRMe1EqYiauD8qLwQsFeaIjnQFGKMNJClUPDRlSyFA3ulEtiL/xcRlyZZ5ixrDBJRtkw3w==}
     peerDependencies:
       react: ^18.2.0
     dependencies:
-      '@lawallet/utils': 0.2.45(typescript@5.3.3)
+      '@lawallet/utils': 0.2.48(typescript@5.3.3)
       '@nostr-dev-kit/ndk': 2.10.0(typescript@5.3.3)
       nostr-tools: /@lawallet/nostr-tools@2.7.2(typescript@5.3.3)
       react: 18.2.0
@@ -376,9 +381,10 @@ packages:
       - react-dom
     dev: false
 
-  /@lawallet/utils@0.2.45(typescript@5.3.3):
-    resolution: {integrity: sha512-DA6MTWwMkFjIDTGr3KK2eDeeAlxIIJYCxIF3rOr5Hi3RiMi2QKql5avB0kVOo/1h9qxUJFx14jmwfut2fEiABA==}
+  /@lawallet/utils@0.2.48(typescript@5.3.3):
+    resolution: {integrity: sha512-JjEjwj2+eHuxFsagIAcaT7FbEq+VFuk+rZJbSLRdwBG1yYidEkbOHvBKDyCY1/6YQn4pUGPuFaeEGxmHeHWS8g==}
     dependencies:
+      '@getalby/lightning-tools': 5.1.0
       '@nostr-dev-kit/ndk': 2.10.0(typescript@5.3.3)
       crypto-js: 4.2.0
       date-fns: 3.6.0
