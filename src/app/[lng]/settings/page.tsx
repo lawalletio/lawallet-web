@@ -25,6 +25,7 @@ import { useConfig, useIdentity } from '@lawallet/react';
 import { AvailableLanguages } from '@lawallet/react/types';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import { startTransition, useState } from 'react';
+import { getUserStoragedKey } from '@/utils';
 
 export default function Page() {
   const config = useConfig();
@@ -62,6 +63,24 @@ export default function Page() {
     }
   };
 
+  const addToAlby = async () => {
+    await window?.alby?.enable();
+
+    const privateKey = await getUserStoragedKey(config.storage);
+    window.alby?.addAccount({
+      name: identity.lud16,
+      connector: 'lawallet',
+      config: {
+        privateKey: privateKey,
+        apiEndpoint: config.endpoints.gateway,
+        identityEndpoint: config.endpoints.lightningDomain,
+        ledgerPublicKey: config.modulePubkeys.ledger,
+        urlxPublicKey: config.modulePubkeys.urlx,
+        relayUrl: 'wss://relay.lawallet.ar',
+      },
+    });
+  };
+
   return (
     <>
       <Navbar showBackPage={true} title={t('SETTINGS')} overrideBack="/dashboard" />
@@ -72,8 +91,13 @@ export default function Page() {
           {t('ACCOUNT')}
         </Text>
         <Divider y={8} />
-        <Flex direction="column" gap={4}>
+        <Flex direction="column" gap={8}>
+          <LinkSetting onClick={() => router.push('/profile')}>{t('MY_PROFILE')}</LinkSetting>
+        </Flex>
+        <Divider y={8} />
+        <Flex direction="column" gap={8}>
           <LinkSetting onClick={() => router.push('/settings/cards')}>{t('MY_CARDS')}</LinkSetting>
+          {window?.alby && <LinkSetting onClick={() => addToAlby()}>{t('ADD_TO_ALBY')}</LinkSetting>}
         </Flex>
         <Divider y={8} />
 
@@ -91,18 +115,14 @@ export default function Page() {
           </ButtonSetting>
         </Flex>
 
-        {Boolean(identity.signer) && (
-          <>
-            <Divider y={16} />
-            <Text size="small" color={appTheme.colors.gray50}>
-              {t('SECURITY')}
-            </Text>
-            <Divider y={8} />
-            <Flex direction="column" gap={4}>
-              <LinkSetting onClick={() => router.push('/settings/recovery')}>{t('BACKUP_ACCOUNT')}</LinkSetting>
-            </Flex>
-          </>
-        )}
+        <Divider y={16} />
+        <Text size="small" color={appTheme.colors.gray50}>
+          {t('SECURITY')}
+        </Text>
+        <Divider y={8} />
+        <Flex direction="column" gap={4}>
+          <LinkSetting onClick={() => router.push('/settings/recovery')}>{t('BACKUP_ACCOUNT')}</LinkSetting>
+        </Flex>
 
         <Divider y={16} />
         <Text size="small" color={appTheme.colors.gray50}>

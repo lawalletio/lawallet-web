@@ -5,9 +5,9 @@ import Navbar from '@/components/Layout/Navbar';
 import { TokenList } from '@/components/TokenList';
 import TransactionItem from '@/components/TransactionItem';
 // Libraries
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/UI/avatar';
 import { GearIcon, HiddenIcon, SatoshiV2Icon, SendIcon, VisibleIcon } from '@bitcoin-design/bitcoin-icons-react/filled';
 import {
-  Avatar,
   BannerAlert,
   BtnLoader,
   Button,
@@ -41,6 +41,7 @@ import {
   useConfig,
   useCurrencyConverter,
   useIdentity,
+  useProfile,
   useSettings,
   useTransactions,
 } from '@lawallet/react';
@@ -56,6 +57,7 @@ export default function Page() {
   const [showBanner, setShowBanner] = useState<'backup' | 'none'>('none');
 
   const identity = useIdentity();
+  const { nip05Avatar, nip05 } = useProfile();
   const balance = useBalance();
   const transactions = useTransactions();
 
@@ -88,23 +90,32 @@ export default function Page() {
     <>
       <HeroCard>
         <Navbar>
-          <Flex align="center" gap={8}>
-            <Avatar>
-              <Text size="small">{identity.username ? extractFirstTwoChars(identity.username) : 'AN'}</Text>
-            </Avatar>
-            <Flex direction="column">
-              <Text size="small" color={appTheme.colors.gray50}>
-                {t('HELLO')},
-              </Text>
-              <Flex
-                onClick={() => {
-                  if (identity.lud16) copy(identity.lud16);
-                }}
-              >
-                <Text>{loading ? '--' : identity.lud16 ? identity.lud16 : t('ANONYMOUS')}</Text>
+          <div className="cursor-pointer">
+            <Flex align="center" gap={8} onClick={() => router.push(`/profile`)} style={{ cursor: 'pointer' }}>
+              <Avatar className="w-8 h-8">
+                {nip05Avatar && <AvatarImage src={nip05Avatar} />}
+                <AvatarFallback>{identity.username ? extractFirstTwoChars(identity.username) : 'AN'}</AvatarFallback>
+              </Avatar>
+              <Flex direction="column">
+                <Text size="small" color={appTheme.colors.gray50}>
+                  {t('HELLO')},
+                </Text>
+                <Flex
+                  onClick={() => {
+                    if (identity.lud16) copy(identity.lud16);
+                  }}
+                >
+                  <p className="text-md whitespace-nowrap">
+                    {loading
+                      ? '--'
+                      : nip05?.name || nip05?.displayName
+                        ? nip05?.name || nip05?.displayName
+                        : (identity.lud16 ?? t('ANONYMOUS'))}
+                  </p>
+                </Flex>
               </Flex>
             </Flex>
-          </Flex>
+          </div>
           <Flex gap={4} justify="end">
             <Button variant="bezeled" size="small" onClick={toggleHideBalance}>
               <Icon size="small">{hideBalance ? <HiddenIcon /> : <VisibleIcon />}</Icon>
