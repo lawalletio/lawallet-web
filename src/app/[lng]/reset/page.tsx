@@ -12,8 +12,9 @@ import { Container, Feedback, Flex, Heading, Text } from '@lawallet/ui';
 import { NostrEvent } from '@nostr-dev-kit/ndk';
 import { useTranslations } from 'next-intl';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { generatePrivateKey, getPublicKey } from 'nostr-tools';
+import { generateSecretKey, getPublicKey } from 'nostr-tools';
 import { useEffect } from 'react';
+import { bytesToHex } from '@noble/hashes/utils';
 
 export default function Page() {
   const t = useTranslations();
@@ -35,18 +36,19 @@ export default function Page() {
       return;
     }
 
-    const randomHexPKey: string = generatePrivateKey();
-    buildCardActivationEvent(recoveryNonce, randomHexPKey, config)
+    const randomSecretKey = generateSecretKey();
+    const skToHex = bytesToHex(randomSecretKey);
+    buildCardActivationEvent(recoveryNonce, skToHex, config)
       .then((cardEvent: NostrEvent) => {
         cardResetCaim(cardEvent, config).then((res) => {
           if (res.error) errors.modifyError(res.error);
 
           if (res.name) {
-            identity.initializeFromPrivateKey(randomHexPKey, res.name).then(() => {
+            identity.initializeFromPrivateKey(skToHex, res.name).then(() => {
               const identityToSave: StoragedIdentityInfo = {
                 username: res.name,
-                pubkey: getPublicKey(randomHexPKey),
-                privateKey: randomHexPKey,
+                pubkey: getPublicKey(randomSecretKey),
+                privateKey: skToHex,
               };
 
               saveIdentityToStorage(config.storage, identityToSave).then(() => {

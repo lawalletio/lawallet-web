@@ -101,7 +101,7 @@ export function LNURLProvider({ children }: { children: React.ReactNode }) {
     if (isLoading || !signer || !signerInfo || LNURLTransferInfo.type === TransferTypes.NONE) return;
     handleMarkLoading(true);
 
-    const { type, request, receiverPubkey, data, amount, comment } = LNURLTransferInfo;
+    const { type, request, lnService, receiverPubkey, data, amount, comment } = LNURLTransferInfo;
 
     try {
       if (type === TransferTypes.LNURLW) {
@@ -120,10 +120,17 @@ export function LNURLProvider({ children }: { children: React.ReactNode }) {
             tags: [metadataTag],
           });
         } else {
-          const { callback } = request!;
-          const bolt11: string = await requestInvoice(
-            `${callback}?amount=${amount * 1000}&comment=${escapingBrackets(comment)}`,
-          );
+          let bolt11: string = '';
+
+          if (lnService) {
+            const invoice = await lnService.requestInvoice({ satoshi: amount, comment: escapingBrackets(comment) });
+            if (!invoice || !invoice.paymentRequest) return;
+
+            bolt11 = invoice.paymentRequest;
+          } else {
+            const { callback } = request!;
+            bolt11 = await requestInvoice(`${callback}?amount=${amount * 1000}&comment=${escapingBrackets(comment)}`);
+          }
 
           execOutboundTransfer({ tags: [['bolt11', bolt11], metadataTag], amount: amount });
         }
