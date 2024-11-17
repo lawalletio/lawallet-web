@@ -1,7 +1,5 @@
 'use client';
 
-import { useParams } from 'next/navigation';
-
 import Navbar from '@/components/Layout/Navbar';
 
 import { Profile } from '@/features/profile';

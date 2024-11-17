@@ -1,13 +1,12 @@
 // Packages
 import { useMemo } from 'react';
-import Link from 'next/link';
 import { useProfile } from '@lawallet/react';
 
 // Generic components
 import { Button } from '@/components/UI/button';
 import { Skeleton } from '@/components/UI/skeleton';
 
-export function Mention(props: { value: any }) {
+export function Mention(props: { value: string }) {
   const { value } = props;
 
   const paramPubkey = useMemo(() => value as string, [value]);
