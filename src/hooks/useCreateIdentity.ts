@@ -174,7 +174,7 @@ export const useCreateIdentity = (): UseIdentityReturns => {
     }
   };
 
-  const handleCreateIdentity = (props: AccountProps) => {
+  const handleCreateIdentity = async (props: AccountProps) => {
     if (loading) return;
     const { nonce, name } = props;
 
@@ -191,33 +191,33 @@ export const useCreateIdentity = (): UseIdentityReturns => {
 
     setLoading(true);
 
-    existIdentity(name, config)
-      .then((nameWasTaken: boolean) => {
-        if (nameWasTaken) return errors.modifyError('NAME_ALREADY_TAKEN');
+    const nameWasTaken = await existIdentity(name, config);
 
-        return createIdentity({ nonce, name }).then((response_identity: CreateIdentityReturns) => {
-          const { success, randomKey, message } = response_identity;
+    if (nameWasTaken) {
+      setLoading(false);
+      return errors.modifyError('NAME_ALREADY_TAKEN');
+    }
 
-          if (success && randomKey) {
-            if (props.card) {
-              buildCardActivationEvent(props.card, randomKey, config)
-                .then((cardEvent: NostrEvent) => {
-                  requestCardActivation(cardEvent, config).then(() => {
-                    router.push('/dashboard');
-                  });
-                })
-                .catch(() => {
-                  router.push('/dashboard');
-                });
-            } else {
-              router.push('/dashboard');
-            }
-          } else {
-            errors.modifyError(message);
-          }
-        });
-      })
-      .finally(() => setLoading(false));
+    const { success, message, randomKey } = await createIdentity(props);
+
+    if (success && randomKey) {
+      if (props.card) {
+        const cardEvent: NostrEvent = await buildCardActivationEvent(props.card, randomKey, config);
+
+        requestCardActivation(cardEvent, config)
+          .then(() => {
+            router.push('/dashboard');
+          })
+          .catch(() => {
+            router.push('/dashboard');
+          });
+      } else {
+        router.push('/dashboard');
+      }
+    } else {
+      setLoading(false);
+      errors.modifyError(message);
+    }
   };
   return {
     accountInfo,
