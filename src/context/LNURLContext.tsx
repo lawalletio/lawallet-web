@@ -103,7 +103,6 @@ export function LNURLProvider({ children }: { children: React.ReactNode }) {
 
     const { type, request, lnService, receiverPubkey, data, amount, comment } = LNURLTransferInfo;
 
-    console.log(LNURLTransferInfo);
     try {
       if (type === TransferTypes.LNURLW) {
         const { callback, maxWithdrawable, k1 } = request!;
@@ -130,8 +129,6 @@ export function LNURLProvider({ children }: { children: React.ReactNode }) {
             bolt11 = invoice.paymentRequest;
           } else {
             const { callback } = request!;
-
-            console.log(`${callback}?amount=${amount * 1000}&comment=${escapingBrackets(comment)}`);
 
             bolt11 = await requestInvoice(`${callback}?amount=${amount * 1000}&comment=${escapingBrackets(comment)}`);
           }
