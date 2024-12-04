@@ -37,17 +37,18 @@ import BitcoinTrade from '@/components/Animations/bitcoin-trade.json';
 import Subnavbar from '@/components/Layout/Subnavbar';
 import {
   formatToPreference,
+  useActivity,
   useBalance,
   useConfig,
   useCurrencyConverter,
   useIdentity,
   useProfile,
   useSettings,
-  useTransactions,
 } from '@lawallet/react';
 
 // Constans
 import { CACHE_BACKUP_KEY, EMERGENCY_LOCK_DEPOSIT, EMERGENCY_LOCK_TRANSFER } from '@/utils/constants';
+import { Loader } from '@/components/Icons/Loader';
 
 export default function Page() {
   const config = useConfig();
@@ -59,7 +60,7 @@ export default function Page() {
   const identity = useIdentity();
   const { nip05Avatar, nip05 } = useProfile();
   const balance = useBalance();
-  const transactions = useTransactions();
+  const activity = useActivity();
 
   const {
     loading,
@@ -192,7 +193,11 @@ export default function Page() {
           </>
         ) : null}
 
-        {transactions.length === 0 ? (
+        {activity.loading ? (
+          <Flex direction="column" justify="center" align="center" flex={1}>
+            <Loader />
+          </Flex>
+        ) : activity.transactions.length === 0 ? (
           <Flex direction="column" justify="center" align="center" flex={1}>
             <Animations data={BitcoinTrade} />
             <Heading as="h4">{t('EMPTY_TRANSACTIONS_TITLE')}</Heading>
@@ -212,7 +217,7 @@ export default function Page() {
             </Flex>
 
             <Flex direction="column" gap={4}>
-              {transactions.slice(0, 5).map((transaction) => (
+              {activity.transactions.slice(0, 5).map((transaction) => (
                 <TransactionItem key={transaction.id} transaction={transaction} />
               ))}
             </Flex>

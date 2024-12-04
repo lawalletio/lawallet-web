@@ -8,7 +8,7 @@ import {
   normalizeLNDomain,
   removeDuplicateArray,
   useConfig,
-  useTransactions,
+  useActivity,
 } from '@lawallet/react';
 import { Transaction, TransactionDirection, TransferTypes } from '@lawallet/react/types';
 import {
@@ -56,7 +56,7 @@ export default function Page() {
   const errors = useErrors();
   const config = useConfig();
 
-  const transactions = useTransactions();
+  const { transactions } = useActivity();
 
   const [inputText, setInputText] = useState<string>(params.get('data') ?? '');
   const [loading, setLoading] = useState<boolean>(false);
