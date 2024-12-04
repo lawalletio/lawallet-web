@@ -9,14 +9,18 @@ import {
   dateFormatter,
   defaultCurrency,
   unescapingText,
+  useConfig,
   useCurrencyConverter,
   useFormatter,
+  useNostr,
   useSettings,
 } from '@lawallet/react';
 import { AvailableLanguages, Transaction, TransactionDirection, TransactionStatus } from '@lawallet/react/types';
 import { BtnLoader } from '@lawallet/ui';
 import { useLocale, useTranslations } from 'next-intl';
-import { useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
+import { extractMetadata } from '@/utils';
+import { NostrEvent } from 'nostr-tools';
 
 interface ComponentProps {
   transaction: Transaction;
@@ -33,6 +37,8 @@ export default function Component({ transaction }: ComponentProps) {
   if (!transaction) return null;
   const lng = useLocale();
   const t = useTranslations();
+  const { decrypt } = useNostr();
+  const config = useConfig();
 
   const { status, type } = transaction;
 
@@ -63,14 +69,30 @@ export default function Component({ transaction }: ComponentProps) {
 
   const { customFormat } = useFormatter({ locale: lng as AvailableLanguages });
 
+  const getMetadata = React.useCallback(
+    async (transaction: Transaction) => {
+      const decryptedMetadata = await extractMetadata(
+        transaction.events[0] as NostrEvent,
+        transaction.direction,
+        decrypt,
+        config,
+      );
+
+      return decryptedMetadata;
+    },
+    [decrypt],
+  );
+
   const handleOpenAccordion = async () => {
     setLudInfo({ ...ludInfo, loading: true });
 
     if (transaction.metadata) {
+      const decryptedMetadata = await getMetadata(transaction);
+
       const username: string =
         transaction.direction === TransactionDirection.INCOMING
-          ? (transaction.metadata.sender ?? defaultTransferText)
-          : (transaction.metadata.receiver ?? defaultTransferText);
+          ? (decryptedMetadata.sender ?? defaultTransferText)
+          : (decryptedMetadata.receiver ?? defaultTransferText);
 
       setLudInfo({
         loading: false,
