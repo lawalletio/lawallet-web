@@ -100,7 +100,7 @@ export function LNURLProvider({ children }: { children: React.ReactNode }) {
       const metadataTag: NDKTag = ['metadata', 'true', 'nip04', metadataEncrypted];
       return metadataTag;
     },
-    [identity],
+    [identity, LNURLInfo],
   );
 
   const execute = async () => {
