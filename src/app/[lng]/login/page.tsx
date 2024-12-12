@@ -10,9 +10,9 @@ import { useConfig, useIdentity, useNostr } from '@lawallet/react';
 import { getUsername } from '@lawallet/react/actions';
 import { Button, Container, Divider, Feedback, Flex, Heading, Input } from '@lawallet/ui';
 import { useTranslations } from 'next-intl';
-import { getPublicKey } from 'nostr-tools';
+import { getPublicKey, nip19 } from 'nostr-tools';
 import { ChangeEvent, useState } from 'react';
-import { hexToBytes } from '@noble/hashes/utils';
+import { bytesToHex, hexToBytes } from '@noble/hashes/utils';
 
 export default function Page() {
   const { initializeSigner } = useNostr();
@@ -40,7 +40,15 @@ export default function Page() {
     setLoading(true);
 
     try {
-      const pubkey: string = getPublicKey(hexToBytes(keyInput));
+      let hexSecretKey: string = keyInput;
+
+      if (hexSecretKey.startsWith('nsec1')) {
+        const { type, data } = nip19.decode(keyInput);
+
+        if (type === 'nsec') hexSecretKey = bytesToHex(data);
+      }
+
+      const pubkey: string = getPublicKey(hexToBytes(hexSecretKey));
       const username: string = await getUsername(pubkey, config);
 
       // if (!username.length) {
@@ -49,12 +57,12 @@ export default function Page() {
       //   return;
       // }
 
-      identity.initializeFromPrivateKey(keyInput, username).then((res) => {
+      identity.initializeFromPrivateKey(hexSecretKey, username).then((res) => {
         if (res) {
           const IdentityToSave: StoragedIdentityInfo = {
             username,
             pubkey,
-            privateKey: keyInput,
+            privateKey: hexSecretKey,
           };
 
           saveIdentityToStorage(config.storage, IdentityToSave, true).then(() => {

@@ -111,7 +111,9 @@ export default function Page() {
                       ? '--'
                       : nip05?.name || nip05?.displayName
                         ? nip05?.name || nip05?.displayName
-                        : (identity.lud16 ?? t('ANONYMOUS'))}
+                        : identity.lud16.length
+                          ? identity.lud16
+                          : t('ANONYMOUS')}
                   </p>
                 </Flex>
               </Flex>
