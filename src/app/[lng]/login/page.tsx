@@ -46,6 +46,8 @@ export default function Page() {
         const { type, data } = nip19.decode(keyInput);
 
         if (type === 'nsec') hexSecretKey = bytesToHex(data);
+      } else if (hexSecretKey.startsWith('0x')) {
+        hexSecretKey = hexSecretKey.substring(2, hexSecretKey.length);
       }
 
       const pubkey: string = getPublicKey(hexToBytes(hexSecretKey));
