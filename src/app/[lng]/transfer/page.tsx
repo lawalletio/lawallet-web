@@ -85,7 +85,7 @@ export default function Page() {
         return;
     }
 
-    const formattedLNURLData = await formatLNURLData(cleanData);
+    const formattedLNURLData = await formatLNURLData(cleanData, config);
     if (formattedLNURLData.type === TransferTypes.NONE || formattedLNURLData.type === TransferTypes.INVOICE) {
       errors.modifyError('INVALID_RECIPIENT');
       setLoading(false);
