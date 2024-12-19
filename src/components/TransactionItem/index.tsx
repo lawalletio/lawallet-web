@@ -86,21 +86,17 @@ export default function Component({ transaction }: ComponentProps) {
   const handleOpenAccordion = async () => {
     setLudInfo({ ...ludInfo, loading: true });
 
-    if (transaction.metadata) {
-      const decryptedMetadata = await getMetadata(transaction);
+    const decryptedMetadata = await getMetadata(transaction);
 
-      const username: string =
-        transaction.direction === TransactionDirection.INCOMING
-          ? (decryptedMetadata.sender ?? defaultTransferText)
-          : (decryptedMetadata.receiver ?? defaultTransferText);
+    const username: string =
+      transaction.direction === TransactionDirection.INCOMING
+        ? (decryptedMetadata.sender ?? defaultTransferText)
+        : (decryptedMetadata.receiver ?? defaultTransferText);
 
-      setLudInfo({
-        loading: false,
-        data: username,
-      });
-    } else {
-      setLudInfo({ ...ludInfo, loading: false });
-    }
+    setLudInfo({
+      loading: false,
+      data: username,
+    });
   };
 
   if (!satsAmount) return null;

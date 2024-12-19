@@ -20,34 +20,45 @@ export const extractMetadata = async (
   config: ConfigProps = baseConfig,
 ) => {
   try {
+    const receiverPubkey: string = getMultipleTagsValues(event.tags, 'p')[1]!;
     const metadataTag = getTag(event.tags, 'metadata');
+
     if (metadataTag && metadataTag.length === 4) {
       const [, encrypted, encryptType, message] = metadataTag;
 
       if (!encrypted) return parseContent(message!);
 
       if (encryptType === 'nip04') {
-        const receiverPubkey: string = getMultipleTagsValues(event.tags, 'p')[1]!;
-
         const decryptPubkey: string = direction === TransactionDirection.INCOMING ? event.pubkey : receiverPubkey;
 
         const decryptedMessage = await decrypt(decryptPubkey, message!);
-        const parsedDecryptedMessage = parseContent(decryptedMessage);
 
-        if (
-          direction === TransactionDirection.OUTGOING &&
-          receiverPubkey !== config.modulePubkeys.urlx &&
-          (!parsedDecryptedMessage || !parsedDecryptedMessage.receiver)
-        ) {
-          const receiverUsername = await getUsername(receiverPubkey, config);
+        if (decryptedMessage.length) {
+          const parsedDecryptedMessage = parseContent(decryptedMessage);
 
-          return receiverUsername.length
-            ? { receiver: `${receiverUsername}@${normalizeLNDomain(config.endpoints.lightningDomain)}` }
-            : {};
-        } else {
-          return parsedDecryptedMessage;
+          if (
+            direction === TransactionDirection.OUTGOING &&
+            receiverPubkey !== config.modulePubkeys.urlx &&
+            (!parsedDecryptedMessage || !parsedDecryptedMessage.receiver)
+          ) {
+            const receiverUsername = await getUsername(receiverPubkey, config);
+
+            return receiverUsername.length
+              ? { receiver: `${receiverUsername}@${normalizeLNDomain(config.endpoints.lightningDomain)}` }
+              : {};
+          } else {
+            return parsedDecryptedMessage;
+          }
         }
       }
+    }
+
+    if (direction === TransactionDirection.OUTGOING && receiverPubkey !== config.modulePubkeys.urlx) {
+      const receiverUsername = await getUsername(receiverPubkey, config);
+
+      return receiverUsername.length
+        ? { receiver: `${receiverUsername}@${normalizeLNDomain(config.endpoints.lightningDomain)}` }
+        : {};
     } else {
       if (
         direction === TransactionDirection.INCOMING &&
@@ -59,6 +70,8 @@ export const extractMetadata = async (
         return senderUsername.length
           ? { sender: `${senderUsername}@${normalizeLNDomain(config.endpoints.lightningDomain)}` }
           : {};
+      } else {
+        return {};
       }
     }
   } catch {
