@@ -132,9 +132,9 @@ export default function Page() {
           </Flex>
         </Navbar>
 
-        <div className="bg-[#F9B550] text-black text-center py-2">
+        {/* <div className="bg-[#F9B550] text-black text-center py-2">
           <h1>{t('ERROR_MESSAGE')}</h1>
-        </div>
+        </div> */}
 
         <Divider y={12} />
 
