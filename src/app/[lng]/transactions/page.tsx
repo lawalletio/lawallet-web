@@ -4,7 +4,7 @@ import Navbar from '@/components/Layout/Navbar';
 import TransactionItem from '@/components/TransactionItem';
 import { appTheme } from '@/config/exports';
 import { useRouter } from '@/navigation';
-import { useTransactions } from '@lawallet/react';
+import { useActivity } from '@lawallet/react';
 import { Button, Container, Divider, Flex, Footer, Text } from '@lawallet/ui';
 import { differenceInCalendarDays } from 'date-fns';
 import { useTranslations } from 'next-intl';
@@ -15,7 +15,7 @@ let dateToRender: Date | null = null;
 export default function Page() {
   const t = useTranslations();
   const router = useRouter();
-  const transactions = useTransactions();
+  const { transactions } = useActivity();
 
   // const [filteredTransactions, setFilteredTransactions] = useState<Transaction[]>([]);
 

@@ -6,7 +6,7 @@ import withSerwistInit from '@serwist/next';
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 
-const withNextIntl = createNextIntlPlugin();
+const withNextIntl = createNextIntlPlugin('./src/i18n.ts');
 const { version } = require('./package.json');
 
 const withSerwist = withSerwistInit({
@@ -25,6 +25,14 @@ const nextConfig = {
   },
   env: {
     version,
+  },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '*',
+      },
+    ],
   },
 };
 

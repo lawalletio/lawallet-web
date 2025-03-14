@@ -5,8 +5,9 @@ import { IdentityResponse, claimIdentity, existIdentity, requestCardActivation }
 import { StoragedIdentityInfo } from '@/components/AppProvider/AuthProvider';
 import { useRouter } from '@/navigation';
 import { saveIdentityToStorage } from '@/utils';
+import { bytesToHex } from '@noble/hashes/utils';
 import { NostrEvent } from '@nostr-dev-kit/ndk';
-import { generatePrivateKey, getPublicKey } from 'nostr-tools';
+import { generateSecretKey, getPublicKey } from 'nostr-tools';
 import { Dispatch, SetStateAction, useState } from 'react';
 import useErrors, { IUseErrors } from './useErrors';
 
@@ -24,7 +25,7 @@ export type CreateIdentityProps = {
 export type CreateIdentityReturns = {
   success: boolean;
   message: string;
-  randomHexPKey?: string;
+  randomKey?: string;
 };
 
 interface CreateIdentityParams extends AccountProps {
@@ -113,9 +114,10 @@ export const useCreateIdentity = (): UseIdentityReturns => {
   const createNostrAccount = async () => {
     setLoading(true);
 
-    const randomHexPKey: string = generatePrivateKey();
-    if (randomHexPKey) {
-      identity.initializeFromPrivateKey(randomHexPKey);
+    const randomSecretKey = generateSecretKey();
+    const skToHex: string = bytesToHex(randomSecretKey);
+    if (randomSecretKey) {
+      identity.initializeFromPrivateKey(skToHex);
       router.push('/dashboard');
       setLoading(false);
     }
@@ -123,10 +125,11 @@ export const useCreateIdentity = (): UseIdentityReturns => {
 
   const createIdentity = async ({ nonce, name }: CreateIdentityProps): Promise<CreateIdentityReturns> => {
     try {
-      const randomHexPKey: string = generatePrivateKey();
-      const initialized: boolean = await identity.initializeFromPrivateKey(randomHexPKey, name);
+      const randomSecretKey = generateSecretKey();
+      const randomKey: string = bytesToHex(randomSecretKey);
+      const initialized: boolean = await identity.initializeFromPrivateKey(randomKey, name);
 
-      if (!randomHexPKey || !initialized)
+      if (!randomKey || !initialized)
         return {
           success: false,
           message: 'ERROR_WITH_SIGNER',
@@ -151,8 +154,8 @@ export const useCreateIdentity = (): UseIdentityReturns => {
 
       const identityToSave: StoragedIdentityInfo = {
         username: name,
-        pubkey: getPublicKey(randomHexPKey),
-        privateKey: randomHexPKey,
+        pubkey: getPublicKey(randomSecretKey),
+        privateKey: randomKey,
       };
 
       await saveIdentityToStorage(config.storage, identityToSave);
@@ -161,7 +164,7 @@ export const useCreateIdentity = (): UseIdentityReturns => {
       return {
         success: true,
         message: 'ok',
-        randomHexPKey,
+        randomKey,
       };
     } catch {
       return {
@@ -171,7 +174,7 @@ export const useCreateIdentity = (): UseIdentityReturns => {
     }
   };
 
-  const handleCreateIdentity = (props: AccountProps) => {
+  const handleCreateIdentity = async (props: AccountProps) => {
     if (loading) return;
     const { nonce, name } = props;
 
@@ -188,33 +191,33 @@ export const useCreateIdentity = (): UseIdentityReturns => {
 
     setLoading(true);
 
-    existIdentity(name, config)
-      .then((nameWasTaken: boolean) => {
-        if (nameWasTaken) return errors.modifyError('NAME_ALREADY_TAKEN');
+    const nameWasTaken = await existIdentity(name, config);
 
-        return createIdentity({ nonce, name }).then((response_identity: CreateIdentityReturns) => {
-          const { success, randomHexPKey, message } = response_identity;
+    if (nameWasTaken) {
+      setLoading(false);
+      return errors.modifyError('NAME_ALREADY_TAKEN');
+    }
 
-          if (success && randomHexPKey) {
-            if (props.card) {
-              buildCardActivationEvent(props.card, randomHexPKey, config)
-                .then((cardEvent: NostrEvent) => {
-                  requestCardActivation(cardEvent, config).then(() => {
-                    router.push('/dashboard');
-                  });
-                })
-                .catch(() => {
-                  router.push('/dashboard');
-                });
-            } else {
-              router.push('/dashboard');
-            }
-          } else {
-            errors.modifyError(message);
-          }
-        });
-      })
-      .finally(() => setLoading(false));
+    const { success, message, randomKey } = await createIdentity(props);
+
+    if (success && randomKey) {
+      if (props.card) {
+        const cardEvent: NostrEvent = await buildCardActivationEvent(props.card, randomKey, config);
+
+        requestCardActivation(cardEvent, config)
+          .then(() => {
+            router.push('/dashboard');
+          })
+          .catch(() => {
+            router.push('/dashboard');
+          });
+      } else {
+        router.push('/dashboard');
+      }
+    } else {
+      setLoading(false);
+      errors.modifyError(message);
+    }
   };
   return {
     accountInfo,

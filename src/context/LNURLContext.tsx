@@ -13,7 +13,7 @@ import { requestInvoice } from '@lawallet/react/actions';
 import { LNURLTransferType, TransferTypes } from '@lawallet/react/types';
 import { NDKTag } from '@nostr-dev-kit/ndk';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 
 // Constans
 import { EMERGENCY_LOCK_TRANSFER } from '@/utils/constants';
@@ -74,34 +74,40 @@ export function LNURLProvider({ children }: { children: React.ReactNode }) {
     });
   };
 
-  const defineMetadata = async (receiver: string): Promise<NDKTag> => {
-    const showReceiver: boolean = Boolean(receiver.length && !receiver.toLowerCase().startsWith('lnurl'));
+  const defineMetadata = React.useCallback(
+    async (receiver: string): Promise<NDKTag> => {
+      const showReceiver: boolean = Boolean(receiver.length && !receiver.toLowerCase().startsWith('lnurl'));
 
-    const receiverInfo: string =
-      showReceiver && LNURLInfo.transferInfo.data.includes('@')
-        ? LNURLInfo.transferInfo.data
-        : `${LNURLInfo.transferInfo.data}@${normalizeLNDomain(config.endpoints.lightningDomain)}`;
+      const receiverInfo: string =
+        showReceiver && LNURLInfo.transferInfo.data.includes('@')
+          ? LNURLInfo.transferInfo.data
+          : `${LNURLInfo.transferInfo.data}@${normalizeLNDomain(config.endpoints.lightningDomain)}`;
 
-    const metadataMessage: { sender?: string; receiver?: string } = {
-      ...(showReceiver ? { receiver: receiverInfo } : {}),
-      ...(identity.lud16
-        ? {
-            sender: identity.lud16,
-          }
-        : {}),
-    };
+      const metadataMessage: { sender?: string; receiver?: string } = {
+        ...(showReceiver ? { receiver: receiverInfo } : {}),
+        ...(identity.username
+          ? {
+              sender: `${identity.username}@${normalizeLNDomain(config.endpoints.lightningDomain)}`,
+            }
+          : {}),
+      };
 
-    const metadataEncrypted: string = await encrypt(LNURLTransferInfo.receiverPubkey, JSON.stringify(metadataMessage));
+      const metadataEncrypted: string = await encrypt(
+        LNURLTransferInfo.receiverPubkey,
+        JSON.stringify(metadataMessage),
+      );
 
-    const metadataTag: NDKTag = ['metadata', 'true', 'nip04', metadataEncrypted];
-    return metadataTag;
-  };
+      const metadataTag: NDKTag = ['metadata', 'true', 'nip04', metadataEncrypted];
+      return metadataTag;
+    },
+    [identity, LNURLInfo],
+  );
 
   const execute = async () => {
     if (isLoading || !signer || !signerInfo || LNURLTransferInfo.type === TransferTypes.NONE) return;
     handleMarkLoading(true);
 
-    const { type, request, receiverPubkey, data, amount, comment } = LNURLTransferInfo;
+    const { type, request, lnService, receiverPubkey, data, amount, comment } = LNURLTransferInfo;
 
     try {
       if (type === TransferTypes.LNURLW) {
@@ -120,10 +126,18 @@ export function LNURLProvider({ children }: { children: React.ReactNode }) {
             tags: [metadataTag],
           });
         } else {
-          const { callback } = request!;
-          const bolt11: string = await requestInvoice(
-            `${callback}?amount=${amount * 1000}&comment=${escapingBrackets(comment)}`,
-          );
+          let bolt11: string = '';
+
+          if (lnService && lnService.lnurlpData) {
+            const invoice = await lnService.requestInvoice({ satoshi: amount, comment: escapingBrackets(comment) });
+            if (!invoice || !invoice.paymentRequest) return;
+
+            bolt11 = invoice.paymentRequest;
+          } else {
+            const { callback } = request!;
+
+            bolt11 = await requestInvoice(`${callback}?amount=${amount * 1000}&comment=${escapingBrackets(comment)}`);
+          }
 
           execOutboundTransfer({ tags: [['bolt11', bolt11], metadataTag], amount: amount });
         }

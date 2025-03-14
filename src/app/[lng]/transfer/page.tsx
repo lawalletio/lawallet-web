@@ -8,7 +8,8 @@ import {
   normalizeLNDomain,
   removeDuplicateArray,
   useConfig,
-  useTransactions,
+  useActivity,
+  useNostr,
 } from '@lawallet/react';
 import { Transaction, TransactionDirection, TransferTypes } from '@lawallet/react/types';
 import {
@@ -26,7 +27,7 @@ import {
 } from '@lawallet/ui';
 import { useTranslations } from 'next-intl';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 // Theme
 import { appTheme } from '@/config/exports';
@@ -42,6 +43,8 @@ import RecipientElement from './components/RecipientElement';
 
 // Constans
 import { EMERGENCY_LOCK_TRANSFER } from '@/utils/constants';
+import { NostrEvent } from 'nostr-tools';
+import { extractMetadata } from '@/utils';
 
 export default function Page() {
   const router = useRouter();
@@ -56,7 +59,10 @@ export default function Page() {
   const errors = useErrors();
   const config = useConfig();
 
-  const transactions = useTransactions();
+  const [lastDestinations, setLastDestinations] = useState<string[]>([]);
+
+  const { transactions } = useActivity();
+  const { decrypt } = useNostr();
 
   const [inputText, setInputText] = useState<string>(params.get('data') ?? '');
   const [loading, setLoading] = useState<boolean>(false);
@@ -106,21 +112,26 @@ export default function Page() {
     }
   };
 
-  const lastDestinations = useMemo(() => {
+  const getLastDestinations = React.useCallback(() => {
     const receiversList: string[] = [];
-    transactions.forEach((tx: Transaction) => {
-      if (
-        tx.direction === TransactionDirection.OUTGOING &&
-        tx.metadata &&
-        tx.metadata.receiver &&
-        tx.metadata.receiver.includes('@') &&
-        tx.metadata.receiver.length < 40 &&
-        !receiversList.includes(tx.metadata.receiver)
-      )
-        receiversList.push(tx.metadata.receiver);
+    transactions.forEach(async (tx: Transaction) => {
+      if (tx.direction === TransactionDirection.OUTGOING && tx.metadata) {
+        const metadata = await extractMetadata(tx.events[0] as NostrEvent, tx.direction, decrypt, config);
+        if (
+          metadata &&
+          metadata.receiver &&
+          metadata.receiver.includes('@') &&
+          !receiversList.includes(metadata.receiver)
+        )
+          receiversList.push(metadata.receiver);
+      }
     });
 
-    return receiversList;
+    setLastDestinations(receiversList);
+  }, [transactions]);
+
+  useEffect(() => {
+    getLastDestinations();
   }, [transactions]);
 
   const autoCompleteData: string[] = useMemo(() => {

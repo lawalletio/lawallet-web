@@ -3,7 +3,7 @@
 import { useRouter } from '@/navigation';
 import { getTagValue, parseContent, useConfig, useSubscription } from '@lawallet/react';
 import { Button, CheckIcon, Container, Divider, Feedback, Flex, Heading, Icon, SatoshiIcon, Text } from '@lawallet/ui';
-import { NDKEvent, NostrEvent } from '@nostr-dev-kit/ndk';
+import { NostrEvent } from '@nostr-dev-kit/ndk';
 import { useCallback, useEffect, useState } from 'react';
 
 // Generic components
@@ -15,11 +15,11 @@ import { Loader } from '@/components/Icons/Loader';
 
 import useErrors from '@/hooks/useErrors';
 
+import SignUpEmptyView from '@/components/Layout/EmptyView/SignUpEmptyView';
+import SpinnerView from '@/components/Spinner/SpinnerView';
 import { QRCode } from '@/components/UI';
 import { appTheme } from '@/config/exports';
 import { useTranslations } from 'next-intl';
-import SpinnerView from '@/components/Spinner/SpinnerView';
-import SignUpEmptyView from '@/components/Layout/EmptyView/SignUpEmptyView';
 
 const SIGN_UP_CACHE_KEY: string = 'signup-cache-key';
 
@@ -105,19 +105,33 @@ const SignUp = () => {
 
     try {
       const response = await fetch(`${config.endpoints.lightningDomain}/api/signup/request`);
-      const { zapRequest, invoice, error } = await response.json();
-      if (!zapRequest || !invoice) throw new Error(error);
+      const { requirePayment, data, error } = await response.json();
 
-      const parsedZapRequest = parseContent(zapRequest);
-      saveZapRequestInfo(
-        {
-          zapRequest: parsedZapRequest,
-          receiverPubkey: getTagValue(parsedZapRequest.tags, 'p'),
-          invoice,
-          payed: false,
-        },
-        nonce,
-      );
+      if (!requirePayment) {
+        const { buyEvent } = data;
+        if (!buyEvent) throw new Error(error);
+
+        saveZapRequestInfo({
+          ...zapRequestInfo,
+          payed: true,
+        });
+
+        await claimNonce(buyEvent);
+      } else {
+        const { zapRequest, invoice } = data;
+        if (!zapRequest || !invoice) throw new Error(error);
+
+        const parsedZapRequest = parseContent(zapRequest);
+        saveZapRequestInfo(
+          {
+            zapRequest: parsedZapRequest,
+            receiverPubkey: getTagValue(parsedZapRequest.tags, 'p'),
+            invoice,
+            payed: false,
+          },
+          nonce,
+        );
+      }
     } catch (err) {
       const errorMessage = (err as Error).message;
       errors.modifyError(!errorMessage ? 'UNEXPECTED_ERROR' : errorMessage);
@@ -127,10 +141,8 @@ const SignUp = () => {
   }, [nonce]);
 
   const claimNonce = useCallback(
-    async (zapReceipt: NDKEvent) => {
+    async (nostrEvent: NostrEvent) => {
       try {
-        const nostrEvent: NostrEvent = await zapReceipt.toNostrEvent();
-
         const response = await fetch(`${config.endpoints.lightningDomain}/api/nonce`, {
           method: 'POST',
           body: JSON.stringify(nostrEvent),
@@ -140,9 +152,11 @@ const SignUp = () => {
 
         setNonce(claimedNonce);
         saveZapRequestInfo(zapRequestInfo, claimedNonce);
+        return;
       } catch (err) {
         const errorMessage = (err as Error).message;
         errors.modifyError(!errorMessage ? 'UNEXPECTED_ERROR' : errorMessage);
+        return;
       }
     },
     [zapRequestInfo],
@@ -184,7 +198,7 @@ const SignUp = () => {
 
         if (boltTag === zapRequestInfo.invoice) {
           saveZapRequestInfo({ ...zapRequestInfo, payed: true }, nonce);
-          claimNonce(event);
+          event.toNostrEvent().then((nostrEvent) => claimNonce(nostrEvent));
           return;
         }
       });
@@ -226,12 +240,19 @@ const SignUp = () => {
               <Divider y={16} />
               <Flex direction="column" align="center" gap={8}>
                 <Text color={appTheme.colors.gray50}>{t('COST')}</Text>
+
                 <Flex align="center" gap={4} justify="center">
-                  <Icon>
-                    <SatoshiIcon />
-                  </Icon>
-                  <Heading>{signUpData.price}</Heading>
-                  <Text size="small">SAT</Text>
+                  {signUpData.price === 0 ? (
+                    <Text size="small">{t('FREE')}</Text>
+                  ) : (
+                    <>
+                      <Icon>
+                        <SatoshiIcon />
+                      </Icon>
+                      <Heading>{signUpData.price}</Heading>
+                      <Text size="small">SAT</Text>
+                    </>
+                  )}
                 </Flex>
               </Flex>
             </>

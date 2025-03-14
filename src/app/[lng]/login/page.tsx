@@ -8,10 +8,11 @@ import useErrors from '@/hooks/useErrors';
 import { saveIdentityToStorage } from '@/utils';
 import { useConfig, useIdentity, useNostr } from '@lawallet/react';
 import { getUsername } from '@lawallet/react/actions';
-import { Button, Container, Divider, Feedback, Flex, Heading, Textarea } from '@lawallet/ui';
+import { Button, Container, Divider, Feedback, Flex, Heading, Input } from '@lawallet/ui';
 import { useTranslations } from 'next-intl';
-import { getPublicKey } from 'nostr-tools';
+import { getPublicKey, nip19 } from 'nostr-tools';
 import { ChangeEvent, useState } from 'react';
+import { bytesToHex, hexToBytes } from '@noble/hashes/utils';
 
 export default function Page() {
   const { initializeSigner } = useNostr();
@@ -39,21 +40,31 @@ export default function Page() {
     setLoading(true);
 
     try {
-      const pubkey: string = getPublicKey(keyInput);
-      const username: string = await getUsername(pubkey, config);
+      let hexSecretKey: string = keyInput;
 
-      if (!username.length) {
-        errors.modifyError('NOT_FOUND_PUBKEY');
-        setLoading(false);
-        return;
+      if (hexSecretKey.startsWith('nsec1')) {
+        const { type, data } = nip19.decode(keyInput);
+
+        if (type === 'nsec') hexSecretKey = bytesToHex(data);
+      } else if (hexSecretKey.startsWith('0x')) {
+        hexSecretKey = hexSecretKey.substring(2, hexSecretKey.length);
       }
 
-      identity.initializeFromPrivateKey(keyInput, username).then((res) => {
+      const pubkey: string = getPublicKey(hexToBytes(hexSecretKey));
+      const username: string = await getUsername(pubkey, config);
+
+      // if (!username.length) {
+      //   errors.modifyError('NOT_FOUND_PUBKEY');
+      //   setLoading(false);
+      //   return;
+      // }
+
+      identity.initializeFromPrivateKey(hexSecretKey, username).then((res) => {
         if (res) {
           const IdentityToSave: StoragedIdentityInfo = {
             username,
             pubkey,
-            privateKey: keyInput,
+            privateKey: hexSecretKey,
           };
 
           saveIdentityToStorage(config.storage, IdentityToSave, true).then(() => {
@@ -79,7 +90,7 @@ export default function Page() {
           <Heading as="h2">{t('LOGIN_TITLE')}</Heading>
 
           <Divider y={8} />
-          <Textarea placeholder={t('INSERT_PRIVATE_KEY')} onChange={handleChangeInput} />
+          <Input type="password" placeholder={t('INSERT_PRIVATE_KEY')} onChange={handleChangeInput} />
 
           <Feedback show={errors.errorInfo.visible} status={'error'}>
             {errors.errorInfo.text}

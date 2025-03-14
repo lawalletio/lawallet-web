@@ -5,9 +5,9 @@ import Navbar from '@/components/Layout/Navbar';
 import { TokenList } from '@/components/TokenList';
 import TransactionItem from '@/components/TransactionItem';
 // Libraries
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/UI/avatar';
 import { GearIcon, HiddenIcon, SatoshiV2Icon, SendIcon, VisibleIcon } from '@bitcoin-design/bitcoin-icons-react/filled';
 import {
-  Avatar,
   BannerAlert,
   BtnLoader,
   Button,
@@ -37,16 +37,18 @@ import BitcoinTrade from '@/components/Animations/bitcoin-trade.json';
 import Subnavbar from '@/components/Layout/Subnavbar';
 import {
   formatToPreference,
+  useActivity,
   useBalance,
   useConfig,
   useCurrencyConverter,
   useIdentity,
+  useProfile,
   useSettings,
-  useTransactions,
 } from '@lawallet/react';
 
 // Constans
 import { CACHE_BACKUP_KEY, EMERGENCY_LOCK_DEPOSIT, EMERGENCY_LOCK_TRANSFER } from '@/utils/constants';
+import { Loader } from '@/components/Icons/Loader';
 
 export default function Page() {
   const config = useConfig();
@@ -56,8 +58,9 @@ export default function Page() {
   const [showBanner, setShowBanner] = useState<'backup' | 'none'>('none');
 
   const identity = useIdentity();
+  const { nip05Avatar, nip05 } = useProfile();
   const balance = useBalance();
-  const transactions = useTransactions();
+  const activity = useActivity();
 
   const {
     loading,
@@ -88,23 +91,34 @@ export default function Page() {
     <>
       <HeroCard>
         <Navbar>
-          <Flex align="center" gap={8}>
-            <Avatar>
-              <Text size="small">{identity.username ? extractFirstTwoChars(identity.username) : 'AN'}</Text>
-            </Avatar>
-            <Flex direction="column">
-              <Text size="small" color={appTheme.colors.gray50}>
-                {t('HELLO')},
-              </Text>
-              <Flex
-                onClick={() => {
-                  if (identity.lud16) copy(identity.lud16);
-                }}
-              >
-                <Text>{loading ? '--' : identity.lud16 ? identity.lud16 : t('ANONYMOUS')}</Text>
+          <div className="cursor-pointer">
+            <Flex align="center" gap={8} onClick={() => router.push(`/profile`)} style={{ cursor: 'pointer' }}>
+              <Avatar className="w-8 h-8">
+                {nip05Avatar && <AvatarImage src={nip05Avatar} />}
+                <AvatarFallback>{identity.username ? extractFirstTwoChars(identity.username) : 'AN'}</AvatarFallback>
+              </Avatar>
+              <Flex direction="column">
+                <Text size="small" color={appTheme.colors.gray50}>
+                  {t('HELLO')},
+                </Text>
+                <Flex
+                  onClick={() => {
+                    if (identity.lud16) copy(identity.lud16);
+                  }}
+                >
+                  <p className="text-md whitespace-nowrap">
+                    {loading
+                      ? '--'
+                      : nip05?.name || nip05?.displayName
+                        ? nip05?.name || nip05?.displayName
+                        : identity.lud16.length
+                          ? identity.lud16
+                          : t('ANONYMOUS')}
+                  </p>
+                </Flex>
               </Flex>
             </Flex>
-          </Flex>
+          </div>
           <Flex gap={4} justify="end">
             <Button variant="bezeled" size="small" onClick={toggleHideBalance}>
               <Icon size="small">{hideBalance ? <HiddenIcon /> : <VisibleIcon />}</Icon>
@@ -117,6 +131,10 @@ export default function Page() {
             </Button>
           </Flex>
         </Navbar>
+
+        {/* <div className="bg-[#F9B550] text-black text-center py-2">
+          <h1>{t('ERROR_MESSAGE')}</h1>
+        </div> */}
 
         <Divider y={12} />
 
@@ -181,7 +199,11 @@ export default function Page() {
           </>
         ) : null}
 
-        {transactions.length === 0 ? (
+        {activity.loading ? (
+          <Flex direction="column" justify="center" align="center" flex={1}>
+            <Loader />
+          </Flex>
+        ) : activity.transactions.length === 0 ? (
           <Flex direction="column" justify="center" align="center" flex={1}>
             <Animations data={BitcoinTrade} />
             <Heading as="h4">{t('EMPTY_TRANSACTIONS_TITLE')}</Heading>
@@ -201,7 +223,7 @@ export default function Page() {
             </Flex>
 
             <Flex direction="column" gap={4}>
-              {transactions.slice(0, 5).map((transaction) => (
+              {activity.transactions.slice(0, 5).map((transaction) => (
                 <TransactionItem key={transaction.id} transaction={transaction} />
               ))}
             </Flex>
