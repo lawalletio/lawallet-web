@@ -1,12 +1,13 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-
-import Navbar from '@/components/Layout/Navbar';
-import { useCardsContext } from '@/context/CardsContext';
-import { useNotifications } from '@/context/NotificationsContext';
 import { Design } from '@lawallet/react/types';
 import { Container, Divider, Flex, Loader } from '@lawallet/ui';
+
+import { useCardsContext } from '@/context/CardsContext';
+import { useNotifications } from '@/context/NotificationsContext';
+
+import Navbar from '@/components/Layout/Navbar';
 import AddNewCardModal from './components/AddCard';
 import DebitCard from './components/DebitCard';
 import EmptyCards from './components/EmptyCards';
