@@ -1,29 +1,23 @@
-import { TokenList } from '@/components/TokenList';
-import { Confetti, QRCode } from '@/components/UI';
-import { appTheme } from '@/config/exports';
-import { useActionOnKeypress } from '@/hooks/useActionOnKeypress';
-import useErrors from '@/hooks/useErrors';
-import { useRouter } from '@/navigation';
-import { MAX_INVOICE_AMOUNT } from '@/utils/constants';
-import { SatoshiV2Icon } from '@bitcoin-design/bitcoin-icons-react/filled';
+import { useEffect, useState } from 'react';
+import { useLocale, useTranslations } from 'next-intl';
 import { useCurrencyConverter, useFormatter, useIdentity, useNumpad, useSettings, useZap } from '@lawallet/react';
 import { AvailableLanguages } from '@lawallet/react/types';
-import {
-  BtnLoader,
-  Button,
-  CheckIcon,
-  Container,
-  Divider,
-  Feedback,
-  Flex,
-  Heading,
-  Icon,
-  Keyboard,
-  Sheet,
-  Text,
-} from '@lawallet/ui';
-import { useLocale, useTranslations } from 'next-intl';
-import { useEffect, useState } from 'react';
+import { BtnLoader, CheckIcon, Container, Divider, Feedback, Flex, Heading, Icon, Text } from '@lawallet/ui';
+import { SatoshiV2Icon } from '@bitcoin-design/bitcoin-icons-react/filled';
+import { LoaderCircle } from 'lucide-react';
+
+import { useRouter } from '@/navigation';
+import useErrors from '@/hooks/useErrors';
+import { useActionOnKeypress } from '@/hooks/useActionOnKeypress';
+import { MAX_INVOICE_AMOUNT } from '@/utils/constants';
+
+import { TokenList } from '@/components/TokenList';
+import { Confetti, QRCode } from '@/components/UI';
+import { Button } from '@/components/UI/button';
+import { Keyboard } from '@/components/keyboard';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/UI/sheet';
+
+import { appTheme } from '@/config/exports';
 
 type SheetTypes = 'amount' | 'qr' | 'finished';
 type InvoiceSheetTypes = {
@@ -101,59 +95,65 @@ const InvoiceSheet = ({ isOpen, handleCopy, onClose }: InvoiceSheetTypes) => {
 
   return (
     <Sheet
-      title={
-        sheetStep === 'amount' ? t('DEFINE_AMOUNT') : sheetStep === 'qr' ? t('WAITING_PAYMENT') : t('PAYMENT_RECEIVED')
-      }
-      isOpen={isOpen || !identity.username.length}
-      closeText={t('CLOSE')}
-      onClose={handleCloseSheet}
+      // title=
+      open={isOpen || !identity.username.length}
+      // closeText={t('CLOSE')}
+      onOpenChange={handleCloseSheet}
     >
-      {sheetStep === 'amount' && (
-        <>
-          <Container size="small">
-            <Flex direction="column" gap={8} flex={1} justify="center" align="center">
-              <Flex justify="center" align="center" gap={4}>
-                {currency === 'SAT' ? (
-                  <Icon size="small">
-                    <SatoshiV2Icon />
-                  </Icon>
-                ) : (
-                  <Text>$</Text>
-                )}
-                <Heading>{formatAmount(numpadData.intAmount[numpadData.usedCurrency])}</Heading>
+      <SheetContent className="max-h-screen h-full" side="bottom">
+        <SheetHeader>
+          <SheetTitle>
+            {sheetStep === 'amount'
+              ? t('DEFINE_AMOUNT')
+              : sheetStep === 'qr'
+                ? t('WAITING_PAYMENT')
+                : t('PAYMENT_RECEIVED')}
+          </SheetTitle>
+        </SheetHeader>
+        {sheetStep === 'amount' && (
+          <>
+            <div className="relative container flex-1 flex flex-col">
+              <div className="flex-1 flex flex-col gap-4 justify-center items-center">
+                <Flex justify="center" align="center" gap={4}>
+                  {currency === 'SAT' ? (
+                    <Icon size="small">
+                      <SatoshiV2Icon />
+                    </Icon>
+                  ) : (
+                    <Text>$</Text>
+                  )}
+                  <Heading>{formatAmount(numpadData.intAmount[numpadData.usedCurrency])}</Heading>
+                </Flex>
+
+                <TokenList />
+
+                <Feedback show={errors.errorInfo.visible} status={'error'}>
+                  {errors.errorInfo.text}
+                </Feedback>
+              </div>
+              <Divider y={24} />
+              <Flex gap={8}>
+                <Button
+                  className="w-full"
+                  onClick={handleClick}
+                  disabled={invoice.loading || numpadData.intAmount['SAT'] === 0}
+                >
+                  {invoice.loading ? <LoaderCircle className="size-6 animate-spin" /> : t('GENERATE')}
+                </Button>
               </Flex>
+              <Divider y={24} />
+              <Keyboard numpadData={numpadData} />
+            </div>
+          </>
+        )}
 
-              <TokenList />
-
-              <Feedback show={errors.errorInfo.visible} status={'error'}>
-                {errors.errorInfo.text}
-              </Feedback>
-            </Flex>
+        {sheetStep === 'qr' && (
+          <div className="flex flex-col justify-end h-full px-4">
+            <div className="flex justify-center">
+              <QRCode size={300} value={`${invoice.bolt11}`} />
+            </div>
             <Divider y={24} />
-            <Flex gap={8}>
-              <Button
-                variant="filled"
-                onClick={handleClick}
-                disabled={invoice.loading || numpadData.intAmount['SAT'] === 0}
-                loading={invoice.loading}
-              >
-                {t('GENERATE')}
-              </Button>
-            </Flex>
-            <Divider y={24} />
-            <Keyboard numpadData={numpadData} />
-          </Container>
-        </>
-      )}
-
-      {sheetStep === 'qr' && (
-        <>
-          <Flex flex={1} justify="center" align="center">
-            <QRCode size={300} value={`${invoice.bolt11}`} />
-          </Flex>
-          <Divider y={24} />
-          <Container size="small">
-            <Flex direction="column" justify="center" align="center" flex={1} gap={8}>
+            <div className="flex flex-col justify-center items-center gap-2 w-full">
               <BtnLoader />
               <Text size="small" color={appTheme.colors.gray50}>
                 {t('WAITING_PAYMENT_OF')}
@@ -170,50 +170,50 @@ const InvoiceSheet = ({ isOpen, handleCopy, onClose }: InvoiceSheetTypes) => {
 
                 <Text>{currency}</Text>
               </Flex>
-            </Flex>
+            </div>
             <Divider y={24} />
             <Flex gap={8}>
-              <Button variant="bezeledGray" onClick={handleCloseSheet}>
+              <Button className="w-full" variant="ghost" onClick={handleCloseSheet}>
                 {t('CANCEL')}
               </Button>
-              <Button variant="bezeled" onClick={() => handleCopy(invoice.bolt11)}>
+              <Button className="w-full" variant="secondary" onClick={() => handleCopy(invoice.bolt11)}>
                 {t('COPY')}
               </Button>
             </Flex>
-          </Container>
-        </>
-      )}
+          </div>
+        )}
 
-      {sheetStep === 'finished' && (
-        <>
-          <Confetti />
-          <Container size="small">
-            <Flex direction="column" justify="center" flex={1} align="center" gap={8}>
-              <Icon color={appTheme.colors.primary}>
-                <CheckIcon />
-              </Icon>
-              <Text size="small" color={appTheme.colors.gray50}>
-                {t('PAYMENT_RECEIVED')}
-              </Text>
-              <Flex justify="center" align="center" gap={4}>
-                {currency === 'SAT' ? (
-                  <Icon size="small">
-                    <SatoshiV2Icon />
-                  </Icon>
-                ) : (
-                  <Text>$</Text>
-                )}
-                <Heading>{formatAmount(numpadData.intAmount[numpadData.usedCurrency])}</Heading>
+        {sheetStep === 'finished' && (
+          <>
+            <Confetti />
+            <Container size="small">
+              <Flex direction="column" justify="center" flex={1} align="center" gap={8}>
+                <Icon color={appTheme.colors.primary}>
+                  <CheckIcon />
+                </Icon>
+                <Text size="small" color={appTheme.colors.gray50}>
+                  {t('PAYMENT_RECEIVED')}
+                </Text>
+                <Flex justify="center" align="center" gap={4}>
+                  {currency === 'SAT' ? (
+                    <Icon size="small">
+                      <SatoshiV2Icon />
+                    </Icon>
+                  ) : (
+                    <Text>$</Text>
+                  )}
+                  <Heading>{formatAmount(numpadData.intAmount[numpadData.usedCurrency])}</Heading>
+                </Flex>
               </Flex>
-            </Flex>
-            <Flex gap={8}>
-              <Button variant="bezeledGray" onClick={handleCloseSheet}>
-                {t('CLOSE')}
-              </Button>
-            </Flex>
-          </Container>
-        </>
-      )}
+              <Flex gap={8}>
+                <Button variant="secondary" onClick={handleCloseSheet}>
+                  {t('CLOSE')}
+                </Button>
+              </Flex>
+            </Container>
+          </>
+        )}
+      </SheetContent>
     </Sheet>
   );
 };
