@@ -1,18 +1,22 @@
 'use client';
+import { ChangeEvent, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { useRouter } from '@/navigation';
-
-import { StoragedIdentityInfo } from '@/components/AppProvider/AuthProvider';
-import Navbar from '@/components/Layout/Navbar';
-import { useActionOnKeypress } from '@/hooks/useActionOnKeypress';
-import useErrors from '@/hooks/useErrors';
-import { saveIdentityToStorage } from '@/utils';
+import { getPublicKey, nip19 } from 'nostr-tools';
+import { bytesToHex, hexToBytes } from '@noble/hashes/utils';
 import { useConfig, useIdentity, useNostr } from '@lawallet/react';
 import { getUsername } from '@lawallet/react/actions';
-import { Button, Container, Divider, Feedback, Flex, Heading, Input } from '@lawallet/ui';
-import { useTranslations } from 'next-intl';
-import { getPublicKey, nip19 } from 'nostr-tools';
-import { ChangeEvent, useState } from 'react';
-import { bytesToHex, hexToBytes } from '@noble/hashes/utils';
+import { Container, Divider, Feedback, Flex, Heading } from '@lawallet/ui';
+
+import { saveIdentityToStorage } from '@/utils';
+import { useActionOnKeypress } from '@/hooks/useActionOnKeypress';
+import useErrors from '@/hooks/useErrors';
+
+import Navbar from '@/components/Layout/Navbar';
+import { StoragedIdentityInfo } from '@/components/AppProvider/AuthProvider';
+import { Input } from '@/components/UI/input';
+import { Button } from '@/components/UI/button';
+import { LoaderCircle } from 'lucide-react';
 
 export default function Page() {
   const { initializeSigner } = useNostr();
@@ -26,7 +30,7 @@ export default function Page() {
   const errors = useErrors();
   const identity = useIdentity();
 
-  const handleChangeInput = (e: ChangeEvent<HTMLTextAreaElement>) => {
+  const handleChangeInput = (e: any) => {
     errors.resetError();
     setKeyInput(e.target.value);
   };
@@ -104,11 +108,11 @@ export default function Page() {
         <Container size="small">
           <Divider y={16} />
           <Flex gap={8}>
-            <Button variant="bezeledGray" onClick={() => router.push('/')}>
+            <Button className="w-full" variant="secondary" onClick={() => router.push('/')}>
               {t('CANCEL')}
             </Button>
-            <Button onClick={handleRecoveryAccount} disabled={!keyInput.length || loading} loading={loading}>
-              {t('LOGIN')}
+            <Button className="w-full" onClick={handleRecoveryAccount} disabled={!keyInput.length || loading}>
+              {loading ? <LoaderCircle className="size-6 animate-spin" /> : t('LOGIN')}
             </Button>
           </Flex>
           <Divider y={32} />

@@ -1,23 +1,24 @@
 'use client';
 
 // Libraries
-import { Button, Container, Divider, Flex, Text } from '@lawallet/ui';
 import { useMemo, useState } from 'react';
-
-// Theme
-import { appTheme } from '@/config/exports';
+import { useTranslations } from 'next-intl';
+import { formatAddress, lnurl_encode, useConfig, useIdentity } from '@lawallet/react';
+import { Container, Divider, Flex, Text } from '@lawallet/ui';
 
 // Hooks and utils
-import { useNotifications } from '@/context/NotificationsContext';
 import { useRouter } from '@/navigation';
+import { useNotifications } from '@/context/NotificationsContext';
 import { copy } from '@/utils/share';
-import { formatAddress, lnurl_encode, useConfig, useIdentity } from '@lawallet/react';
-import { useTranslations } from 'next-intl';
 
 // Components
 import Navbar from '@/components/Layout/Navbar';
 import { QRCode } from '@/components/UI';
 import InvoiceSheet from './components/InvoiceSheet';
+import { Button } from '@/components/UI/button';
+
+// Theme
+import { appTheme } from '@/config/exports';
 
 // Constans
 import { EMERGENCY_LOCK_DEPOSIT } from '@/utils/constants';
@@ -85,8 +86,8 @@ export default function Page() {
                 </Flex>
                 <div>
                   <Button
-                    size="small"
-                    variant="bezeled"
+                    size="sm"
+                    variant="secondary"
                     onClick={() => handleCopy(identity.lud16 ? identity.lud16 : LNURLEncoded)}
                   >
                     {t('COPY')}
@@ -103,7 +104,7 @@ export default function Page() {
               <Divider y={16} />
               <Flex gap={8}>
                 <Button
-                  variant="bezeled"
+                  className="w-full"
                   onClick={() => {
                     setIsOpenSheet(true);
                   }}
