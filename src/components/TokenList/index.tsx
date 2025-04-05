@@ -20,7 +20,7 @@ export function TokenList() {
             return (
               <Button
                 key={currency}
-                variant={selected ? 'secondary' : 'ghost'}
+                variant={selected ? 'terciary' : 'secondary'}
                 size="sm"
                 onClick={() => settings.changeCurrency(currency)}
               >
