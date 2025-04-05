@@ -1,12 +1,14 @@
-import { useRouter } from '@/navigation';
-import { CrossIcon } from '@bitcoin-design/bitcoin-icons-react/filled';
+import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { formatAddress, splitHandle, useConfig } from '@lawallet/react';
 import { TransferTypes } from '@lawallet/react/types';
-import { Avatar, Card, Flex, Text, Button } from '@lawallet/ui';
+import { Avatar, Card, Flex, Text } from '@lawallet/ui';
+import { X } from 'lucide-react';
 
-import { useTranslations } from 'next-intl';
-
+import { useRouter } from '@/navigation';
 import { extractFirstTwoChars } from '@/utils';
+
+import { Button } from '@/components/UI/button';
 
 const CardWithData = ({ type, data }: { type: TransferTypes; data: string }) => {
   const router = useRouter();
@@ -32,8 +34,10 @@ const CardWithData = ({ type, data }: { type: TransferTypes; data: string }) => 
           </Text>
         )}
       </Flex>
-      <Button onClick={() => router.push('/transfer')} variant="borderless">
-        <CrossIcon />
+      <Button size="icon" variant="ghost" asChild>
+        <Link href="/transfer">
+          <X className="size-4" />
+        </Link>
       </Button>
     </Card>
   );
