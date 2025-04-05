@@ -1,16 +1,19 @@
 'use client';
 
-import { SatoshiV2Icon } from '@bitcoin-design/bitcoin-icons-react/filled';
-
-import Navbar from '@/components/Layout/Navbar';
-import { Confetti } from '@/components/UI';
-import { useRouter } from '@/navigation';
-import { extractFirstTwoChars } from '@/utils';
+import { useMemo } from 'react';
+import { useLocale, useTranslations } from 'next-intl';
 import { formatAddress, splitHandle, useCurrencyConverter, useFormatter, useSettings } from '@lawallet/react';
 import { AvailableLanguages, TransferInformation, TransferTypes } from '@lawallet/react/types';
 import { Avatar, Container, Divider, Flex, Heading, Icon, LinkButton, Text } from '@lawallet/ui';
-import { useLocale, useTranslations } from 'next-intl';
-import { useMemo } from 'react';
+import { SatoshiV2Icon } from '@bitcoin-design/bitcoin-icons-react/filled';
+
+import { useRouter } from '@/navigation';
+import { extractFirstTwoChars } from '@/utils';
+
+import Navbar from '@/components/Layout/Navbar';
+import { Confetti } from '@/components/UI';
+import { Button } from '@/components/UI/button';
+import Link from 'next/link';
 
 export const FinishTransfer = ({ transferInfo }: { transferInfo: TransferInformation }) => {
   const lng = useLocale();
@@ -85,9 +88,9 @@ export const FinishTransfer = ({ transferInfo }: { transferInfo: TransferInforma
         <Container size="small">
           <Divider y={16} />
           <Flex gap={8}>
-            <LinkButton variant="borderless" onClick={() => router.push('/dashboard')}>
-              {t('GO_HOME')}
-            </LinkButton>
+            <Button className="w-full" variant="ghost" asChild>
+              <Link href="/dashboard">{t('GO_HOME')}</Link>
+            </Button>
           </Flex>
           <Divider y={32} />
         </Container>

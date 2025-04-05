@@ -1,8 +1,10 @@
 'use client';
 
-import { Button, Container, Flex } from '@lawallet/ui';
-
 import { CurrenciesList, useSettings } from '@lawallet/react';
+import { Container, Flex } from '@lawallet/ui';
+
+import { Button } from '@/components/UI/button';
+
 import { TokenListStyle } from './style';
 
 export function TokenList() {
@@ -18,8 +20,8 @@ export function TokenList() {
             return (
               <Button
                 key={currency}
-                variant={selected ? 'bezeled' : 'borderless'}
-                size="small"
+                variant={selected ? 'secondary' : 'ghost'}
+                size="sm"
                 onClick={() => settings.changeCurrency(currency)}
               >
                 {currency}

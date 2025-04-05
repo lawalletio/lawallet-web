@@ -1,14 +1,16 @@
 'use client';
 
-import { HomeIcon, RocketIcon } from '@bitcoin-design/bitcoin-icons-react/filled';
+import { ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
-
-import { Button, Container, Divider, Icon, QrCodeIcon, Text } from '@lawallet/ui';
+import { useTranslations } from 'next-intl';
+import { HomeIcon, RocketIcon } from '@bitcoin-design/bitcoin-icons-react/filled';
+import { Container, Divider, Icon, QrCodeIcon, Text } from '@lawallet/ui';
 
 import ButtonCTA from '@/components/ButtonCTA';
+import { Button } from '@/components/UI/button';
+
 import { appTheme, pluginsEnabled } from '@/config/exports';
-import { useTranslations } from 'next-intl';
-import { ReactNode } from 'react';
+
 import { SubnavbarPrimitive } from './style';
 
 interface ComponentProps {
