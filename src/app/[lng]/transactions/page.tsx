@@ -1,14 +1,18 @@
 'use client';
 
+import React from 'react';
+import { useTranslations } from 'next-intl';
+import { useActivity } from '@lawallet/react';
+import { Container, Divider, Flex, Footer, Text } from '@lawallet/ui';
+import { differenceInCalendarDays } from 'date-fns';
+
+import { useRouter } from '@/navigation';
+
 import Navbar from '@/components/Layout/Navbar';
 import TransactionItem from '@/components/TransactionItem';
+import { Button } from '@/components/UI/button';
+
 import { appTheme } from '@/config/exports';
-import { useRouter } from '@/navigation';
-import { useActivity } from '@lawallet/react';
-import { Button, Container, Divider, Flex, Footer, Text } from '@lawallet/ui';
-import { differenceInCalendarDays } from 'date-fns';
-import { useTranslations } from 'next-intl';
-import React from 'react';
 
 let dateToRender: Date | null = null;
 
@@ -79,7 +83,7 @@ export default function Page() {
       <Divider y={64} />
 
       <Footer>
-        <Button variant="bezeledGray" onClick={() => router.push('/dashboard')}>
+        <Button variant="secondary" onClick={() => router.push('/dashboard')}>
           {t('BACK')}
         </Button>
       </Footer>

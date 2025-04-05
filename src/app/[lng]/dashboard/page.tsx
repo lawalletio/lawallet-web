@@ -1,40 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
 
-import Navbar from '@/components/Layout/Navbar';
-import { TokenList } from '@/components/TokenList';
-import TransactionItem from '@/components/TransactionItem';
-// Libraries
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/UI/avatar';
-import { GearIcon, HiddenIcon, SatoshiV2Icon, SendIcon, VisibleIcon } from '@bitcoin-design/bitcoin-icons-react/filled';
-import {
-  BannerAlert,
-  BtnLoader,
-  Button,
-  Container,
-  Divider,
-  Flex,
-  Heading,
-  HeroCard,
-  Icon,
-  ReceiveIcon,
-  Text,
-} from '@lawallet/ui';
-import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
-
-// Theme
-import { appTheme } from '@/config/exports';
-
-// Hooks and utils
-import { Link, useRouter } from '@/navigation';
-import { extractFirstTwoChars } from '@/utils';
-import { copy } from '@/utils/share';
-
-// Components
-import Animations from '@/components/Animations';
-import BitcoinTrade from '@/components/Animations/bitcoin-trade.json';
-import Subnavbar from '@/components/Layout/Subnavbar';
+import { useLocale, useTranslations } from 'next-intl';
 import {
   formatToPreference,
   useActivity,
@@ -45,10 +13,41 @@ import {
   useProfile,
   useSettings,
 } from '@lawallet/react';
+import {
+  BannerAlert,
+  BtnLoader,
+  Container,
+  Divider,
+  Flex,
+  Heading,
+  HeroCard,
+  Icon,
+  ReceiveIcon,
+  Text,
+} from '@lawallet/ui';
+import { GearIcon, HiddenIcon, SatoshiV2Icon, SendIcon, VisibleIcon } from '@bitcoin-design/bitcoin-icons-react/filled';
+
+// Hooks and utils
+import { Link, useRouter } from '@/navigation';
+import { extractFirstTwoChars } from '@/utils';
+import { copy } from '@/utils/share';
+
+// Components
+import Navbar from '@/components/Layout/Navbar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/UI/avatar';
+import { TokenList } from '@/components/TokenList';
+import TransactionItem from '@/components/TransactionItem';
+import { Loader } from '@/components/Icons/Loader';
+import Animations from '@/components/Animations';
+import BitcoinTrade from '@/components/Animations/bitcoin-trade.json';
+import Subnavbar from '@/components/Layout/Subnavbar';
+import { Button } from '@/components/UI/button';
+
+// Theme
+import { appTheme } from '@/config/exports';
 
 // Constans
 import { CACHE_BACKUP_KEY, EMERGENCY_LOCK_DEPOSIT, EMERGENCY_LOCK_TRANSFER } from '@/utils/constants';
-import { Loader } from '@/components/Icons/Loader';
 
 export default function Page() {
   const config = useConfig();
@@ -120,11 +119,11 @@ export default function Page() {
             </Flex>
           </div>
           <Flex gap={4} justify="end">
-            <Button variant="bezeled" size="small" onClick={toggleHideBalance}>
+            <Button variant="secondary" size="icon" onClick={toggleHideBalance}>
               <Icon size="small">{hideBalance ? <HiddenIcon /> : <VisibleIcon />}</Icon>
             </Button>
 
-            <Button variant="bezeled" size="small" onClick={() => router.push('/settings')}>
+            <Button variant="secondary" size="icon" onClick={() => router.push('/settings')}>
               <Icon size="small">
                 <GearIcon />
               </Icon>
@@ -171,15 +170,20 @@ export default function Page() {
       <Container size="small">
         <Divider y={16} />
         <Flex gap={8}>
-          <Button onClick={() => router.push('/deposit')} disabled={EMERGENCY_LOCK_DEPOSIT}>
+          <Button
+            className="w-full"
+            variant="secondary"
+            onClick={() => router.push('/deposit')}
+            disabled={EMERGENCY_LOCK_DEPOSIT}
+          >
             <Icon>
               <ReceiveIcon />
             </Icon>
             {t('DEPOSIT')}
           </Button>
           <Button
+            className="w-full"
             onClick={() => router.push('/transfer')}
-            color="secondary"
             disabled={EMERGENCY_LOCK_TRANSFER || Number(balance.amount) === 0}
           >
             <Icon>
@@ -217,7 +221,7 @@ export default function Page() {
                 {t('LAST_ACTIVITY').toUpperCase()}
               </Text>
 
-              <Button size="small" variant="borderless" onClick={() => router.push('/transactions')}>
+              <Button size="sm" variant="link" onClick={() => router.push('/transactions')}>
                 {t('SEE_ALL')}
               </Button>
             </Flex>
