@@ -1,15 +1,13 @@
-import { GearIcon } from '@bitcoin-design/bitcoin-icons-react/filled';
 import { useState } from 'react';
+import { CardPayload, CardStatus, Design } from '@lawallet/react/types';
+import { Flex } from '@lawallet/ui';
+import { PauseIcon, PlayIcon, Settings } from 'lucide-react';
 
 import Card from '@/components/Card';
-
-import { Button, Flex } from '@lawallet/ui';
-import { CardImage, ConfigCard } from './style';
-
-import Pause from '@/components/Icons/Pause';
-import Play from '@/components/Icons/Play';
-import { CardPayload, CardStatus, Design } from '@lawallet/react/types';
 import SettingsSheet from '../Sheets/SettingsSheet';
+import { Button } from '@/components/UI/button';
+
+import { CardImage, ConfigCard } from './style';
 
 export type CardProps = {
   uuid: string;
@@ -45,20 +43,20 @@ export default function Component(props: ComponentProps) {
             <Flex direction="column" flex={1} justify="center" gap={8}>
               {card.config?.status === CardStatus.ENABLED ? (
                 <div>
-                  <Button onClick={() => toggleCardStatus(card.uuid)} color="secondary" variant="bezeled">
-                    <Pause />
+                  <Button size="icon" variant="destructive" onClick={() => toggleCardStatus(card.uuid)}>
+                    <PauseIcon className="size-4" />
                   </Button>
                 </div>
               ) : (
                 <div>
-                  <Button onClick={() => toggleCardStatus(card.uuid)} variant="bezeled">
-                    <Play />
+                  <Button size="icon" onClick={() => toggleCardStatus(card.uuid)}>
+                    <PlayIcon className="size-4" />
                   </Button>
                 </div>
               )}
               <div>
-                <Button onClick={toggleShowConfig} variant="bezeledGray">
-                  <GearIcon />
+                <Button size="icon" variant="secondary" onClick={toggleShowConfig}>
+                  <Settings className="size-4" />
                 </Button>
               </div>
             </Flex>

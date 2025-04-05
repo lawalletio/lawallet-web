@@ -1,29 +1,25 @@
 'use client';
 
-import { SatoshiV2Icon } from '@bitcoin-design/bitcoin-icons-react/filled';
-import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
-
-import { TokenList } from '@/components/TokenList';
-import { appTheme } from '@/config/exports';
-import { useActionOnKeypress } from '@/hooks/useActionOnKeypress';
-import useErrors from '@/hooks/useErrors';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useLocale, useTranslations } from 'next-intl';
+import { SatoshiV2Icon } from '@bitcoin-design/bitcoin-icons-react/filled';
 import { decimalsToUse, useBalance, useCurrencyConverter, useFormatter, useNumpad, useSettings } from '@lawallet/react';
 import { AvailableLanguages, LNURLTransferType, TransferTypes } from '@lawallet/react/types';
-import {
-  Button,
-  Container,
-  Divider,
-  Feedback,
-  Flex,
-  Heading,
-  Icon,
-  InputWithLabel,
-  Keyboard,
-  Text,
-} from '@lawallet/ui';
-import { useLocale, useTranslations } from 'next-intl';
+import { Container, Divider, Feedback, Flex, Heading, Icon, Text } from '@lawallet/ui';
+
+import { useActionOnKeypress } from '@/hooks/useActionOnKeypress';
+import useErrors from '@/hooks/useErrors';
+
+import { TokenList } from '@/components/TokenList';
 import CardWithData from './CardWithData';
+import { Keyboard } from '@/components/keyboard';
+import { Input } from '@/components/UI/input';
+import { Label } from '@/components/UI/label';
+import { Button } from '@/components/UI/button';
+
+import { appTheme } from '@/config/exports';
+import { LoaderCircle } from 'lucide-react';
 
 type SelectTransferAmountType = {
   transferInfo: LNURLTransferType;
@@ -169,25 +165,28 @@ export const SelectTransferAmount = ({ transferInfo, setAmountToPay, setComment 
 
         <Divider y={24} />
         <Flex gap={16} align="end">
-          <Flex direction="column" align="end">
+          <Flex direction="column">
             {/* POC: integrate message */}
-            <InputWithLabel
-              label={t('MESSAGE')}
-              name="message"
-              placeholder={t('OPTIONAL')}
-              onChange={(e) => handleChangeComment(e.target.value)}
-              value={transferInfo.comment}
-              onFocus={() => setCommentFocus(true)}
-              onBlur={() => setCommentFocus(false)}
-            />
+            <div className="flex flex-col gap-1">
+              <Label htmlFor="message">{t('MESSAGE')}</Label>
+              <Input
+                id="message"
+                name="message"
+                placeholder={t('OPTIONAL')}
+                onChange={(e) => handleChangeComment(e.target.value)}
+                value={transferInfo.comment}
+                onFocus={() => setCommentFocus(true)}
+                onBlur={() => setCommentFocus(false)}
+              />
+            </div>
           </Flex>
           <Flex>
             <Button
+              className="w-full"
               onClick={handleClick}
               disabled={loading || balance.amount === 0 || numpadData.intAmount['SAT'] === 0}
-              loading={loading}
             >
-              {t('CONTINUE')}
+              {loading ? <LoaderCircle className="size-4 animate-spin" /> : t('CONTINUE')}
             </Button>
           </Flex>
         </Flex>

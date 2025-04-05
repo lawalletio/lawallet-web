@@ -1,10 +1,13 @@
 import { useTranslations } from 'next-intl';
+import { Flex, Text } from '@lawallet/ui';
+
 import { copy } from '@/utils/share';
 
-import { Button, Flex, Text } from '@lawallet/ui';
+import { useNotifications } from '@/context/NotificationsContext';
+
+import { Button } from '../button';
 
 import { appTheme } from '@/config/exports';
-import { useNotifications } from '@/context/NotificationsContext';
 import { InfoCopy } from './style';
 
 interface ComponentProps {
@@ -41,7 +44,7 @@ export default function Component(props: ComponentProps) {
             <Text>{value}</Text>
           </Flex>
           <div>
-            <Button size="small" variant="bezeled" onClick={handleCopy}>
+            <Button size="sm" variant="secondary" onClick={handleCopy}>
               {t('COPY')}
             </Button>
           </div>
