@@ -1,14 +1,17 @@
 'use client';
+
+import { useEffect, useState } from 'react';
+import { useTranslations } from 'next-intl';
+import { CardAlert, Container, Divider, Feedback, Flex, Text, Loader } from '@lawallet/ui';
+
+import { useRouter } from '@/navigation';
+import { checkIOS } from '@/utils';
+
 import HomeDescription from '@/app/[lng]/start/components/HomeDescription';
 import Logo from '@/components/Logo';
-import { Button, CardAlert, Container, Divider, Feedback, Flex, Text } from '@lawallet/ui';
+import { Button } from '@/components/UI/button';
 
 import { appTheme } from '@/config/exports';
-import { useTranslations } from 'next-intl';
-import { checkIOS } from '@/utils';
-import { Loader } from '@lawallet/ui';
-import { useRouter } from '@/navigation';
-import { useEffect, useState } from 'react';
 
 const StartView = ({ onClick, verifyingNonce, isValidNonce }) => {
   const t = useTranslations();
@@ -52,9 +55,9 @@ const StartView = ({ onClick, verifyingNonce, isValidNonce }) => {
               </>
             )}
 
-            <Flex>
-              <Button onClick={onClick}>{t('START')}</Button>
-            </Flex>
+            <Button className="w-full" onClick={onClick}>
+              {t('START')}
+            </Button>
           </>
         ) : (
           <>
@@ -66,9 +69,9 @@ const StartView = ({ onClick, verifyingNonce, isValidNonce }) => {
 
             <Divider y={16} />
 
-            <Flex>
-              <Button onClick={() => router.push('/')}>{t('BACK_TO_HOME')}</Button>
-            </Flex>
+            <Button className="w-full" onClick={() => router.push('/')}>
+              {t('BACK_TO_HOME')}
+            </Button>
           </>
         )}
       </Flex>
