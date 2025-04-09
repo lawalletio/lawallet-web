@@ -2,8 +2,7 @@ import { useTranslations } from 'next-intl';
 import { Flex, Text } from '@lawallet/ui';
 
 import { copy } from '@/utils/share';
-
-import { useNotifications } from '@/context/NotificationsContext';
+import { useToast } from '@/hooks/use-toast';
 
 import { Button } from '../button';
 
@@ -20,13 +19,14 @@ export default function Component(props: ComponentProps) {
   const { title, value, onCopy = null } = props;
 
   const t = useTranslations();
-  const notifications = useNotifications();
+  const { toast } = useToast();
 
   const handleCopy = () => {
     copy(value).then((res) => {
-      notifications.showAlert({
+      toast({
         description: res ? t('SUCCESS_COPY') : t('ERROR_COPY'),
-        type: res ? 'success' : 'error',
+        variant: res ? 'default' : 'destructive',
+        duration: 1400,
       });
 
       if (onCopy) onCopy();
