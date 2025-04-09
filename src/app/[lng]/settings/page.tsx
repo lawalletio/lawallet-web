@@ -4,18 +4,7 @@ import Navbar from '@/components/Layout/Navbar';
 import Radio from '@/components/Radio/Radio';
 import useErrors from '@/hooks/useErrors';
 import { CACHE_BACKUP_KEY, STORAGE_IDENTITY_KEY } from '@/utils/constants';
-import {
-  Button,
-  ButtonSetting,
-  Container,
-  Divider,
-  Feedback,
-  Flex,
-  Icon,
-  LinkSetting,
-  Sheet,
-  Text,
-} from '@lawallet/ui';
+import { ButtonSetting, Container, Divider, Feedback, Flex, Icon, LinkSetting, Text } from '@lawallet/ui';
 import { useLocale, useTranslations } from 'next-intl';
 
 import { appTheme } from '@/config/exports';
@@ -26,6 +15,8 @@ import { AvailableLanguages } from '@lawallet/react/types';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import { startTransition, useState } from 'react';
 import { getUserStoragedKey } from '@/utils';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/UI/sheet';
+import { Button } from '@/components/UI/button';
 
 export default function Page() {
   const config = useConfig();
@@ -150,38 +141,43 @@ export default function Page() {
         <Divider y={16} />
 
         <Flex>
-          <Button color="error" variant="bezeled" onClick={logoutSession}>
+          <Button className="w-full" variant="destructive" onClick={logoutSession}>
             {t('LOGOUT')}
           </Button>
         </Flex>
         <Divider y={16} />
       </Container>
 
-      <Sheet
-        title={t('CHANGE_LANGUAGE')}
-        isOpen={sheetLanguage}
-        closeText={t('CLOSE')}
-        onClose={() => setSheetLanguage(false)}
-      >
-        <Container>
-          <Flex direction="column" flex={1}>
-            <Radio
-              text={t('ENGLISH')}
-              checked={lng === 'en'}
-              onClick={() => {
-                if (lng !== 'en') changeLanguage('en');
-              }}
-            />
+      <Sheet open={sheetLanguage} onOpenChange={() => setSheetLanguage(false)}>
+        <SheetContent side="bottom">
+          <SheetHeader>
+            <SheetTitle>{t('CHANGE_LANGUAGE')}</SheetTitle>
+          </SheetHeader>
+          <div className="container">
+            <Flex direction="column" flex={1}>
+              <Radio
+                text={t('ENGLISH')}
+                checked={lng === 'en'}
+                onClick={() => {
+                  if (lng !== 'en') changeLanguage('en');
+                }}
+              />
 
-            <Radio
-              text={t('SPANISH')}
-              checked={lng === 'es'}
-              onClick={() => {
-                if (lng !== 'es') changeLanguage('es');
-              }}
-            />
-          </Flex>
-        </Container>
+              <Radio
+                text={t('SPANISH')}
+                checked={lng === 'es'}
+                onClick={() => {
+                  if (lng !== 'es') changeLanguage('es');
+                }}
+              />
+            </Flex>
+            <div className="mt-4">
+              <Button className="w-full" variant="secondary" onClick={() => setSheetLanguage(false)}>
+                {t('CANCEL')}
+              </Button>
+            </div>
+          </div>
+        </SheetContent>
       </Sheet>
     </>
   );
