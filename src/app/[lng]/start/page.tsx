@@ -5,7 +5,8 @@ import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { normalizeLNDomain, useConfig } from '@lawallet/react';
 import { validateNonce } from '@lawallet/react/actions';
-import { Container, Divider, Feedback, Flex, Heading, Input, InputGroup, InputGroupRight, Text } from '@lawallet/ui';
+import { Container, Divider, Feedback, Flex, Heading, Text } from '@lawallet/ui';
+import { LoaderCircle } from 'lucide-react';
 
 import { useActionOnKeypress } from '@/hooks/useActionOnKeypress';
 import { useCreateIdentity } from '@/hooks/useCreateIdentity';
@@ -13,7 +14,7 @@ import { useCreateIdentity } from '@/hooks/useCreateIdentity';
 import StartView from '@/app/[lng]/start/components/StartView';
 import Navbar from '@/components/Layout/Navbar';
 import { Button } from '@/components/UI/button';
-import { LoaderCircle } from 'lucide-react';
+import { Input, InputGroup, InputGroupRight } from '@/components/UI/input';
 
 export default function Page() {
   const config = useConfig();
@@ -70,23 +71,24 @@ export default function Page() {
           <Divider y={8} />
           <InputGroup>
             <Input
+              className="rounded-r-none"
               onChange={(e: ChangeEvent<HTMLInputElement>) => handleChangeUsername(e.target.value)}
               placeholder="Satoshi"
               type="text"
               id="username"
               name="username"
-              status={errors.isExactError('NAME_ALREADY_TAKEN') ? 'error' : undefined}
+              // status={errors.isExactError('NAME_ALREADY_TAKEN') ? 'error' : undefined}
               autoFocus={true}
               value={accountInfo.name}
-              isLoading={accountInfo.loading}
-              isError={accountInfo.loading ? undefined : errors.isExactError('NAME_ALREADY_TAKEN')}
-              isChecked={
-                accountInfo.loading
-                  ? undefined
-                  : !errors.isExactError('NAME_ALREADY_TAKEN') && Boolean(accountInfo.name)
-              }
+              // isLoading={accountInfo.loading}
+              // isError={accountInfo.loading ? undefined : errors.isExactError('NAME_ALREADY_TAKEN')}
+              // isChecked={
+              //   accountInfo.loading
+              //     ? undefined
+              //     : !errors.isExactError('NAME_ALREADY_TAKEN') && Boolean(accountInfo.name)
+              // }
             />
-            <InputGroupRight>
+            <InputGroupRight className="rounded-l-none">
               <Text size="small">@{normalizeLNDomain(config.endpoints.lightningDomain)}</Text>
             </InputGroupRight>
           </InputGroup>
@@ -102,7 +104,11 @@ export default function Page() {
             <Button className="w-full" variant="secondary" onClick={() => setActiveStartView(true)}>
               {t('CANCEL')}
             </Button>
-            <Button className="w-full" onClick={handleConfirm} disabled={loading || !accountInfo.nonce.length}>
+            <Button
+              className="w-full"
+              onClick={handleConfirm}
+              disabled={loading || !accountInfo.nonce.length || accountInfo.loading || errors.errorInfo.visible}
+            >
               {loading ? <LoaderCircle className="size-4 animate-spin" /> : t('CONFIRM')}
             </Button>
           </Flex>
