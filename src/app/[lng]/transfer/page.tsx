@@ -2,6 +2,7 @@
 
 // Libraries
 import React, { useEffect, useMemo, useState } from 'react';
+import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import {
   detectTransferType,
@@ -22,12 +23,12 @@ import {
   Icon,
   InputGroup,
   InputGroupRight,
-  LinkButton,
   Text,
 } from '@lawallet/ui';
 import { useTranslations } from 'next-intl';
 import { NostrEvent } from 'nostr-tools';
 import { CaretRightIcon } from '@bitcoin-design/bitcoin-icons-react/filled';
+import { LoaderCircle } from 'lucide-react';
 
 // Hooks and utils
 import { useActionOnKeypress } from '@/hooks/useActionOnKeypress';
@@ -45,8 +46,6 @@ import { Button } from '@/components/UI/button';
 
 // Theme
 import { appTheme } from '@/config/exports';
-import { LoaderCircle } from 'lucide-react';
-import Link from 'next/link';
 
 export default function Page() {
   const router = useRouter();
