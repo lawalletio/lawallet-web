@@ -1,11 +1,15 @@
-import AppProvider from '@/components/AppProvider/AppProvider';
-import { fontPrimary, fontSecondary } from '@/config/exports/fonts';
-import { APP_NAME } from '@/utils/constants';
-import { AvailableLanguages } from '@lawallet/react/types';
-import { NextIntlClientProvider, useMessages } from 'next-intl';
-import { getTranslations, unstable_setRequestLocale } from 'next-intl/server';
-import Script from 'next/script';
 import { ReactNode } from 'react';
+import Script from 'next/script';
+import { NextIntlClientProvider, useMessages } from 'next-intl';
+import { AvailableLanguages } from '@lawallet/react/types';
+import { getTranslations, unstable_setRequestLocale } from 'next-intl/server';
+
+import { fontPrimary, fontSecondary } from '@/config/exports/fonts';
+
+import { Toaster } from '@/components/UI/toaster';
+import AppProvider from '@/components/AppProvider/AppProvider';
+
+import { APP_NAME } from '@/utils/constants';
 
 // Style
 import '@/index.css';
@@ -73,7 +77,10 @@ const Providers = (props: ProviderProps) => {
 
       <body>
         <NextIntlClientProvider locale={params.lng} messages={messages}>
-          <AppProvider>{children}</AppProvider>
+          <AppProvider>
+            {children}
+            <Toaster />
+          </AppProvider>
         </NextIntlClientProvider>
       </body>
     </html>
