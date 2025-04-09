@@ -28,19 +28,19 @@ const SettingsSheet = ({ card, onClose, isOpen }: SettingsSheetProps) => {
         <Button variant="bezeledGray" onClick={() => router.push(`/settings/cards/${card?.uuid}`)}>
           {t('SETTINGS')}
         </Button>
-        <Button variant="bezeledGray" onClick={handleShowTransfer}>
+        {/* <Button variant="bezeledGray" onClick={handleShowTransfer}>
           {t('TRANSFER')}
-        </Button>
+        </Button> */}
       </ActionSheet>
 
-      <TransferSheet
+      {/* <TransferSheet
         isOpen={showTransfer}
         card={card}
         onClose={() => {
           setShowTransfer(false);
           onClose();
         }}
-      />
+      /> */}
     </React.Fragment>
   );
 };
