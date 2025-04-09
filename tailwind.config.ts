@@ -7,7 +7,7 @@ const config: Config = {
       center: true,
       padding: '1rem',
       screens: {
-        sm: '600px',
+        sm: '440px',
       },
     },
     ringColor: {
