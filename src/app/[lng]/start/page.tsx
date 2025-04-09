@@ -1,29 +1,19 @@
 'use client';
 
+import { ChangeEvent, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-
-import Navbar from '@/components/Layout/Navbar';
-
-import StartView from '@/app/[lng]/start/components/StartView';
-import {
-  Button,
-  Container,
-  Divider,
-  Feedback,
-  Flex,
-  Heading,
-  Input,
-  InputGroup,
-  InputGroupRight,
-  Text,
-} from '@lawallet/ui';
-
 import { useTranslations } from 'next-intl';
+import { normalizeLNDomain, useConfig } from '@lawallet/react';
+import { validateNonce } from '@lawallet/react/actions';
+import { Container, Divider, Feedback, Flex, Heading, Input, InputGroup, InputGroupRight, Text } from '@lawallet/ui';
+
 import { useActionOnKeypress } from '@/hooks/useActionOnKeypress';
 import { useCreateIdentity } from '@/hooks/useCreateIdentity';
-import { validateNonce } from '@lawallet/react/actions';
-import { ChangeEvent, useEffect, useState } from 'react';
-import { normalizeLNDomain, useConfig } from '@lawallet/react';
+
+import StartView from '@/app/[lng]/start/components/StartView';
+import Navbar from '@/components/Layout/Navbar';
+import { Button } from '@/components/UI/button';
+import { LoaderCircle } from 'lucide-react';
 
 export default function Page() {
   const config = useConfig();
@@ -109,11 +99,11 @@ export default function Page() {
         <Container size="small">
           <Divider y={16} />
           <Flex gap={8}>
-            <Button variant="bezeledGray" onClick={() => setActiveStartView(true)}>
+            <Button className="w-full" variant="secondary" onClick={() => setActiveStartView(true)}>
               {t('CANCEL')}
             </Button>
-            <Button onClick={handleConfirm} disabled={loading || !accountInfo.nonce.length} loading={loading}>
-              {t('CONFIRM')}
+            <Button className="w-full" onClick={handleConfirm} disabled={loading || !accountInfo.nonce.length}>
+              {loading ? <LoaderCircle className="size-4 animate-spin" /> : t('CONFIRM')}
             </Button>
           </Flex>
           <Divider y={32} />
