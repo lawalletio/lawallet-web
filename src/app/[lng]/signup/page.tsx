@@ -1,25 +1,24 @@
 'use client';
 
-import { useRouter } from '@/navigation';
-import { getTagValue, parseContent, useConfig, useSubscription } from '@lawallet/react';
-import { Button, CheckIcon, Container, Divider, Feedback, Flex, Heading, Icon, SatoshiIcon, Text } from '@lawallet/ui';
-import { NostrEvent } from '@nostr-dev-kit/ndk';
 import { useCallback, useEffect, useState } from 'react';
+import { useTranslations } from 'next-intl';
+import { NostrEvent } from '@nostr-dev-kit/ndk';
+import { getTagValue, parseContent, useConfig, useSubscription } from '@lawallet/react';
+import { CheckIcon, Container, Divider, Feedback, Flex, Heading, Icon, SatoshiIcon, Text } from '@lawallet/ui';
+import { LoaderCircle } from 'lucide-react';
 
-// Generic components
-import Logo from '@/components/Logo';
-
-// New ui-components
-import { CardV2 } from '@/components/CardV2';
-import { Loader } from '@/components/Icons/Loader';
-
+import { useRouter } from '@/navigation';
 import useErrors from '@/hooks/useErrors';
 
+import Logo from '@/components/Logo';
+import { CardV2 } from '@/components/CardV2';
+import { Loader } from '@/components/Icons/Loader';
 import SignUpEmptyView from '@/components/Layout/EmptyView/SignUpEmptyView';
 import SpinnerView from '@/components/Spinner/SpinnerView';
 import { QRCode } from '@/components/UI';
+import { Button } from '@/components/UI/button';
+
 import { appTheme } from '@/config/exports';
-import { useTranslations } from 'next-intl';
 
 const SIGN_UP_CACHE_KEY: string = 'signup-cache-key';
 
@@ -264,7 +263,12 @@ const SignUp = () => {
               <Flex justify="center" align="center" direction="column" gap={8}>
                 <QRCode value={zapRequestInfo.invoice} size={250} />
                 {window.webln && (
-                  <Button onClick={() => payWithWebLN(zapRequestInfo.invoice!)} variant="bezeled" disabled={isPaying}>
+                  <Button
+                    className="w-full"
+                    onClick={() => payWithWebLN(zapRequestInfo.invoice!)}
+                    variant="secondary"
+                    disabled={isPaying}
+                  >
                     {t('PAY_WITH_ALBY')}
                   </Button>
                 )}
@@ -296,21 +300,13 @@ const SignUp = () => {
         <Divider y={16} />
 
         {!zapRequestInfo.invoice ? (
-          <Flex>
-            <Button onClick={requestPayment} disabled={loading}>
-              {loading ? (
-                <Icon>
-                  <Loader />
-                </Icon>
-              ) : (
-                t('I_WANT_AN_ACCOUNT')
-              )}
-            </Button>
-          </Flex>
+          <Button className="w-full" onClick={requestPayment} disabled={loading}>
+            {loading ? <LoaderCircle className="size-4 animate-spin" /> : t('I_WANT_AN_ACCOUNT')}
+          </Button>
         ) : nonce.length ? (
-          <Flex justify="center">
-            <Button onClick={() => router.push(`/start?i=${nonce}`)}>{t('CREATE_WALLET')}</Button>
-          </Flex>
+          <Button className="w-full" onClick={() => router.push(`/start?i=${nonce}`)}>
+            {t('CREATE_WALLET')}
+          </Button>
         ) : (
           zapRequestInfo.payed && (
             <Flex direction="column" align="center" gap={8}>
