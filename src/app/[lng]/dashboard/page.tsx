@@ -109,10 +109,10 @@ export default function Page() {
                   <p className="text-md whitespace-nowrap">
                     {loading
                       ? '--'
-                      : nip05?.name || nip05?.displayName
-                        ? nip05?.name || nip05?.displayName
-                        : identity.lud16.length
-                          ? identity.lud16
+                      : identity.lud16.length
+                        ? identity.lud16
+                        : nip05?.name || nip05?.displayName
+                          ? nip05?.name || nip05?.displayName
                           : t('ANONYMOUS')}
                   </p>
                 </Flex>
