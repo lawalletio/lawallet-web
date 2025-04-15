@@ -49,6 +49,12 @@ export default function Page() {
     }
   };
 
+  const handleOpenUrl = () => {
+    if (typeof window === 'undefined') return;
+
+    window.open(urlScanned);
+  };
+
   const handleScanURL = (str: string) => {
     const url = new URL(str);
     const originURL = window.location.origin;
@@ -121,7 +127,7 @@ export default function Page() {
         <Text>{t('URL_SCANNED_DESC', { url: urlScanned })}</Text>
         <Flex direction="column" gap={4}>
           <Flex>
-            <Button onClick={() => window.open(urlScanned)}>{t('OPEN_URL')}</Button>
+            <Button onClick={handleOpenUrl}>{t('OPEN_URL')}</Button>
           </Flex>
           <Flex>
             <Button variant="borderless" onClick={() => setUrlScanned('')}>

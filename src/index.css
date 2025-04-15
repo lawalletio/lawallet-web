@@ -49,3 +49,9 @@
     /* font-size: .8em !important */
   }
 }
+
+@layer utilities {
+  .refresh-icon {
+    color: hsl(var(--primary));
+  }
+}

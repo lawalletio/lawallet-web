@@ -5,9 +5,10 @@ interface shareDataType {
 }
 
 export const share = (shareData: shareDataType): boolean => {
-  if (!window.navigator.canShare(shareData)) return false;
+  if (typeof navigator === 'undefined') return false;
+  if (!navigator.canShare(shareData)) return false;
 
-  window.navigator.share(shareData);
+  navigator.share(shareData);
   return true;
 };
 
