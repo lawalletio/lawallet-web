@@ -10,7 +10,7 @@
 
     /* Brand */
     --primary: 154 40% 53%;
-    --primary-foreground: 0 0 11%;  
+    --primary-foreground: 0 0 11%;
 
     --secondary: 154 2% 24%;
     --secondary-foreground: 154 84% 95%;
@@ -21,7 +21,7 @@
 
     --muted: 0 0% 15%;
     --muted-foreground: 0 0% 50%;
-    
+
     --accent: 210 40% 96.1%;
     --accent-foreground: 222.2 47.4% 11.2%;
 
@@ -30,7 +30,7 @@
     --super: 240, 7%, 9%;
     --epic: 301, 97%, 45%;
     --legendary: 25, 97%, 45%;
-    
+
     /* Components */
     --border: 0 0% 30%;
     --input: 0 0% 15%;
