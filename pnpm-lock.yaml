@@ -104,6 +104,9 @@ dependencies:
   tailwind-merge:
     specifier: ^2.5.2
     version: 2.5.5
+  use-pull-to-refresh:
+    specifier: ^2.4.1
+    version: 2.4.1(react@18.2.0)
   vaul:
     specifier: ^0.9.2
     version: 0.9.9(@types/react-dom@18.2.19)(@types/react@18.3.3)(react-dom@18.2.0)(react@18.2.0)
@@ -4855,6 +4858,15 @@ packages:
     dependencies:
       '@formatjs/fast-memoize': 2.2.5
       intl-messageformat: 10.7.10
+      react: 18.2.0
+    dev: false
+
+  /use-pull-to-refresh@2.4.1(react@18.2.0):
+    resolution:
+      { integrity: sha512-mI3utetwSPT3ovZHUJ4LBW29EtmkrzpK/O38msP5WnI8ocFmM5boy3QZALosgeQwqwdmtQgC+8xnJIYHXeABew== }
+    peerDependencies:
+      react: 18.x || 19.x
+    dependencies:
       react: 18.2.0
     dev: false
 
