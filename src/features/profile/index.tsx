@@ -35,6 +35,7 @@ export function Profile(props: { pubkey: string }) {
 
   const identity = useIdentity();
   const profile = paramPubkey === identity.pubkey ? useProfile() : useProfile({ pubkey: paramPubkey });
+  console.log(profile, 'profile');
 
   const { userBadges, acceptBadge, revokeBadge } =
     paramPubkey === identity.pubkey ? useBadges() : useBadges({ pubkey: paramPubkey });
@@ -67,7 +68,7 @@ export function Profile(props: { pubkey: string }) {
               <div
                 className={cn(`relative overflow-hidden flex-none bg-background rounded-full`, 'w-16 h-16 max-h-16')}
               >
-                {!profile?.nip05Avatar ? (
+                {!profile?.nip05Avatar || !profile.domainAvatar ? (
                   <Skeleton className={`w-full h-full bg-border`} />
                 ) : (
                   <Image
@@ -75,7 +76,7 @@ export function Profile(props: { pubkey: string }) {
                     priority
                     quality={70}
                     className="object-cover"
-                    src={profile?.nip05Avatar}
+                    src={profile?.nip05?.image || profile.domainAvatar}
                     alt={
                       profile?.nip05?.name || profile?.nip05?.displayName || String(profile?.nip05?.display_name) || ''
                     }
@@ -101,7 +102,7 @@ export function Profile(props: { pubkey: string }) {
             )}
             {/* TO-DO */}
             {/* Replace with: lud16/nip05 */}
-            <p className="text-md text-muted-foreground">{profile?.nip05 ? profile?.nip05?.nip05 : identity?.lud16}</p>
+            <p className="text-md text-muted-foreground">{identity?.lud16 ? identity?.lud16 : profile?.nip05?.name}</p>
             <div className="flex flex-col gap-1 mt-2 text-md">
               <About value={profile?.nip05?.about} />
               <Website value={profile?.nip05?.website} />
