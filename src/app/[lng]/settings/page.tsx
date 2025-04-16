@@ -3,7 +3,7 @@
 import Navbar from '@/components/Layout/Navbar';
 import Radio from '@/components/Radio/Radio';
 import useErrors from '@/hooks/useErrors';
-import { CACHE_BACKUP_KEY, STORAGE_IDENTITY_KEY } from '@/utils/constants';
+import { CACHE_BACKUP_KEY, STORAGE_IDENTITY_KEY, SUPPORT_TELEGRAM_URL } from '@/utils/constants';
 import { ButtonSetting, Container, Divider, Feedback, Flex, Icon, LinkSetting, Text } from '@lawallet/ui';
 import { useLocale, useTranslations } from 'next-intl';
 
@@ -113,6 +113,15 @@ export default function Page() {
         <Divider y={8} />
         <Flex direction="column" gap={4}>
           <LinkSetting onClick={() => router.push('/settings/recovery')}>{t('BACKUP_ACCOUNT')}</LinkSetting>
+        </Flex>
+
+        <Divider y={16} />
+        <Text size="small" color={appTheme.colors.gray50}>
+          {t('CONTACT_SUPPORT')}
+        </Text>
+        <Divider y={8} />
+        <Flex direction="column" gap={4}>
+          <LinkSetting onClick={() => router.push(SUPPORT_TELEGRAM_URL)}>{"Telegram"}</LinkSetting>
         </Flex>
 
         <Divider y={16} />
