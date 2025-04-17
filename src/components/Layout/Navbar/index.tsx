@@ -70,18 +70,21 @@ export default function Component(props: ComponentProps) {
             ) : (
               children
             )}
-            {onlyChildren && <Right>
-              {showHelpButton && (
+            {onlyChildren && (
+              <Right>
+                {showHelpButton && (
                   <Button
                     size="icon"
                     variant="secondary"
-                    onClick={() => { router.push(SUPPORT_TELEGRAM_URL);
+                    onClick={() => {
+                      router.push(SUPPORT_TELEGRAM_URL);
                     }}
                   >
                     <CircleHelp />
                   </Button>
                 )}
-              </Right>}
+              </Right>
+            )}
           </Flex>
         </Container>
       </Navbar>

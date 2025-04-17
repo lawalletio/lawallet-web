@@ -121,7 +121,7 @@ export default function Page() {
         </Text>
         <Divider y={8} />
         <Flex direction="column" gap={4}>
-          <LinkSetting onClick={() => router.push(SUPPORT_TELEGRAM_URL)}>{"Telegram"}</LinkSetting>
+          <LinkSetting onClick={() => router.push(SUPPORT_TELEGRAM_URL)}>{'Telegram'}</LinkSetting>
         </Flex>
 
         <Divider y={16} />
