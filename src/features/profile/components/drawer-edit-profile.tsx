@@ -6,6 +6,7 @@ import { Container } from '@lawallet/ui';
 import { useIdentity, useNostr, useProfile, useConfig } from '@lawallet/react';
 import { useTranslations } from 'next-intl';
 import { CameraIcon } from 'lucide-react';
+import useAlert from '@/hooks/useAlerts';
 
 // Generic components
 import { Button } from '@/components/UI/button';
@@ -31,7 +32,7 @@ const DEFAULT_PROFILE = {
   content: {},
 };
 
-// Lista de relays estática
+// Static list of relays
 const PREDEFINED_RELAYS = ['wss://relay.damus.io', 'wss://relay.hodl.ar', 'wss://relay.lawallet.ar'];
 
 interface ProfileProps {
@@ -51,11 +52,20 @@ export function DrawerEditProfile() {
   const identity = useIdentity();
   const profile = useProfile();
   const config = useConfig();
+  const { showAlert } = useAlert();
 
   const profileEvent: NostrEvent = useMemo(() => {
-    const profileEvent: NostrEvent =
-      profile.nip05 && profile.nip05.profileEvent ? JSON.parse(profile.nip05.profileEvent) : DEFAULT_PROFILE;
-    return profileEvent;
+    // Validate if profile and nip05 exist
+    if (!profile?.nip05 || !profile.nip05.profileEvent) {
+      return DEFAULT_PROFILE;
+    }
+
+    try {
+      const parsedEvent = JSON.parse(profile.nip05.profileEvent);
+      return parsedEvent;
+    } catch (error) {
+      return DEFAULT_PROFILE;
+    }
   }, [profile]);
 
   const [profileContent, setProfileContent] = useState<ProfileProps>({
@@ -71,9 +81,20 @@ export function DrawerEditProfile() {
 
   const handleSaveProfile = React.useCallback(async () => {
     try {
+      // Validate if we have the necessary data
+      if (!ndk || !identity.pubkey) {
+        showAlert({
+          title: 'Error',
+          description: 'Error: NDK or pubkey not available.',
+          type: 'error',
+        });
+        setLoading(false);
+        return;
+      }
+
       setLoading(true);
 
-      // Crear objeto de contenido que incluya todos los campos necesarios
+      // Create the content object that includes all the necessary fields
       const contentObj = {
         name: profileContent.name || profileContent.displayName || '',
         displayName: profileContent.displayName || profileContent.name || '',
@@ -84,12 +105,7 @@ export function DrawerEditProfile() {
         banner: profileContent.banner || '',
       };
 
-      console.log('Guardando perfil con datos de imagen:', {
-        picture: contentObj.picture ? `${contentObj.picture.substring(0, 30)}...` : 'ninguna',
-        banner: contentObj.banner ? `${contentObj.banner.substring(0, 30)}...` : 'ninguna',
-      });
-
-      // Crear el evento de perfil
+      // Create the profile event
       const newProfileEvent = {
         created_at: Math.floor(Date.now() / 1000),
         content: JSON.stringify(contentObj),
@@ -98,92 +114,165 @@ export function DrawerEditProfile() {
         kind: 0,
       };
 
-      // Crear y firmar el evento
+      // Create and sign the event
       const eventToSign = new NDKEvent(ndk, newProfileEvent);
       await eventToSign.sign();
 
-      // Definir los relays a utilizar
+      // Define the relays to use
       const relays = config.relaysList && config.relaysList.length > 0 ? config.relaysList : PREDEFINED_RELAYS;
-
-      console.log('Publicando a relays:', relays);
 
       let publishedSuccessfully = false;
 
-      // Intentar publicar a cada relay individualmente
-      // Este enfoque es menos óptimo pero más seguro para compatibilidad
+      // Try to publish to each relay individually
+      // This approach is less optimal but more secure for compatibility
       try {
-        // Primero intentamos publish() sin argumentos para usar relays predeterminados
+        // First try to publish() without arguments to use default relays
         await eventToSign.publish();
         publishedSuccessfully = true;
-        console.log('✅ Publicado exitosamente a relays predeterminados');
+        showAlert({
+          title: 'Success',
+          description: 'Your profile has been updated successfully.',
+          type: 'success',
+        });
       } catch (publishError) {
-        console.error('Error publicando a relays predeterminados:', publishError);
+        showAlert({
+          title: 'Error',
+          description: 'Error: Your profile has not been updated.',
+          type: 'error',
+        });
 
-        // Si falla, intentamos publicar directamente al relay del ecosistema
+        // If it fails, try to publish directly to the federation relay
         try {
-          // Publicación manual a los relays de la federación
+          // Manual publication to federation relays
           for (const relay of relays) {
             try {
-              // Crear una conexión explícita al relay desde NDK
+              // Check if the signer is available
+              if (!ndk.signer) {
+                showAlert({
+                  title: 'Error',
+                  description: 'Error: NDK signer not available.',
+                  type: 'error',
+                });
+                continue;
+              }
+
+              // Create an explicit connection to the relay from NDK
               const tempNDK = new NDK({
                 explicitRelayUrls: [relay],
                 signer: ndk.signer,
               });
               await tempNDK.connect();
 
-              // Crear un nuevo evento con la misma información pero con esta conexión
+              // Create a new event with the same information but with this connection
               const tempEvent = new NDKEvent(tempNDK, newProfileEvent);
               await tempEvent.sign();
               await tempEvent.publish();
-
-              console.log(`✅ Publicado exitosamente a ${relay}`);
+              showAlert({
+                title: 'Success',
+                description: 'Your profile has been updated successfully.',
+                type: 'success',
+              });
               publishedSuccessfully = true;
             } catch (relayError) {
-              console.error(`❌ Error al publicar a ${relay}:`, relayError);
+              showAlert({
+                title: 'Error',
+                description: 'Error: Your profile has not been updated.',
+                type: 'error',
+              });
             }
           }
         } catch (error) {
-          console.error('Error en publicación manual:', error);
+          showAlert({
+            title: 'Error',
+            description: 'Error: Your profile has not been updated.',
+            type: 'error',
+          });
         }
       }
 
       if (publishedSuccessfully) {
-        console.log('Evento publicado exitosamente en al menos un relay');
+        showAlert({
+          title: 'Success',
+          description: 'Your profile has been updated successfully.',
+          type: 'success',
+        });
 
-        // Recargar el perfil después de la publicación exitosa
-        // Esperamos un poco para dar tiempo a que los relays procesen el evento
+        // Reload the profile after the successful publication
+        // Wait a bit to give time for the relays to process the event
         setTimeout(async () => {
-          await profile.loadProfileFromPubkey(identity.pubkey);
-          console.log('Perfil recargado');
+          if (profile && profile.loadProfileFromPubkey && identity.pubkey) {
+            await profile.loadProfileFromPubkey(identity.pubkey);
+            showAlert({
+              title: 'Success',
+              description: 'Your profile has been updated successfully.',
+              type: 'success',
+            });
+          } else {
+            showAlert({
+              title: 'Error',
+              description: 'Error: Your profile has not been updated.',
+              type: 'error',
+            });
+          }
           setLoading(false);
           setOpen(false);
         }, 1000);
       } else {
-        console.error('No se pudo publicar en ningún relay');
+        showAlert({
+          title: 'Error',
+          description: 'Error: Your profile has not been updated.',
+          type: 'error',
+        });
         setLoading(false);
       }
     } catch (error) {
-      console.error('Error al guardar el perfil:', error);
+      showAlert({
+        title: 'Error',
+        description: 'Error: Your profile has not been updated.',
+        type: 'error',
+      });
       setLoading(false);
     }
-  }, [profileContent, identity.pubkey, ndk, profile, profileEvent.tags, config.relaysList]);
+  }, [profileContent, identity.pubkey, ndk, profile, profileEvent.tags, config.relaysList, showAlert]);
 
   useEffect(() => {
     if (!profile?.nip05) return;
 
-    const content = typeof profileEvent.content === 'string' ? JSON.parse(profileEvent.content) : profileEvent.content;
+    try {
+      // Parse the content of the profile event
+      const content = typeof profileEvent.content === 'string' ? JSON.parse(profileEvent.content) : profileEvent.content || {};
 
-    setProfileContent({
-      ...content,
-      displayName: content.displayName || content.name || content.display_name || '',
-      name: content.name || content.displayName || content.display_name || '',
-      display_name: content.display_name || content.displayName || content.name || '',
-      about: content.about || '',
-      website: content.website || '',
-      picture: content.picture || profile?.nip05Avatar || '',
-      banner: content.banner || profile?.nip05?.banner || '',
-    });
+      setProfileContent({
+        ...content,
+        displayName: content.displayName || content.name || content.display_name || '',
+        name: content.name || content.displayName || content.display_name || '',
+        display_name: content.display_name || content.displayName || content.name || '',
+        about: content.about || '',
+        website: content.website || '',
+        picture: content.picture || profile?.nip05Avatar || '',
+        banner: content.banner || profile?.nip05?.banner || '',
+      });
+    } catch (error) {
+      showAlert({
+        title: 'Error',
+        description: 'Error: Your profile has not been updated.',
+        type: 'error',
+      });
+      // Set default values if there is an error
+      setProfileContent({
+        displayName: '',
+        about: '',
+        website: '',
+        picture: profile?.nip05Avatar || '',
+        banner: profile?.nip05?.banner || '',
+      });
+    }
   }, [profileEvent, profile]);
+
+  // If there is no identity or pubkey, don't show the edit button
+  if (!identity || !identity.pubkey) {
+    return null;
+  }
 
   return (
     <Drawer open={open} onOpenChange={setOpen}>
@@ -254,8 +343,6 @@ function ProfileForm(props: {
         imageType === 'banner' ? 500 : 800,
       );
 
-      console.log(`Imagen ${imageType} comprimida correctamente`);
-
       // Update the image preview
       setImage(compressedImage);
 
@@ -267,7 +354,7 @@ function ProfileForm(props: {
         };
       });
     } catch (error) {
-      console.error('Error procesando la imagen:', error);
+      console.error('Error processing the image:', error);
     } finally {
       imageType === 'banner' ? setIsUploadingBanner(false) : setIsUploadingProfile(false);
     }
@@ -330,7 +417,7 @@ function ProfileForm(props: {
           <Input
             id="name"
             name="name"
-            value={profileContent?.name || profileContent?.displayName || profileContent?.display_name}
+            value={profileContent?.name || profileContent?.displayName || profileContent?.display_name || ''}
             onChange={(e) =>
               setProfileContent({
                 ...profileContent,
@@ -346,7 +433,7 @@ function ProfileForm(props: {
           <Textarea
             id="description"
             name="description"
-            value={profileContent?.about}
+            value={profileContent?.about || ''}
             onChange={(e) =>
               setProfileContent({
                 ...profileContent,
@@ -360,7 +447,7 @@ function ProfileForm(props: {
           <Input
             id="website"
             name="website"
-            value={profileContent?.website}
+            value={profileContent?.website || ''}
             onChange={(e) => setProfileContent({ ...profileContent, website: e.target.value })}
           />
         </div>
