@@ -1,7 +1,9 @@
 'use client';
 
 // Libraries
-import { CaretRightIcon } from '@bitcoin-design/bitcoin-icons-react/filled';
+import React, { useEffect, useMemo, useState } from 'react';
+import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
 import {
   detectTransferType,
   formatLNURLData,
@@ -14,7 +16,6 @@ import {
 import { Transaction, TransactionDirection, TransferTypes } from '@lawallet/react/types';
 import {
   Autocomplete,
-  Button,
   Container,
   Divider,
   Feedback,
@@ -22,29 +23,29 @@ import {
   Icon,
   InputGroup,
   InputGroupRight,
-  LinkButton,
   Text,
 } from '@lawallet/ui';
 import { useTranslations } from 'next-intl';
-import { useRouter, useSearchParams } from 'next/navigation';
-import React, { useEffect, useMemo, useState } from 'react';
-
-// Theme
-import { appTheme } from '@/config/exports';
+import { NostrEvent } from 'nostr-tools';
+import { CaretRightIcon } from '@bitcoin-design/bitcoin-icons-react/filled';
+import { LoaderCircle } from 'lucide-react';
 
 // Hooks and utils
 import { useActionOnKeypress } from '@/hooks/useActionOnKeypress';
 import useErrors from '@/hooks/useErrors';
 import { lightningAddresses } from '@/utils/constants';
 
+// Constans
+import { EMERGENCY_LOCK_TRANSFER } from '@/utils/constants';
+import { extractMetadata } from '@/utils';
+
 // Components
 import Navbar from '@/components/Layout/Navbar';
 import RecipientElement from './components/RecipientElement';
+import { Button } from '@/components/UI/button';
 
-// Constans
-import { EMERGENCY_LOCK_TRANSFER } from '@/utils/constants';
-import { NostrEvent } from 'nostr-tools';
-import { extractMetadata } from '@/utils';
+// Theme
+import { appTheme } from '@/config/exports';
 
 export default function Page() {
   const router = useRouter();
@@ -177,7 +178,7 @@ export default function Page() {
               visible={Boolean(autoCompleteData.length) && !loading}
             />
             <InputGroupRight>
-              <Button size="small" variant="borderless" onClick={handlePasteInput} disabled={!!inputText}>
+              <Button size="sm" variant="ghost" onClick={handlePasteInput} disabled={!!inputText}>
                 {t('PASTE')}
               </Button>
             </InputGroupRight>
@@ -189,9 +190,9 @@ export default function Page() {
 
           <Divider y={16} />
           <Flex>
-            <LinkButton color="secondary" variant="bezeled" onClick={() => router.push('/scan')}>
-              {t('SCAN_QR_CODE')}
-            </LinkButton>
+            <Button className="w-full" color="secondary" variant="secondary" asChild>
+              <Link href="/scan">{t('SCAN_QR_CODE')}</Link>
+            </Button>
           </Flex>
           <Divider y={16} />
           {/* Ultimos 3 destinos */}
@@ -226,12 +227,12 @@ export default function Page() {
         <Container size="small">
           <Divider y={16} />
           <Flex gap={8}>
-            <Button variant="bezeledGray" onClick={() => router.push('/dashboard')}>
+            <Button className="w-full" variant="secondary" onClick={() => router.push('/dashboard')}>
               {t('CANCEL')}
             </Button>
 
-            <Button onClick={handleContinue} disabled={loading || inputText.length === 0} loading={loading}>
-              {t('CONTINUE')}
+            <Button className="w-full" onClick={handleContinue} disabled={loading || inputText.length === 0}>
+              {loading ? <LoaderCircle className="size-4 animate-spin" /> : t('CONTINUE')}
             </Button>
           </Flex>
           <Divider y={32} />

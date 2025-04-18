@@ -1,7 +1,8 @@
 'use client';
 
 import Logo from '@/components/Logo';
-import { Button, Divider, Container, Flex, Text } from '@lawallet/ui';
+import { Divider, Container, Flex, Text } from '@lawallet/ui';
+import { Button } from '@/components/UI/button';
 
 import { appTheme } from '@/config/exports';
 import { useTranslations } from 'next-intl';
@@ -38,15 +39,13 @@ export default function Page() {
 
         <Divider y={16} />
 
-        <Flex>
-          <Button onClick={() => router.push('/signup')}>{t('CREATE_ACCOUNT')}</Button>
-        </Flex>
+        <Button className="w-full" onClick={() => router.push('/signup')}>
+          {t('CREATE_ACCOUNT')}
+        </Button>
         <Divider y={8} />
-        <Flex>
-          <Button variant="bezeled" onClick={() => router.push('/login')}>
-            {t('LOGIN_ACCOUNT')}
-          </Button>
-        </Flex>
+        <Button className="w-full" variant="secondary" onClick={() => router.push('/login')}>
+          {t('LOGIN_ACCOUNT')}
+        </Button>
       </Flex>
       <Divider y={32} />
     </Container>

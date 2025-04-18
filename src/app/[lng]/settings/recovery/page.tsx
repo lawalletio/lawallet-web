@@ -1,19 +1,20 @@
 'use client';
 
-import { useRouter } from '@/navigation';
-import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import { useEffect, useState } from 'react';
-
 import { useTranslations } from 'next-intl';
+import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
+import { useConfig, useIdentity } from '@lawallet/react';
+import { Container, Divider, Flex, Label, Text, ToggleSwitch } from '@lawallet/ui';
+
+import { useRouter } from '@/navigation';
+import { getUserStoragedKey } from '@/utils';
+import { CACHE_BACKUP_KEY } from '@/utils/constants';
 
 import Navbar from '@/components/Layout/Navbar';
 import { InfoCopy } from '@/components/UI';
-import { Button, Container, Divider, Flex, Label, Text, ToggleSwitch } from '@lawallet/ui';
+import { Button } from '@/components/UI/button';
 
 import { appTheme } from '@/config/exports';
-import { getUserStoragedKey } from '@/utils';
-import { CACHE_BACKUP_KEY } from '@/utils/constants';
-import { useConfig, useIdentity } from '@lawallet/react';
 
 export default function Page() {
   const t = useTranslations();
@@ -64,7 +65,7 @@ export default function Page() {
             <Container size="small">
               <Divider y={16} />
               <Flex gap={8}>
-                <Button variant="bezeledGray" onClick={() => router.push('/dashboard')}>
+                <Button className="w-full" variant="secondary" onClick={() => router.push('/dashboard')}>
                   {t('CANCEL')}
                 </Button>
               </Flex>
@@ -97,11 +98,11 @@ export default function Page() {
             <Container size="small">
               <Divider y={16} />
               <Flex gap={8}>
-                <Button variant="bezeledGray" onClick={() => router.push('/dashboard')}>
+                <Button className="w-full" variant="secondary" onClick={() => router.push('/dashboard')}>
                   {t('CANCEL')}
                 </Button>
 
-                <Button onClick={handleShowRecovery} disabled={!switchOne || !switchTwo}>
+                <Button className="w-full" onClick={handleShowRecovery} disabled={!switchOne || !switchTwo}>
                   {t('CONFIRM')}
                 </Button>
               </Flex>

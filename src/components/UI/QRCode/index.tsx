@@ -1,16 +1,14 @@
 'use client';
 
-import { useState } from 'react';
 import ReactQRCode from 'qrcode.react';
+import { useTranslations } from 'next-intl';
 
 import { copy } from '@/utils/share';
-
-import { Text } from '@lawallet/ui';
+import { useToast } from '@/hooks/use-toast';
 
 import { appTheme } from '@/config/exports';
-import { useNotifications } from '@/context/NotificationsContext';
-import { useTranslations } from 'next-intl';
-import { QRCode, Toast } from './style';
+
+import { QRCode } from './style';
 
 interface ComponentProps {
   value: string;
@@ -21,16 +19,15 @@ interface ComponentProps {
 }
 
 export default function Component({ value, size = 150, borderSize = 40, showCopy = true, textToCopy }: ComponentProps) {
-  const [showToast, setShowToast] = useState(true);
   const t = useTranslations();
-  const notifications = useNotifications();
+  const { toast } = useToast();
 
   const handleCopy = (text: string) => {
     copy(text).then((res) => {
-      setShowToast(false);
-      notifications.showAlert({
+      toast({
         description: res ? t('SUCCESS_COPY') : t('ERROR_COPY'),
-        type: res ? 'success' : 'error',
+        variant: res ? 'default' : 'destructive',
+        duration: 1400,
       });
     });
   };
@@ -43,13 +40,6 @@ export default function Component({ value, size = 150, borderSize = 40, showCopy
           handleCopy(textToCopy ? textToCopy : value);
         }}
       >
-        {showCopy ? (
-          <Toast $isShow={showToast}>
-            <Text size="small">{t('PRESS_TO_COPY')}</Text>
-            <span></span>
-          </Toast>
-        ) : null}
-
         <ReactQRCode value={value} size={size} fgColor={appTheme.colors.black} bgColor={appTheme.colors.white} />
       </QRCode>
     </>

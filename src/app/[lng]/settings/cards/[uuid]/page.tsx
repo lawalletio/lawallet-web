@@ -1,29 +1,25 @@
 'use client';
-import Navbar from '@/components/Layout/Navbar';
-import { appTheme } from '@/config/exports';
-import { regexComment } from '@/utils/constants';
-import { useCardsContext } from '@/context/CardsContext';
-import { useActionOnKeypress } from '@/hooks/useActionOnKeypress';
-import useErrors from '@/hooks/useErrors';
+
+import { ChangeEvent, useEffect, useMemo, useState } from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import { useLocale, useTranslations } from 'next-intl';
 import { roundToDown, useFormatter } from '@lawallet/react';
 import { AvailableLanguages, CardPayload, CardStatus, Limit } from '@lawallet/react/types';
-import {
-  Button,
-  Container,
-  Divider,
-  Feedback,
-  Flex,
-  Heading,
-  InputWithLabel,
-  Label,
-  Loader,
-  Text,
-  ToggleSwitch,
-} from '@lawallet/ui';
-import { useLocale, useTranslations } from 'next-intl';
-import { useParams, useRouter } from 'next/navigation';
-import { ChangeEvent, useEffect, useMemo, useState } from 'react';
+import { Container, Divider, Feedback, Flex, Heading, Loader, Text, ToggleSwitch } from '@lawallet/ui';
+
+import { useActionOnKeypress } from '@/hooks/useActionOnKeypress';
+import useErrors from '@/hooks/useErrors';
+import { regexComment } from '@/utils/constants';
+
+import { useCardsContext } from '@/context/CardsContext';
+
+import Navbar from '@/components/Layout/Navbar';
 import LimitInput from '../components/LimitInput/LimitInput';
+import { Button } from '@/components/UI/button';
+import { Input } from '@/components/UI/input';
+import { Label } from '@/components/UI/label';
+
+import { appTheme } from '@/config/exports';
 
 const regexNumbers: RegExp = /^[0123456789]+$/;
 
@@ -171,32 +167,29 @@ const page = () => {
         <Container size="small">
           <Divider y={24} />
 
-          <InputWithLabel
-            onChange={handleChangeName}
-            isError={
-              errors.isExactError('EMPTY_NAME') ||
-              errors.isExactError('MAX_LENGTH_NAME', {
-                length: `${NAME_MAX_LENGTH}`,
-              })
-            }
-            name="card-name"
-            label={t('NAME')}
-            placeholder={t('NAME')}
-            value={newConfig.name}
-          />
+          <div className="flex flex-col gap-1">
+            <Label htmlFor="card-name">{t('NAME')}</Label>
+            <Input
+              id="card-name"
+              name="card-name"
+              placeholder={t('NAME')}
+              value={newConfig.name}
+              onChange={handleChangeName}
+            />
+          </div>
 
           <Divider y={12} />
 
-          <InputWithLabel
-            onChange={handleChangeDesc}
-            isError={errors.isExactError('MAX_LENGTH_DESC', {
-              length: `${DESC_MAX_LENGTH}`,
-            })}
-            name="card-desc"
-            label={t('DESCRIPTION')}
-            placeholder={t('DESCRIPTION')}
-            value={newConfig.description}
-          />
+          <div className="flex flex-col gap-1">
+            <Label htmlFor="card-desc">{t('DESCRIPTION')}</Label>
+            <Input
+              id="card-desc"
+              name="card-desc"
+              placeholder={t('DESCRIPTION')}
+              value={newConfig.description}
+              onChange={handleChangeDesc}
+            />
+          </div>
 
           <Divider y={24} />
 
@@ -268,10 +261,12 @@ const page = () => {
 
           <Divider y={16} />
           <Flex gap={8}>
-            <Button variant="bezeledGray" onClick={() => router.push('/settings/cards')}>
+            <Button className="w-full" variant="secondary" onClick={() => router.push('/settings/cards')}>
               {t('CANCEL')}
             </Button>
-            <Button onClick={handleSaveConfig}>{t('SAVE')}</Button>
+            <Button className="w-full" onClick={handleSaveConfig}>
+              {t('SAVE')}
+            </Button>
           </Flex>
           <Divider y={32} />
         </Container>

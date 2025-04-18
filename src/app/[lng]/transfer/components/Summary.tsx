@@ -1,16 +1,19 @@
 'use client';
 
-import { SatoshiV2Icon } from '@bitcoin-design/bitcoin-icons-react/filled';
-
-import { Button, Container, Divider, Feedback, Flex, Heading, Icon, LinkButton, Text } from '@lawallet/ui';
-
-import { TokenList } from '@/components/TokenList';
-import { useRouter } from '@/navigation';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useLocale, useTranslations } from 'next-intl';
 import { useBalance, useCurrencyConverter, useFormatter, useSettings } from '@lawallet/react';
 import { AvailableLanguages, TransferTypes } from '@lawallet/react/types';
-import { useLocale, useTranslations } from 'next-intl';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Container, Divider, Feedback, Flex, Heading, Icon, Text } from '@lawallet/ui';
+import { SatoshiV2Icon } from '@bitcoin-design/bitcoin-icons-react/filled';
+
+import { useRouter } from '@/navigation';
+
+import { TokenList } from '@/components/TokenList';
 import CardWithData from './CardWithData';
+import { Button } from '@/components/UI/button';
+import Link from 'next/link';
+import { LoaderCircle } from 'lucide-react';
 
 type SummaryProps = {
   isLoading: boolean;
@@ -109,19 +112,23 @@ export const Summary = ({
         <Container size="small">
           <Divider y={16} />
           <Flex gap={8}>
-            <LinkButton variant="bezeledGray" onClick={() => router.push('/dashboard')}>
-              {t('CANCEL')}
-            </LinkButton>
-
+            <Button className="w-full" variant="secondary">
+              <Link href="/dashboard">{t('CANCEL')}</Link>
+            </Button>
             <Button
-              color="secondary"
+              className="w-full"
               onClick={onClick}
               disabled={
                 !type || isLoading || isPending || expired || (type !== TransferTypes.LNURLW && insufficientBalance)
               }
-              loading={isLoading || isPending}
             >
-              {type === TransferTypes.LNURLW ? t('CLAIM') : t('TRANSFER')}
+              {isLoading || isPending ? (
+                <LoaderCircle className="size-4 animate-spin" />
+              ) : type === TransferTypes.LNURLW ? (
+                t('CLAIM')
+              ) : (
+                t('TRANSFER')
+              )}
             </Button>
           </Flex>
           <Divider y={32} />
