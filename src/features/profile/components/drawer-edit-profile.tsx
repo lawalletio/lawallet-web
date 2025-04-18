@@ -240,7 +240,8 @@ export function DrawerEditProfile() {
 
     try {
       // Parse the content of the profile event
-      const content = typeof profileEvent.content === 'string' ? JSON.parse(profileEvent.content) : profileEvent.content || {};
+      const content =
+        typeof profileEvent?.content === 'string' ? JSON.parse(profileEvent.content) : profileEvent.content;
 
       setProfileContent({
         ...content,

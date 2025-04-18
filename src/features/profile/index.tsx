@@ -37,13 +37,7 @@ export function Profile(props: { pubkey: string }) {
   const profile = paramPubkey === identity.pubkey ? useProfile() : useProfile({ pubkey: paramPubkey });
 
   const { userBadges, acceptBadge, revokeBadge } =
-    paramPubkey === identity.pubkey
-      ? useBadges()
-      : useBadges({ pubkey: paramPubkey }) || {
-        userBadges: { pendings: [], accepted: [] },
-        acceptBadge: () => { },
-        revokeBadge: () => { },
-      };
+    paramPubkey === identity.pubkey ? useBadges() : useBadges({ pubkey: paramPubkey });
 
   const NoBadgesMessage = ({ isPending }: { isPending: boolean }) => (
     <div className="text-center py-8">
