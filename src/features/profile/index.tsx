@@ -33,7 +33,7 @@ export function Profile(props: { pubkey: string }) {
   const [showPendingBadges, setShowPendingBadges] = useState(false);
   const paramPubkey = useMemo(() => pubkey as string, [pubkey]);
 
-  const identity = useIdentity();
+  const identity = useIdentity() || {};
   const profile = paramPubkey === identity.pubkey ? useProfile() : useProfile({ pubkey: paramPubkey });
 
   const { userBadges, acceptBadge, revokeBadge } =
@@ -49,6 +49,14 @@ export function Profile(props: { pubkey: string }) {
       </p>
     </div>
   );
+
+  // If there is no valid pubkey, don't render anything
+  if (!pubkey) {
+    return null;
+  }
+
+  console.log(profile, 'profile');
+  console.log(identity, 'identity');
 
   return (
     <>
@@ -67,7 +75,7 @@ export function Profile(props: { pubkey: string }) {
               <div
                 className={cn(`relative overflow-hidden flex-none bg-background rounded-full`, 'w-16 h-16 max-h-16')}
               >
-                {!profile?.nip05Avatar ? (
+                {!profile?.nip05Avatar || !profile?.domainAvatar ? (
                   <Skeleton className={`w-full h-full bg-border`} />
                 ) : (
                   <Image
@@ -75,7 +83,7 @@ export function Profile(props: { pubkey: string }) {
                     priority
                     quality={70}
                     className="object-cover"
-                    src={profile?.nip05Avatar}
+                    src={profile?.nip05?.image || profile?.domainAvatar}
                     alt={
                       profile?.nip05?.name || profile?.nip05?.displayName || String(profile?.nip05?.display_name) || ''
                     }
@@ -92,16 +100,16 @@ export function Profile(props: { pubkey: string }) {
             </div>
           </div>
           <div className="mt-2">
-            {profile?.nip05 ? (
+            {profile?.nip05 || identity?.username ? (
               <p className="text-lg font-bold">
-                {profile?.nip05?.name || profile?.nip05?.displayName || profile?.nip05?.display_name}
+                {profile?.nip05?.name || profile?.nip05?.displayName || identity?.username || 'Unknown'}
               </p>
             ) : (
               <Skeleton className="w-full h-8" />
             )}
             {/* TO-DO */}
             {/* Replace with: lud16/nip05 */}
-            <p className="text-md text-muted-foreground">{profile?.nip05 ? profile?.nip05?.nip05 : identity?.lud16}</p>
+            <p className="text-md text-muted-foreground">{identity?.lud16 ? identity?.lud16 : profile?.nip05?.name}</p>
             <div className="flex flex-col gap-1 mt-2 text-md">
               <About value={profile?.nip05?.about} />
               <Website value={profile?.nip05?.website} />
@@ -130,7 +138,9 @@ export function Profile(props: { pubkey: string }) {
               <div className="flex gap-1">
                 <p className="text-sm font-semibold">{showPendingBadges ? 'Pending Badges' : 'Active Badges'}</p>
                 <span className="text-sm text-muted-foreground">
-                  {showPendingBadges ? `(${userBadges.pendings.length})` : `(${userBadges.accepted.length})`}
+                  {showPendingBadges
+                    ? `(${userBadges?.pendings?.length || 0})`
+                    : `(${userBadges?.accepted?.length || 0})`}
                 </span>
               </div>
               {paramPubkey === identity.pubkey && (
@@ -140,13 +150,14 @@ export function Profile(props: { pubkey: string }) {
                 </div>
               )}
             </div>
-            {showPendingBadges && userBadges.pendings.length === 0 ? (
+            {showPendingBadges && userBadges?.pendings?.length === 0 ? (
               <NoBadgesMessage isPending={true} />
-            ) : !showPendingBadges && userBadges.accepted.length === 0 ? (
+            ) : !showPendingBadges && userBadges?.accepted?.length === 0 ? (
               <NoBadgesMessage isPending={false} />
             ) : (
               <div className="grid grid-cols-2 md:grid-cols-2 gap-2">
-                {(showPendingBadges ? userBadges.pendings : userBadges.accepted).map((badge) => {
+                {(showPendingBadges ? userBadges?.pendings || [] : userBadges?.accepted || []).map((badge) => {
+                  if (!badge) return null;
                   return (
                     <div
                       key={badge?.id}
@@ -169,12 +180,14 @@ export function Profile(props: { pubkey: string }) {
                         <p className="overflow-hidden text-sm font-bold truncate">{badge?.name}</p>
                       </div>
                       {/* Action */}
-                      {paramPubkey === identity.pubkey && (
+                      {paramPubkey === identity.pubkey && badge?.awardEventId && (
                         <div className="absolute top-2 right-2 flex">
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
-                              showPendingBadges ? acceptBadge(badge?.awardEventId) : revokeBadge(badge?.awardEventId);
+                              if (typeof acceptBadge === 'function' && typeof revokeBadge === 'function') {
+                                showPendingBadges ? acceptBadge(badge?.awardEventId) : revokeBadge(badge?.awardEventId);
+                              }
                             }}
                             className="p-1 bg-background rounded-full opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity"
                           >
