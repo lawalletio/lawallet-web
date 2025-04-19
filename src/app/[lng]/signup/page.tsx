@@ -79,7 +79,7 @@ const SignUp = () => {
     setSignUpData({
       loading: false,
       enabled: Boolean(enabled),
-      price: milisatoshis / 1000 ?? 0,
+      price: milisatoshis / 1000 || 0,
     });
 
     if (!enabled) router.push('/');
@@ -162,6 +162,8 @@ const SignUp = () => {
   );
 
   const payWithWebLN = useCallback(async (invoice: string) => {
+    if (typeof window === 'undefined') return;
+
     try {
       setIsPaying(true);
       if (!window.webln) {
