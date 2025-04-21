@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { formatAddress, splitHandle, useConfig } from '@lawallet/react';
 import { TransferTypes } from '@lawallet/react/types';
@@ -8,6 +7,7 @@ import { X } from 'lucide-react';
 import { extractFirstTwoChars } from '@/utils';
 
 import { Button } from '@/components/UI/button';
+import { Link } from '@/navigation';
 
 const CardWithData = ({ type, data }: { type: TransferTypes; data: string }) => {
   const t = useTranslations();

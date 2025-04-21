@@ -1,7 +1,7 @@
 'use client';
 
 import { ChangeEvent, useEffect, useMemo, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { roundToDown, useFormatter } from '@lawallet/react';
 import { AvailableLanguages, CardPayload, CardStatus, Limit } from '@lawallet/react/types';
@@ -20,6 +20,7 @@ import { Input } from '@/components/UI/input';
 import { Label } from '@/components/UI/label';
 
 import { appTheme } from '@/config/exports';
+import { useRouter } from '@/navigation';
 
 const regexNumbers: RegExp = /^[0123456789]+$/;
 

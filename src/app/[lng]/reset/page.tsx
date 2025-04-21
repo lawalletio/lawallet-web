@@ -11,10 +11,11 @@ import { cardResetCaim } from '@lawallet/react/actions';
 import { Container, Feedback, Flex, Heading, Text } from '@lawallet/ui';
 import { NostrEvent } from '@nostr-dev-kit/ndk';
 import { useTranslations } from 'next-intl';
-import { useRouter, useSearchParams } from 'next/navigation';
 import { generateSecretKey, getPublicKey } from 'nostr-tools';
 import { useEffect } from 'react';
 import { bytesToHex } from '@noble/hashes/utils';
+import { useRouter } from '@/navigation';
+import { useSearchParams } from 'next/navigation';
 
 export default function Page() {
   const t = useTranslations();

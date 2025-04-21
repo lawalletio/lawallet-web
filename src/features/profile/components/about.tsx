@@ -1,5 +1,4 @@
 // Packages
-import Link from 'next/link';
 import { parse, render as renderParsed, isTopic, isLink, isProfile, isNewline } from '@welshman/content';
 
 // Generic components
@@ -8,6 +7,7 @@ import { Button } from '@/components/UI/button';
 
 // Internal components
 import { Mention } from './mention';
+import { Link } from '@/navigation';
 
 export const About = (props: { value: string | undefined }) => {
   const { value } = props;

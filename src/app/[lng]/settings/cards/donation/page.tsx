@@ -3,13 +3,14 @@ import Countdown from '@/components/Countdown/Countdown';
 import Navbar from '@/components/Layout/Navbar';
 import { Modal } from '@/components/UI';
 import { useNotifications } from '@/context/NotificationsContext';
+import { useRouter } from '@/navigation';
 import { getUserStoragedKey } from '@/utils';
 import { buildCardTransferAcceptEvent, nowInSeconds, useConfig, useIdentity } from '@lawallet/react';
 import { requestCardActivation } from '@lawallet/react/actions';
 import { Button, Flex, Text } from '@lawallet/ui';
 import { NostrEvent } from '@nostr-dev-kit/ndk';
 import { useTranslations } from 'next-intl';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 type EventDonationInfo = {

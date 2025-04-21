@@ -1,7 +1,6 @@
 'use client';
 
 import { ReactNode } from 'react';
-import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { HomeIcon, RocketIcon } from '@bitcoin-design/bitcoin-icons-react/filled';
 import { Container, Divider, Icon, QrCodeIcon, Text } from '@lawallet/ui';
@@ -12,6 +11,7 @@ import { Button } from '@/components/UI/button';
 import { appTheme, pluginsEnabled } from '@/config/exports';
 
 import { SubnavbarPrimitive } from './style';
+import { useRouter } from '@/navigation';
 
 interface ComponentProps {
   children?: ReactNode;

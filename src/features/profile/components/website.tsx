@@ -1,5 +1,4 @@
 // Packages
-import Link from 'next/link';
 import { Link2Icon } from '@radix-ui/react-icons';
 
 // Libs and hooks
@@ -8,6 +7,7 @@ import { extractDomain, normalizeUrl } from '@/lib/utils';
 // Generic components
 import { Button } from '@/components/UI/button';
 import { Skeleton } from '@/components/UI/skeleton';
+import { Link } from '@/navigation';
 
 export const Website = (props: { value: string | undefined }) => {
   const { value } = props;

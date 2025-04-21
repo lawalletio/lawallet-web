@@ -10,8 +10,8 @@ import { SatoshiV2Icon } from '@bitcoin-design/bitcoin-icons-react/filled';
 import { TokenList } from '@/components/TokenList';
 import CardWithData from './CardWithData';
 import { Button } from '@/components/UI/button';
-import Link from 'next/link';
 import { LoaderCircle } from 'lucide-react';
+import { Link } from '@/navigation';
 
 type SummaryProps = {
   isLoading: boolean;

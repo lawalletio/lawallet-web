@@ -2,8 +2,7 @@
 
 // Libraries
 import React, { useEffect, useMemo, useState } from 'react';
-import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import {
   detectTransferType,
   formatLNURLData,
@@ -46,6 +45,7 @@ import { Button } from '@/components/UI/button';
 
 // Theme
 import { appTheme } from '@/config/exports';
+import { Link, useRouter } from '@/navigation';
 
 export default function Page() {
   const router = useRouter();

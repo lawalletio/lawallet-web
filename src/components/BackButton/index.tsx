@@ -1,8 +1,8 @@
 import { CaretLeftIcon } from '@bitcoin-design/bitcoin-icons-react/filled';
 import { Icon } from '@lawallet/ui';
 import { useTranslations } from 'next-intl';
-import { useRouter } from 'next/navigation';
 import { BackButtonStyled } from './style';
+import { useRouter } from '@/navigation';
 
 interface ComponentProps {
   overrideBack?: string;

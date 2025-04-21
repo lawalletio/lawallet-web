@@ -2,9 +2,9 @@
 
 import BackButton from '@/components/BackButton';
 import Subnavbar from '@/components/Layout/Subnavbar';
+import { useRouter } from '@/navigation';
 import { ArrowRightIcon, Button, Card, Container, Divider, Flex, Icon, Navbar, Text } from '@lawallet/ui';
 import { useTranslations } from 'next-intl';
-import { useRouter } from 'next/navigation';
 import React from 'react';
 
 export function PluginsList({ plugins }: { plugins: PluginMetadata[] }) {

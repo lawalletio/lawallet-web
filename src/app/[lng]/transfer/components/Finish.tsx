@@ -7,13 +7,12 @@ import { AvailableLanguages, TransferInformation, TransferTypes } from '@lawalle
 import { Avatar, Container, Divider, Flex, Heading, Icon, Text } from '@lawallet/ui';
 import { SatoshiV2Icon } from '@bitcoin-design/bitcoin-icons-react/filled';
 
-import { useRouter } from '@/navigation';
+import { Link, useRouter } from '@/navigation';
 import { extractFirstTwoChars } from '@/utils';
 
 import Navbar from '@/components/Layout/Navbar';
 import { Confetti } from '@/components/UI';
 import { Button } from '@/components/UI/button';
-import Link from 'next/link';
 
 export const FinishTransfer = ({ transferInfo }: { transferInfo: TransferInformation }) => {
   const lng = useLocale();

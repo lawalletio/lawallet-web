@@ -2,8 +2,8 @@
 import BackButton from '@/components/BackButton';
 import Subnavbar from '@/components/Layout/Subnavbar';
 import SpinnerView from '@/components/Spinner/SpinnerView';
+import { useRouter } from '@/navigation';
 import { Navbar } from '@lawallet/ui';
-import { useRouter } from 'next/navigation';
 import React, { useCallback, useEffect, useState } from 'react';
 
 type RouteWithParams = {

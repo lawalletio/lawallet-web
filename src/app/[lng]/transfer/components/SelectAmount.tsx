@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { SatoshiV2Icon } from '@bitcoin-design/bitcoin-icons-react/filled';
 import { decimalsToUse, useBalance, useCurrencyConverter, useFormatter, useNumpad, useSettings } from '@lawallet/react';
@@ -20,6 +20,7 @@ import { Button } from '@/components/UI/button';
 
 import { appTheme } from '@/config/exports';
 import { LoaderCircle } from 'lucide-react';
+import { useRouter } from '@/navigation';
 
 type SelectTransferAmountType = {
   transferInfo: LNURLTransferType;

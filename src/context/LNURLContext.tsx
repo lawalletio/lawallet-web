@@ -12,11 +12,12 @@ import {
 import { requestInvoice } from '@lawallet/react/actions';
 import { LNURLTransferType, TransferTypes } from '@lawallet/react/types';
 import { NDKTag } from '@nostr-dev-kit/ndk';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
 // Constans
 import { EMERGENCY_LOCK_TRANSFER } from '@/utils/constants';
+import { useRouter } from '@/navigation';
 
 interface ILNURLContext {
   LNURLTransferInfo: LNURLTransferType;
