@@ -37,7 +37,7 @@ export const SubnavbarPrimitive = styled.div<SubnavbarProps>`
 
       &.active {
         svg {
-          color: ${(props) => props.theme.colors.primary};
+          color: ${appTheme.colors.primary};
         }
       }
     }
