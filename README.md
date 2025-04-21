@@ -14,7 +14,7 @@ Set NodeJS version
 
 ```bash
 nvm use
-``` 
+```
 
 Install dependencies
 

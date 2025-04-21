@@ -10,7 +10,7 @@ export default function PullRefreshProvider({ children }: { children: React.Reac
   const router = useRouter();
 
   const isiOSStandalone = useMemo(() => {
-    if (!window || typeof navigator === 'undefined') return false;
+    if (typeof window === 'undefined' || typeof navigator === 'undefined') return false;
 
     const isiOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
     const standalone =

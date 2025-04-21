@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { formatAddress, splitHandle, useCurrencyConverter, useFormatter, useSettings } from '@lawallet/react';
 import { AvailableLanguages, TransferInformation, TransferTypes } from '@lawallet/react/types';
-import { Avatar, Container, Divider, Flex, Heading, Icon, LinkButton, Text } from '@lawallet/ui';
+import { Avatar, Container, Divider, Flex, Heading, Icon, Text } from '@lawallet/ui';
 import { SatoshiV2Icon } from '@bitcoin-design/bitcoin-icons-react/filled';
 
 import { useRouter } from '@/navigation';

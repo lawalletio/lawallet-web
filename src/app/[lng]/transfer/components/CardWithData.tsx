@@ -5,13 +5,11 @@ import { TransferTypes } from '@lawallet/react/types';
 import { Avatar, Card, Flex, Text } from '@lawallet/ui';
 import { X } from 'lucide-react';
 
-import { useRouter } from '@/navigation';
 import { extractFirstTwoChars } from '@/utils';
 
 import { Button } from '@/components/UI/button';
 
 const CardWithData = ({ type, data }: { type: TransferTypes; data: string }) => {
-  const router = useRouter();
   const t = useTranslations();
   const config = useConfig();
   const [transferUsername, transferDomain] = splitHandle(data, config);

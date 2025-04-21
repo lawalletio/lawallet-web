@@ -19,7 +19,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(({ className, type,
 });
 Input.displayName = 'Input';
 
-const InputGroup = React.forwardRef<HTMLInputElement, InputProps>(({ className, type, children, ...props }, ref) => {
+const InputGroup = React.forwardRef<HTMLInputElement, InputProps>(({ className, children, ...props }, ref) => {
   return (
     <div className={cn('relative flex w-full items-end justify-center', className)} ref={ref} {...props}>
       {children}
@@ -28,19 +28,17 @@ const InputGroup = React.forwardRef<HTMLInputElement, InputProps>(({ className, 
 });
 InputGroup.displayName = 'InputGroup';
 
-const InputGroupRight = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, children, ...props }, ref) => {
-    return (
-      <div
-        className={cn('flex items-center h-10 px-2 border border-border border-l-0 rounded-md', className)}
-        ref={ref}
-        {...props}
-      >
-        {children}
-      </div>
-    );
-  },
-);
+const InputGroupRight = React.forwardRef<HTMLInputElement, InputProps>(({ className, children, ...props }, ref) => {
+  return (
+    <div
+      className={cn('flex items-center h-10 px-2 border border-border border-l-0 rounded-md', className)}
+      ref={ref}
+      {...props}
+    >
+      {children}
+    </div>
+  );
+});
 InputGroupRight.displayName = 'InputGroupRight';
 
 export { Input, InputGroup, InputGroupRight };

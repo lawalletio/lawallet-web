@@ -1,5 +1,5 @@
 'use client';
-import { ChangeEvent, useState } from 'react';
+import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useRouter } from '@/navigation';
 import { getPublicKey, nip19 } from 'nostr-tools';
@@ -30,7 +30,7 @@ export default function Page() {
   const errors = useErrors();
   const identity = useIdentity();
 
-  const handleChangeInput = (e: any) => {
+  const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     errors.resetError();
     setKeyInput(e.target.value);
   };
@@ -56,12 +56,6 @@ export default function Page() {
 
       const pubkey: string = getPublicKey(hexToBytes(hexSecretKey));
       const username: string = await getUsername(pubkey, config);
-
-      // if (!username.length) {
-      //   errors.modifyError('NOT_FOUND_PUBKEY');
-      //   setLoading(false);
-      //   return;
-      // }
 
       identity.initializeFromPrivateKey(hexSecretKey, username).then((res) => {
         if (res) {

@@ -1,8 +1,7 @@
 import { ReactNode } from 'react';
 import Script from 'next/script';
-import { NextIntlClientProvider, useMessages } from 'next-intl';
-import { AvailableLanguages } from '@lawallet/react/types';
-import { getTranslations, unstable_setRequestLocale } from 'next-intl/server';
+import { NextIntlClientProvider, hasLocale } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 
 import { fontPrimary, fontSecondary } from '@/config/exports/fonts';
 
@@ -13,16 +12,19 @@ import { APP_NAME } from '@/utils/constants';
 
 // Style
 import '@/index.css';
+import { routing } from '@/i18n/config';
+import { notFound } from 'next/navigation';
 
 interface ProviderProps {
   children: ReactNode;
-  params: { lng: AvailableLanguages };
+  params: Promise<{ lng: string }>;
 }
 
 // Metadata
 const APP_DESCRIPTION = 'https://lawallet.ar/';
 
-export async function generateMetadata({ params: { lng } }) {
+export async function generateMetadata({ params }) {
+  const { lng } = await params;
   const t = await getTranslations({ locale: lng, namespace: 'metadata' });
 
   return {
@@ -30,14 +32,16 @@ export async function generateMetadata({ params: { lng } }) {
   };
 }
 
-const Providers = (props: ProviderProps) => {
+const Providers = async (props: ProviderProps) => {
   const { children, params } = props;
 
-  unstable_setRequestLocale(params.lng);
-  const messages = useMessages();
+  const { lng } = await params;
+  if (!hasLocale(routing.locales, lng)) {
+    notFound();
+  }
 
   return (
-    <html lang={params.lng} className={`${fontPrimary.variable} ${fontSecondary.variable}`}>
+    <html lang={lng} className={`${fontPrimary.variable} ${fontSecondary.variable}`}>
       <head>
         <title>{APP_NAME}</title>
         <meta name="application-name" content={APP_NAME} />
@@ -76,7 +80,7 @@ const Providers = (props: ProviderProps) => {
       </head>
 
       <body>
-        <NextIntlClientProvider locale={params.lng} messages={messages}>
+        <NextIntlClientProvider locale={lng}>
           <AppProvider>
             {children}
             <Toaster />

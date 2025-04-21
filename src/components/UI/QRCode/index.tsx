@@ -14,11 +14,10 @@ interface ComponentProps {
   value: string;
   size?: number;
   borderSize?: number;
-  showCopy?: boolean;
   textToCopy?: string;
 }
 
-export default function Component({ value, size = 150, borderSize = 40, showCopy = true, textToCopy }: ComponentProps) {
+export default function Component({ value, size = 150, borderSize = 40, textToCopy }: ComponentProps) {
   const t = useTranslations();
   const { toast } = useToast();
 

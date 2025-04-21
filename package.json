@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "pnpm format --log-level=silent && next build",
     "start": "next start",
     "lint": "next lint",
     "clean": "rm -rf .next && rm -rf node_modules",
@@ -37,7 +37,7 @@
     "lucide-react": "^0.438.0",
     "negotiator": "^0.6.3",
     "next": "14.1.0",
-    "next-intl": "^3.17.2",
+    "next-intl": "^4.0.2",
     "nostr-tools": "npm:@lawallet/nostr-tools",
     "qr-scanner": "^1.4.2",
     "qrcode.react": "^3.1.0",

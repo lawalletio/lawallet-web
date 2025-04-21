@@ -7,8 +7,6 @@ import { AvailableLanguages, TransferTypes } from '@lawallet/react/types';
 import { Container, Divider, Feedback, Flex, Heading, Icon, Text } from '@lawallet/ui';
 import { SatoshiV2Icon } from '@bitcoin-design/bitcoin-icons-react/filled';
 
-import { useRouter } from '@/navigation';
-
 import { TokenList } from '@/components/TokenList';
 import CardWithData from './CardWithData';
 import { Button } from '@/components/UI/button';
@@ -39,7 +37,6 @@ export const Summary = ({
   const lng = useLocale();
   const t = useTranslations();
 
-  const router = useRouter();
   const [insufficientBalance, setInsufficientBalance] = useState<boolean>(false);
 
   const {

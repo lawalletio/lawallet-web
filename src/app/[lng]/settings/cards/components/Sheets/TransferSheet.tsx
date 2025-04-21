@@ -52,7 +52,7 @@ const TransferSheet = ({ card, isOpen, onClose }: SettingsSheetProps) => {
     >
       {qrInfo.visible ? (
         <Flex direction="column" align="center">
-          <QRCode size={250} value={qrInfo.value} showCopy={false} />
+          <QRCode size={250} value={qrInfo.value} />
           <Divider y={12} />
           <Flex flex={1} direction="column" justify="space-between" align="center">
             <Text size="small">{t('TIME_LEFT')}</Text>
