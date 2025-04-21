@@ -74,7 +74,7 @@ export default function Page() {
 
     const cleanData: string = data.trim();
     const type: TransferTypes = detectTransferType(cleanData);
-
+    console.log("type: ", type);
     switch (type) {
       case TransferTypes.NONE:
         errors.modifyError('INVALID_RECIPIENT');
