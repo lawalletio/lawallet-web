@@ -15,6 +15,8 @@ import { InfoCopy } from '@/components/UI';
 import { Button } from '@/components/UI/button';
 
 import { appTheme } from '@/config/exports';
+import { nip19 } from 'nostr-tools';
+import { hexToBytes } from '@noble/hashes/utils';
 
 export default function Page() {
   const t = useTranslations();
@@ -37,7 +39,8 @@ export default function Page() {
     const storagedKey = await getUserStoragedKey(config.storage);
     if (!storagedKey) return;
 
-    setUserStoragedKey(storagedKey);
+    const nsec = nip19.nsecEncode(hexToBytes(storagedKey));
+    setUserStoragedKey(nsec);
   };
 
   useEffect(() => {
