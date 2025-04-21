@@ -1,5 +1,4 @@
 export const STORAGE_IDENTITY_KEY = 'identity';
-export const CACHE_TXS_KEY = 'cached_txs';
 export const CACHE_BACKUP_KEY = 'backup';
 
 export const APP_NAME = 'LaWallet';
@@ -25,7 +24,5 @@ export const lightningAddresses = [
   'zbd.gg',
 ];
 
-// export const EMERGENCY_LOCK_SERVER = false;
-// export const EMERGENCY_LOCK_SERVER_DISCLAIMER = 'Test text';
 export const EMERGENCY_LOCK_DEPOSIT = false;
 export const EMERGENCY_LOCK_TRANSFER = false;
