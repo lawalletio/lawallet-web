@@ -3,7 +3,7 @@
 import React from 'react';
 import { useTranslations } from 'next-intl';
 import { useActivity } from '@lawallet/react';
-import { Container, Divider, Flex, Footer, Text } from '@lawallet/ui';
+import { BtnLoader, Container, Divider, Flex, Footer, Text } from '@lawallet/ui';
 import { differenceInCalendarDays } from 'date-fns';
 
 import { useRouter } from '@/navigation';
@@ -19,7 +19,7 @@ let dateToRender: Date | null = null;
 export default function Page() {
   const t = useTranslations();
   const router = useRouter();
-  const { transactions } = useActivity();
+  const { transactions, loading } = useActivity();
 
   // const [filteredTransactions, setFilteredTransactions] = useState<Transaction[]>([]);
 
@@ -47,36 +47,42 @@ export default function Page() {
           hasMore={filteredTransactions.length < transactions.length}
           loader={<Loader />}
         > */}
-        <Flex direction="column" gap={4}>
-          {transactions.map((transaction) => {
-            const txDate = new Date(transaction.createdAt);
+        {loading ? (
+          <Flex justify="center">
+            <BtnLoader />
+          </Flex>
+        ) : (
+          <Flex direction="column" gap={4}>
+            {transactions.map((transaction) => {
+              const txDate = new Date(transaction.createdAt);
 
-            if (!dateToRender || dateToRender.toDateString() !== txDate.toDateString()) {
-              dateToRender = txDate;
+              if (!dateToRender || dateToRender.toDateString() !== txDate.toDateString()) {
+                dateToRender = txDate;
 
-              const differenceWithToday: number = differenceInCalendarDays(new Date(), txDate);
-              const isToday: boolean = differenceWithToday === 0;
-              const isYesterday: boolean = differenceWithToday === 1;
+                const differenceWithToday: number = differenceInCalendarDays(new Date(), txDate);
+                const isToday: boolean = differenceWithToday === 0;
+                const isYesterday: boolean = differenceWithToday === 1;
 
-              return (
-                <React.Fragment key={transaction.id}>
-                  <Divider y={8} />
-                  <Text size="small" color={appTheme.colors.gray50}>
-                    {isToday ? t('TODAY') : isYesterday ? t('YESTERDAY') : txDate.toLocaleDateString()}
-                  </Text>
+                return (
+                  <React.Fragment key={transaction.id}>
+                    <Divider y={8} />
+                    <Text size="small" color={appTheme.colors.gray50}>
+                      {isToday ? t('TODAY') : isYesterday ? t('YESTERDAY') : txDate.toLocaleDateString()}
+                    </Text>
 
-                  <TransactionItem transaction={transaction} />
-                </React.Fragment>
-              );
-            } else {
-              return (
-                <React.Fragment key={transaction.id}>
-                  <TransactionItem transaction={transaction} />
-                </React.Fragment>
-              );
-            }
-          })}
-        </Flex>
+                    <TransactionItem transaction={transaction} />
+                  </React.Fragment>
+                );
+              } else {
+                return (
+                  <React.Fragment key={transaction.id}>
+                    <TransactionItem transaction={transaction} />
+                  </React.Fragment>
+                );
+              }
+            })}
+          </Flex>
+        )}
         {/* </InfiniteScroll> */}
       </Container>
 

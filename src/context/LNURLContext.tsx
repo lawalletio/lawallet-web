@@ -20,7 +20,7 @@ import { EMERGENCY_LOCK_TRANSFER } from '@/utils/constants';
 import { useRouter } from '@/navigation';
 
 interface ILNURLContext {
-  LNURLTransferInfo: LNURLTransferType;
+  transferInfo: LNURLTransferType;
   isLoading: boolean;
   isError: boolean;
   isSuccess: boolean;
@@ -44,9 +44,9 @@ export function LNURLProvider({ children }: { children: React.ReactNode }) {
   const config = useConfig();
   const identity = useIdentity();
 
-  const [LNURLTransferInfo, setLNURLTransferInfo] = useState<LNURLTransferType>(defaultLNURLTransfer);
+  const [transferInfo, setTransferInfo] = useState<LNURLTransferType>(defaultLNURLTransfer);
 
-  const { LNURLInfo, decodeLNURL } = useLNURL({ lnurlOrAddress: LNURLTransferInfo.data, config });
+  const { LNURLInfo, decodeLNURL } = useLNURL({ lnurlOrAddress: transferInfo.data, config });
   const { signerInfo, signer, encrypt } = useNostr();
 
   const {
@@ -62,15 +62,15 @@ export function LNURLProvider({ children }: { children: React.ReactNode }) {
   } = useTransfer({ ...params, tokenName: 'BTC' });
 
   const setAmountToPay = (amount: number) => {
-    setLNURLTransferInfo({
-      ...LNURLTransferInfo,
+    setTransferInfo({
+      ...transferInfo,
       amount,
     });
   };
 
   const setComment = (comment: string) => {
-    setLNURLTransferInfo({
-      ...LNURLTransferInfo,
+    setTransferInfo({
+      ...transferInfo,
       comment: escapingBrackets(comment),
     });
   };
@@ -93,22 +93,19 @@ export function LNURLProvider({ children }: { children: React.ReactNode }) {
           : {}),
       };
 
-      const metadataEncrypted: string = await encrypt(
-        LNURLTransferInfo.receiverPubkey,
-        JSON.stringify(metadataMessage),
-      );
+      const metadataEncrypted: string = await encrypt(transferInfo.receiverPubkey, JSON.stringify(metadataMessage));
 
       const metadataTag: NDKTag = ['metadata', 'true', 'nip04', metadataEncrypted];
       return metadataTag;
     },
-    [identity, LNURLInfo],
+    [identity, transferInfo],
   );
 
   const execute = async () => {
-    if (isLoading || !signer || !signerInfo || LNURLTransferInfo.type === TransferTypes.NONE) return;
+    if (isLoading || !signer || !signerInfo || transferInfo.type === TransferTypes.NONE) return;
     handleMarkLoading(true);
 
-    const { type, request, lnService, receiverPubkey, data, amount, comment } = LNURLTransferInfo;
+    const { type, request, lnService, receiverPubkey, data, amount, comment } = transferInfo;
 
     try {
       if (type === TransferTypes.LNURLW) {
@@ -167,7 +164,7 @@ export function LNURLProvider({ children }: { children: React.ReactNode }) {
         ...(amountParam && amountParam !== transferInfo.amount ? { amount: amountParam } : {}),
       };
 
-      setLNURLTransferInfo(new_info);
+      setTransferInfo(new_info);
 
       if (transferInfo && transferInfo.request && transferInfo.request.minSendable === transferInfo.request.maxSendable)
         router.push(`/transfer/lnurl/summary?data=${transferInfo.data}&amount=${transferInfo.amount}`);
@@ -179,7 +176,7 @@ export function LNURLProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const value = {
-    LNURLTransferInfo,
+    transferInfo,
     isLoading,
     isError,
     isSuccess,

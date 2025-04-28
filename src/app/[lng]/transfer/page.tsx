@@ -11,8 +11,11 @@ import {
   useConfig,
   useActivity,
   useNostr,
+  useIdentity,
+  getMultipleTagsValues,
+  parseContent,
 } from '@lawallet/react';
-import { Transaction, TransactionDirection, TransferTypes } from '@lawallet/react/types';
+import { TransactionDirection, TransferTypes } from '@lawallet/react/types';
 import {
   Autocomplete,
   Container,
@@ -25,7 +28,6 @@ import {
   Text,
 } from '@lawallet/ui';
 import { useTranslations } from 'next-intl';
-import { NostrEvent } from 'nostr-tools';
 import { CaretRightIcon } from '@bitcoin-design/bitcoin-icons-react/filled';
 import { LoaderCircle } from 'lucide-react';
 
@@ -36,7 +38,6 @@ import { lightningAddresses } from '@/utils/constants';
 
 // Constans
 import { EMERGENCY_LOCK_TRANSFER } from '@/utils/constants';
-import { extractMetadata } from '@/utils';
 
 // Components
 import Navbar from '@/components/Layout/Navbar';
@@ -47,6 +48,19 @@ import { Button } from '@/components/UI/button';
 import { appTheme } from '@/config/exports';
 import { Link, useRouter } from '@/navigation';
 
+type DestinationCacheEntry = {
+  receiver: string;
+  pubkey: string;
+  createdAt: number;
+};
+
+type DestinationCache = {
+  entries: DestinationCacheEntry[];
+  lastChecked: number;
+};
+
+const LAST_DESTINATIONS_KEY = `last_destinations`;
+
 export default function Page() {
   const router = useRouter();
 
@@ -55,6 +69,7 @@ export default function Page() {
     return null;
   }
 
+  const identity = useIdentity();
   const t = useTranslations();
   const params = useSearchParams();
   const errors = useErrors();
@@ -63,7 +78,7 @@ export default function Page() {
   const [lastDestinations, setLastDestinations] = useState<string[]>([]);
 
   const { transactions } = useActivity();
-  const { decrypt } = useNostr();
+  const { signer } = useNostr();
 
   const [inputText, setInputText] = useState<string>(params.get('data') ?? '');
   const [loading, setLoading] = useState<boolean>(false);
@@ -113,27 +128,68 @@ export default function Page() {
     }
   };
 
-  const getLastDestinations = React.useCallback(() => {
-    const receiversList: string[] = [];
-    transactions.forEach(async (tx: Transaction) => {
-      if (tx.direction === TransactionDirection.OUTGOING && tx.metadata) {
-        const metadata = await extractMetadata(tx.events[0] as NostrEvent, tx.direction, decrypt, config);
-        if (
-          metadata &&
-          metadata.receiver &&
-          metadata.receiver.includes('@') &&
-          !receiversList.includes(metadata.receiver)
-        )
-          receiversList.push(metadata.receiver);
-      }
-    });
+  const lastDestinationsCache = React.useRef<DestinationCache>({
+    entries: [],
+    lastChecked: 0,
+  });
 
-    setLastDestinations(receiversList);
-  }, [transactions]);
+  const getLastDestinations = React.useCallback(async () => {
+    if (!transactions.length || !identity.pubkey || !signer) return;
+
+    if (!lastDestinationsCache.current.entries.length && config.storage) {
+      const stored = await config.storage.getItem(`${LAST_DESTINATIONS_KEY}_${identity.pubkey}`);
+      if (stored) lastDestinationsCache.current = parseContent(stored);
+    }
+
+    const cached = lastDestinationsCache.current;
+    const knownPubkeys = new Set(cached.entries.map((e) => e.pubkey));
+
+    const newEntries: DestinationCacheEntry[] = [];
+
+    const outgoingTransactions = transactions.filter(
+      (tx) => tx.direction === TransactionDirection.OUTGOING && tx.metadata && tx.createdAt > cached.lastChecked,
+    );
+
+    for (const tx of outgoingTransactions) {
+      const tags = tx.events[0].tags;
+      const pubkeys = getMultipleTagsValues(tags, 'p');
+      const receiverPubkey = pubkeys.find((p) => p !== config.modulePubkeys.urlx && p !== config.modulePubkeys.ledger);
+
+      if (!receiverPubkey || knownPubkeys.has(receiverPubkey)) continue;
+
+      const metadata = await tx.extractMetadata();
+
+      if (metadata?.receiver && metadata.receiver.includes('@')) {
+        newEntries.push({
+          receiver: metadata.receiver,
+          pubkey: receiverPubkey,
+          createdAt: tx.createdAt,
+        });
+
+        knownPubkeys.add(receiverPubkey);
+      }
+    }
+
+    const allEntries = [...cached.entries, ...newEntries];
+
+    lastDestinationsCache.current = {
+      entries: allEntries,
+      lastChecked: outgoingTransactions[0]?.createdAt ?? cached.lastChecked,
+    };
+
+    if (config.storage) {
+      await config.storage.setItem(
+        `${LAST_DESTINATIONS_KEY}_${identity.pubkey}`,
+        JSON.stringify(lastDestinationsCache.current),
+      );
+    }
+
+    setLastDestinations(allEntries.map((e) => e.receiver));
+  }, [transactions, identity.pubkey, signer, config]);
 
   useEffect(() => {
     getLastDestinations();
-  }, [transactions]);
+  }, [transactions.length]);
 
   const autoCompleteData: string[] = useMemo(() => {
     if (!inputText.length || inputText.length > 15) return [];

@@ -3,12 +3,11 @@
 import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
-import { useConfig, useIdentity } from '@lawallet/react';
+import { MappedStoragedKeys, useConfig, useIdentity } from '@lawallet/react';
 import { Container, Divider, Flex, Label, Text, ToggleSwitch } from '@lawallet/ui';
 
 import { useRouter } from '@/navigation';
 import { getUserStoragedKey } from '@/utils';
-import { CACHE_BACKUP_KEY } from '@/utils/constants';
 
 import Navbar from '@/components/Layout/Navbar';
 import { InfoCopy } from '@/components/UI';
@@ -58,7 +57,7 @@ export default function Page() {
               title={t('PRIVATE_KEY')}
               value={userStoragedKey}
               onCopy={async () => {
-                await config.storage.setItem(`${CACHE_BACKUP_KEY}_${identity.pubkey}`, '1');
+                await config.storage.setItem(`${MappedStoragedKeys.Backup}_${identity.pubkey}`, '1');
               }}
             />
             <Divider y={16} />

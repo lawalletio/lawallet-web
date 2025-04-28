@@ -3,14 +3,13 @@
 import Navbar from '@/components/Layout/Navbar';
 import Radio from '@/components/Radio/Radio';
 import useErrors from '@/hooks/useErrors';
-import { CACHE_BACKUP_KEY, STORAGE_IDENTITY_KEY } from '@/utils/constants';
 import { ButtonSetting, Container, Divider, Feedback, Flex, Icon, LinkSetting, Text } from '@lawallet/ui';
 import { useLocale, useTranslations } from 'next-intl';
 
 import { appTheme } from '@/config/exports';
 import { useRouter } from '@/navigation';
 import { CaretRightIcon } from '@bitcoin-design/bitcoin-icons-react/filled';
-import { useConfig, useIdentity } from '@lawallet/react';
+import { MappedStoragedKeys, useConfig, useIdentity } from '@lawallet/react';
 import { AvailableLanguages } from '@lawallet/react/types';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import { startTransition, useState } from 'react';
@@ -38,7 +37,7 @@ export default function Page() {
   }
 
   const logoutSession = async () => {
-    const cachedBackup = await config.storage.getItem(`${CACHE_BACKUP_KEY}_${identity.pubkey}`);
+    const cachedBackup = await config.storage.getItem(`${MappedStoragedKeys.Backup}_${identity.pubkey}`);
 
     if (!cachedBackup) {
       errors.modifyError('ERROR_MADE_BACKUP');
@@ -48,7 +47,7 @@ export default function Page() {
     const confirmation: boolean = confirm(t('CONFIRM_LOGOUT'));
 
     if (confirmation) {
-      await config.storage.removeItem(STORAGE_IDENTITY_KEY);
+      await config.storage.removeItem(MappedStoragedKeys.Identity);
       identity.reset();
       router.push('/login');
     }

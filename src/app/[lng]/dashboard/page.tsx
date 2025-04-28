@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import {
   formatToPreference,
+  MappedStoragedKeys,
   useActivity,
   useBalance,
   useConfig,
@@ -37,7 +38,6 @@ import Navbar from '@/components/Layout/Navbar';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/UI/avatar';
 import { TokenList } from '@/components/TokenList';
 import TransactionItem from '@/components/TransactionItem';
-import { Loader } from '@/components/Icons/Loader';
 import Animations from '@/components/Animations';
 import BitcoinTrade from '@/components/Animations/bitcoin-trade.json';
 import Subnavbar from '@/components/Layout/Subnavbar';
@@ -47,7 +47,7 @@ import { Button } from '@/components/UI/button';
 import { appTheme } from '@/config/exports';
 
 // Constans
-import { CACHE_BACKUP_KEY, EMERGENCY_LOCK_DEPOSIT, EMERGENCY_LOCK_TRANSFER } from '@/utils/constants';
+import { EMERGENCY_LOCK_DEPOSIT, EMERGENCY_LOCK_TRANSFER } from '@/utils/constants';
 
 export default function Page() {
   const config = useConfig();
@@ -76,7 +76,7 @@ export default function Page() {
 
   const checkBackup = async () => {
     const userMadeBackup: boolean = Boolean(
-      (await config.storage.getItem(`${CACHE_BACKUP_KEY}_${identity.pubkey}`)) || false,
+      (await config.storage.getItem(`${MappedStoragedKeys.Backup}_${identity.pubkey}`)) || false,
     );
 
     setShowBanner(!userMadeBackup ? 'backup' : 'none');
@@ -84,6 +84,16 @@ export default function Page() {
 
   useEffect(() => {
     checkBackup();
+
+    const prefetchTimeout = setTimeout(() => {
+      router.prefetch('/transfer');
+      router.prefetch('/deposit');
+      router.prefetch('/settings');
+    }, 500);
+
+    return () => {
+      clearTimeout(prefetchTimeout);
+    };
   }, []);
 
   return (
@@ -205,7 +215,7 @@ export default function Page() {
 
         {activity.loading ? (
           <Flex direction="column" justify="center" align="center" flex={1}>
-            <Loader />
+            <BtnLoader />
           </Flex>
         ) : activity.transactions.length === 0 ? (
           <Flex direction="column" justify="center" align="center" flex={1}>

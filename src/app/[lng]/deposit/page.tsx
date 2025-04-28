@@ -36,7 +36,7 @@ export default function Page() {
   const identity = useIdentity();
   const notifications = useNotifications();
 
-  const [isOpenSheet, setIsOpenSheet] = useState<boolean>(Boolean(identity.username.length));
+  const [isOpenSheet, setIsOpenSheet] = useState<boolean>(Boolean(identity.username.length === 0));
 
   const handleCopy = (text: string) => {
     copy(text).then((res) => {

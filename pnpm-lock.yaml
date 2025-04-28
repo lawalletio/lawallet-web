@@ -15,8 +15,8 @@ dependencies:
     specifier: ^0.5.4
     version: 0.5.9
   '@lawallet/react':
-    specifier: 0.2.52
-    version: 0.2.52(react@18.2.0)(typescript@5.3.3)
+    specifier: 0.2.6-beta.1
+    version: 0.2.6-beta.1(react@18.2.0)(typescript@5.3.3)
   '@lawallet/ui':
     specifier: latest
     version: 0.2.0(react-dom@18.2.0)(react@18.2.0)
@@ -393,13 +393,13 @@ packages:
       nostr-wasm: 0.1.0
     dev: false
 
-  /@lawallet/react@0.2.52(react@18.2.0)(typescript@5.3.3):
+  /@lawallet/react@0.2.6-beta.1(react@18.2.0)(typescript@5.3.3):
     resolution:
-      { integrity: sha512-euOE5Cf+IWnI0JNTGdqB4Hk4zSd4Pa6CTZlkvMbxTsOfgzfLiHblunONLKLdoWp3/UQOnGFxpeiulLxFoKSSOg== }
+      { integrity: sha512-ViyYnYjtG+FVNIvarMr4kA2ok+KAAT8fbzBxNGDehw9aAGdSwQDw60Ydym06ab0LSq1bzzs+qclwB7p0aDdvbw== }
     peerDependencies:
       react: ^18.2.0
     dependencies:
-      '@lawallet/utils': 0.2.50(typescript@5.3.3)
+      '@lawallet/utils': 0.2.6-beta.1(typescript@5.3.3)
       '@nostr-dev-kit/ndk': 2.10.6(typescript@5.3.3)
       nostr-tools: /@lawallet/nostr-tools@2.7.2(typescript@5.3.3)
       react: 18.2.0
@@ -418,9 +418,9 @@ packages:
       - react-dom
     dev: false
 
-  /@lawallet/utils@0.2.50(typescript@5.3.3):
+  /@lawallet/utils@0.2.6-beta.1(typescript@5.3.3):
     resolution:
-      { integrity: sha512-yt34BHQt9iPDN/j7WuWPT3Kr4oCgs6KGgJwwzqBcAtoV+WZGIwOkE1F31Pdr6+sbHP1Ssj7SYR02uJdfKoGmuA== }
+      { integrity: sha512-JKzcQ7w8YlMs71f13kG5wT9ATfXLGWKYjC977SpX9hoN1LetaZemO+HZc361IoywsFPBi5idKTcnS4vlOmZXKA== }
     dependencies:
       '@getalby/lightning-tools': 5.1.2
       '@nostr-dev-kit/ndk': 2.10.6(typescript@5.3.3)

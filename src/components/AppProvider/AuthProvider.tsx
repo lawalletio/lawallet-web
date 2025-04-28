@@ -1,6 +1,5 @@
 import { usePathname, useRouter } from '@/navigation';
-import { CACHE_BACKUP_KEY, STORAGE_IDENTITY_KEY } from '@/utils/constants';
-import { parseContent, useConfig, useIdentity, useNostr } from '@lawallet/react';
+import { MappedStoragedKeys, parseContent, useConfig, useIdentity, useNostr } from '@lawallet/react';
 import { useSearchParams } from 'next/navigation';
 import React, { useEffect, useMemo } from 'react';
 import SpinnerView from '../Spinner/SpinnerView';
@@ -62,7 +61,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const loadIdentityFromStorage = async () => {
     try {
       // If you have the identity saved in IndexedDB, we load from here.
-      const storageIdentity = await config.storage.getItem(STORAGE_IDENTITY_KEY);
+      const storageIdentity = await config.storage.getItem(MappedStoragedKeys.Identity);
 
       if (storageIdentity) {
         const parsedIdentity: StoragedIdentityInfo[] = parseContent(storageIdentity as string);
@@ -74,7 +73,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         // Date: 20/05/2024
         // Remove this code after migrating the identity provider.
         // ******************************************
-        const localStorageKey = localStorage.getItem(STORAGE_IDENTITY_KEY);
+        const localStorageKey = localStorage.getItem(MappedStoragedKeys.Identity);
         if (!localStorageKey) {
           identity.reset();
           setIsLoading(false);
@@ -93,11 +92,12 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             },
           ];
 
-          await config.storage.setItem(STORAGE_IDENTITY_KEY, JSON.stringify(IdentityToSave));
+          await config.storage.setItem(MappedStoragedKeys.Identity, JSON.stringify(IdentityToSave));
 
           // Backup account
-          const localStorageBackup = localStorage.getItem(`${CACHE_BACKUP_KEY}_${parsedIdentity.hexpub}`);
-          if (localStorageBackup) await config.storage.setItem(`${CACHE_BACKUP_KEY}_${parsedIdentity.hexpub}`, '1');
+          const localStorageBackup = localStorage.getItem(`${MappedStoragedKeys.Backup}_${parsedIdentity.hexpub}`);
+          if (localStorageBackup)
+            await config.storage.setItem(`${MappedStoragedKeys.Backup}_${parsedIdentity.hexpub}`, '1');
         }
         return auth;
         // ******************************************

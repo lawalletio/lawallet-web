@@ -8,22 +8,21 @@ import { appTheme } from '@/config/exports';
 import {
   dateFormatter,
   defaultCurrency,
+  formatAddress,
+  TransactionInstance,
   unescapingText,
-  useConfig,
   useCurrencyConverter,
   useFormatter,
   useNostr,
   useSettings,
 } from '@lawallet/react';
-import { AvailableLanguages, Transaction, TransactionDirection, TransactionStatus } from '@lawallet/react/types';
+import { AvailableLanguages, TransactionDirection, TransactionStatus } from '@lawallet/react/types';
 import { BtnLoader } from '@lawallet/ui';
 import { useLocale, useTranslations } from 'next-intl';
 import React, { useMemo, useState } from 'react';
-import { extractMetadata } from '@/utils';
-import { NostrEvent } from 'nostr-tools';
 
 interface ComponentProps {
-  transaction: Transaction;
+  transaction: TransactionInstance;
 }
 
 type LudInfoProps = {
@@ -37,8 +36,7 @@ export default function Component({ transaction }: ComponentProps) {
   if (!transaction) return null;
   const lng = useLocale();
   const t = useTranslations();
-  const { decrypt } = useNostr();
-  const config = useConfig();
+  const { signer } = useNostr();
 
   const { status, type } = transaction;
 
@@ -70,17 +68,12 @@ export default function Component({ transaction }: ComponentProps) {
   const { customFormat } = useFormatter({ locale: lng as AvailableLanguages });
 
   const getMetadata = React.useCallback(
-    async (transaction: Transaction) => {
-      const decryptedMetadata = await extractMetadata(
-        transaction.events[0] as NostrEvent,
-        transaction.direction,
-        decrypt,
-        config,
-      );
+    async (transaction: TransactionInstance) => {
+      const decryptedMetadata = await transaction.extractMetadata();
 
       return decryptedMetadata;
     },
-    [decrypt],
+    [signer],
   );
 
   const handleOpenAccordion = async () => {
@@ -153,6 +146,14 @@ export default function Component({ transaction }: ComponentProps) {
             <li>
               <Flex align="center" justify="space-between">
                 <Text size="small" color={appTheme.colors.gray50}>
+                  ID
+                </Text>
+                <Text>{formatAddress(transaction.id, 10)}</Text>
+              </Flex>
+            </li>
+            <li>
+              <Flex align="center" justify="space-between">
+                <Text size="small" color={appTheme.colors.gray50}>
                   {isFromMe ? t('TO') : t('FROM')}
                 </Text>
                 <Text>{ludInfo.loading ? <BtnLoader /> : ludInfo.data}</Text>
@@ -191,6 +192,17 @@ export default function Component({ transaction }: ComponentProps) {
                 <Text>{t(status)}</Text>
               </Flex>
             </li>
+
+            {transaction.preimage ? (
+              <li>
+                <Flex align="center" justify="space-between">
+                  <Text size="small" color={appTheme.colors.gray50}>
+                    Preimage
+                  </Text>
+                  <Text>{formatAddress(transaction.preimage, 10)}</Text>
+                </Flex>
+              </li>
+            ) : null}
           </ul>
           {/* <Flex>
             <Button variant="bezeled" onClick={() => null}>
