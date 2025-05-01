@@ -214,5 +214,7 @@
   "EDIT_PROFILE": "Editar perfil",
   "WEBSITE": "Sitio web",
   "MY_PROFILE": "Mi perfil",
-  "ERROR_MESSAGE": "En este momento estamos con tareas de mantenimiento hasta el 11 de Enero. Más información en en discord.lacrypta.ar"
+  "ERROR_MESSAGE": "En este momento estamos con tareas de mantenimiento hasta el 11 de Enero. Más información en en discord.lacrypta.ar",
+  "CAMERA_NOT_FOUND": "No se encontró una cámara en este dispositivo.",
+  "CAMERA_PERMISSIONS_NOT_FOUND": "El acceso a la cámara está bloqueado."
 }

@@ -3,14 +3,16 @@
 import { appTheme } from '@/config/exports';
 import { styled } from 'styled-components';
 
-interface NavbarProps {}
+interface NavbarProps {
+  $backgroundColor?: string;
+}
 
 export const Navbar = styled.div<NavbarProps>`
   width: 100%;
   height: 60px;
   position: relative;
   z-index: 10;
-  background-color: ${appTheme.colors.background};
+  background-color: ${(props) => (props.$backgroundColor ? props.$backgroundColor : appTheme.colors.background)};
 `;
 
 export const BackButton = styled.button`

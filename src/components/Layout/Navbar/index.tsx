@@ -19,10 +19,11 @@ interface ComponentProps {
   title?: string;
   showBackPage?: boolean;
   overrideBack?: string;
+  backgroundColor?: string;
 }
 
 export default function Component(props: ComponentProps) {
-  const { children, showBackPage = false, title, overrideBack = '' } = props;
+  const { children, showBackPage = false, title, overrideBack = '', backgroundColor } = props;
 
   const router = useRouter();
   const t = useTranslations();
@@ -44,7 +45,8 @@ export default function Component(props: ComponentProps) {
           </Container>
         </AlertSystemStyle>
       )}
-      <Navbar>
+
+      <Navbar $backgroundColor={backgroundColor}>
         <Container>
           <Flex flex={1} align="center" gap={8}>
             {onlyChildren && (

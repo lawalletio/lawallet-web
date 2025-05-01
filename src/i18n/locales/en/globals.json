@@ -214,5 +214,7 @@
   "EDIT_PROFILE": "Edit profile",
   "WEBSITE": "Website",
   "MY_PROFILE": "My profile",
-  "ERROR_MESSAGE": "We are currently undergoing maintenance until January 11th. More information at discord.lacrypta.ar"
+  "ERROR_MESSAGE": "We are currently undergoing maintenance until January 11th. More information at discord.lacrypta.ar",
+  "CAMERA_NOT_FOUND": "No camera was found on this device.",
+  "CAMERA_PERMISSIONS_NOT_FOUND": "Camera access is blocked."
 }

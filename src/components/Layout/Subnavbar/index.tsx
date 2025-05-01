@@ -3,7 +3,7 @@
 import { ReactNode } from 'react';
 import { useTranslations } from 'next-intl';
 import { HomeIcon, RocketIcon } from '@bitcoin-design/bitcoin-icons-react/filled';
-import { Container, Divider, Icon, QrCodeIcon, Text } from '@lawallet/ui';
+import { Container, Icon, QrCodeIcon, Text } from '@lawallet/ui';
 
 import ButtonCTA from '@/components/ButtonCTA';
 import { Button } from '@/components/UI/button';
@@ -29,16 +29,19 @@ export default function Subnavbar(props: ComponentProps) {
 
   if (!pluginsEnabled)
     return (
-      <ButtonCTA>
-        <Button color="secondary" onClick={() => router.push('/scan')}>
-          <QrCodeIcon />
-        </Button>
-        <Divider y={16} />
-      </ButtonCTA>
+      <SubnavbarPrimitive backgroundColor={appTheme.colors.background}>
+        <Container>
+          <ButtonCTA>
+            <Button color="secondary" onClick={() => router.push('/scan')}>
+              <QrCodeIcon />
+            </Button>
+          </ButtonCTA>
+        </Container>
+      </SubnavbarPrimitive>
     );
 
   return (
-    <SubnavbarPrimitive>
+    <SubnavbarPrimitive backgroundColor={appTheme.colors.gray10}>
       <Container>
         <div className="info">
           <button onClick={() => router.push('/dashboard')} className={`${path === 'home' && 'active'}`}>

@@ -3,7 +3,9 @@
 import { appTheme } from '@/config/exports';
 import { styled } from 'styled-components';
 
-interface SubnavbarProps {}
+interface SubnavbarProps {
+  backgroundColor: string;
+}
 
 export const SubnavbarPrimitive = styled.div<SubnavbarProps>`
   position: fixed;
@@ -14,7 +16,7 @@ export const SubnavbarPrimitive = styled.div<SubnavbarProps>`
 
   padding-bottom: 12px;
 
-  background-color: ${appTheme.colors.gray10};
+  background-color: ${(props) => props.backgroundColor};
   border-radius: 12px;
 
   .info {

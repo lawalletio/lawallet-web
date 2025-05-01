@@ -10,15 +10,16 @@ const styles: Record<string, React.CSSProperties> = {
     left: 0,
     overflow: 'hidden',
     position: 'fixed',
+    zIndex: '1',
   },
   video: {
     top: 0,
     left: 0,
     width: '100%',
     height: '100%',
-    display: 'block',
     overflow: 'hidden',
     position: 'absolute',
+    objectFit: 'cover',
   },
 };
 
