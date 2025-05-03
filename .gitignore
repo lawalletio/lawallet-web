@@ -45,3 +45,8 @@ public/workbox-*.js.map
 
 # Sentry Auth Token
 .sentryclirc
+
+# VS code config
+.vscode/
+
+**/.claude/settings.local.json
