@@ -216,32 +216,35 @@ export default function Component({ transaction }: ComponentProps) {
                 </Text>
                 <Text>
                   {transaction.id.substring(0, 4)}...{transaction.id.substring(transaction.id.length - 4)}
-                <Button 
-                  size="icon"
-                  variant="secondary"
-                  onClick={() => {
-                    copy(transaction.id).then((res) => {
-                      toast({
-                        description: res ? t('SUCCESS_COPY') : t('ERROR_COPY'),
-                        variant: res ? 'default' : 'destructive',
-                        duration: 1400,
+                  <Button
+                    size="icon"
+                    variant="secondary"
+                    onClick={() => {
+                      copy(transaction.id).then((res) => {
+                        toast({
+                          description: res ? t('SUCCESS_COPY') : t('ERROR_COPY'),
+                          variant: res ? 'default' : 'destructive',
+                          duration: 1400,
+                        });
                       });
-                    });
-                  }}
-                  className="h-6 w-6"
-                >
-                <Copy className="w-3 h-3" />
-                </Button>
-                </Text>                
+                    }}
+                    className="h-6 w-6"
+                  >
+                    <Copy className="w-3 h-3" />
+                  </Button>
+                </Text>
               </Flex>
             </li>
           </ul>
           <Flex justify="center" mt={4}>
-            <Button 
-              variant="secondary" 
-              size="sm" 
+            <Button
+              variant="secondary"
+              size="sm"
               onClick={() => {
-                window.open(`${SUPPORT_TELEGRAM_URL}?text=${encodeURIComponent(`${t('HELP_WITH_TRANSACTION')}: ${transaction.id}`)}`, "_blank");
+                window.open(
+                  `${SUPPORT_TELEGRAM_URL}?text=${encodeURIComponent(`${t('HELP_WITH_TRANSACTION')}: ${transaction.id}`)}`,
+                  '_blank',
+                );
               }}
             >
               <CircleHelp className="w-4 h-4 mr-2" />
