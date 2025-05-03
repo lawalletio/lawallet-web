@@ -48,3 +48,5 @@ public/workbox-*.js.map
 
 # VS code config
 .vscode/
+
+**/.claude/settings.local.json

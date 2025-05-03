@@ -1,10 +1,14 @@
 'use client';
 
 import { CreditCardIcon, LightningIcon, TransferIcon } from '@bitcoin-design/bitcoin-icons-react/filled';
+import { CircleHelp } from 'lucide-react';
 
 import { Accordion, AccordionBody, Flex, Text } from '@lawallet/ui';
 
 import { appTheme } from '@/config/exports';
+import { useRouter } from '@/navigation';
+import { Button } from '@/components/UI/button';
+import { SUPPORT_TELEGRAM_URL } from '@/utils/constants';
 import {
   dateFormatter,
   defaultCurrency,
@@ -202,11 +206,18 @@ export default function Component({ transaction }: ComponentProps) {
               </Flex>
             </li>
           </ul>
-          {/* <Flex>
-            <Button variant="bezeled" onClick={() => null}>
-              {t('SHARE')}
+          <Flex justify="center" mt={4}>
+            <Button 
+              variant="secondary" 
+              size="sm" 
+              onClick={() => {
+                window.open(`${SUPPORT_TELEGRAM_URL}?text=${encodeURIComponent(`${t('HELP_WITH_TRANSACTION')}: ${transaction.id}`)}`, "_blank");
+              }}
+            >
+              <CircleHelp className="w-4 h-4 mr-2" />
+              {t('HELP')}
             </Button>
-          </Flex> */}
+          </Flex>
         </AccordionBody>
       </Accordion>
     </>
