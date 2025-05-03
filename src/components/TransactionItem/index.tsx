@@ -9,6 +9,9 @@ import { appTheme } from '@/config/exports';
 import { useRouter } from '@/navigation';
 import { Button } from '@/components/UI/button';
 import { SUPPORT_TELEGRAM_URL } from '@/utils/constants';
+import { Copy } from 'lucide-react';
+import { copy } from '@/utils/share';
+import { useToast } from '@/hooks/use-toast';
 import {
   dateFormatter,
   defaultCurrency,
@@ -41,6 +44,7 @@ export default function Component({ transaction }: ComponentProps) {
   if (!transaction) return null;
   const lng = useLocale();
   const t = useTranslations();
+  const { toast } = useToast();
   const { decrypt } = useNostr();
   const config = useConfig();
 
@@ -205,6 +209,32 @@ export default function Component({ transaction }: ComponentProps) {
                 <Text>{t(status)}</Text>
               </Flex>
             </li>
+            <li>
+              <Flex align="center" justify="space-between">
+                <Text size="small" color={appTheme.colors.gray50}>
+                  {t('ID')}
+                </Text>
+                <Text>
+                  {transaction.id.substring(0, 4)}...{transaction.id.substring(transaction.id.length - 4)}
+                <Button 
+                  size="icon"
+                  variant="secondary"
+                  onClick={() => {
+                    copy(transaction.id).then((res) => {
+                      toast({
+                        description: res ? t('SUCCESS_COPY') : t('ERROR_COPY'),
+                        variant: res ? 'default' : 'destructive',
+                        duration: 1400,
+                      });
+                    });
+                  }}
+                  className="h-6 w-6"
+                >
+                <Copy className="w-3 h-3" />
+                </Button>
+                </Text>                
+              </Flex>
+            </li>
           </ul>
           <Flex justify="center" mt={4}>
             <Button 
@@ -215,7 +245,7 @@ export default function Component({ transaction }: ComponentProps) {
               }}
             >
               <CircleHelp className="w-4 h-4 mr-2" />
-              {t('HELP')}
+              {t('CONTACT_SUPPORT')}
             </Button>
           </Flex>
         </AccordionBody>
