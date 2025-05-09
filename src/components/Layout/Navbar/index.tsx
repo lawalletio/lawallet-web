@@ -8,7 +8,7 @@ import { useRouter } from '@/navigation';
 import { appTheme } from '@/config/exports';
 
 // Constans
-import { EMERGENCY_LOCK_DEPOSIT, EMERGENCY_LOCK_TRANSFER } from '@/utils/constants';
+import { EMERGENCY_LOCK_DEPOSIT, EMERGENCY_LOCK_TRANSFER, EMERGENCY_LOCK_SERVER_DISCLAIMER } from '@/utils/constants';
 
 import { Navbar, Left, Right, AlertSystemStyle } from './style';
 import { Button } from '@/components/UI/button';
@@ -35,11 +35,15 @@ export default function Component(props: ComponentProps) {
         <AlertSystemStyle $background={appTheme.colors.error15}>
           <Container>
             <Flex flex={1} justify="center" align="center">
-              <Text color={appTheme.colors.error}>
-                {t('PAUSED')}: {EMERGENCY_LOCK_DEPOSIT && t('DEPOSITS')}{' '}
-                {EMERGENCY_LOCK_DEPOSIT && EMERGENCY_LOCK_TRANSFER && t('AND')}{' '}
-                {EMERGENCY_LOCK_TRANSFER && t('TRANSFERS')}
-              </Text>
+              {EMERGENCY_LOCK_SERVER_DISCLAIMER.length > 0 ? (
+                <Text color={appTheme.colors.error}>{EMERGENCY_LOCK_SERVER_DISCLAIMER}</Text>
+              ) : (
+                <Text color={appTheme.colors.error}>
+                  {t('PAUSED')}: {EMERGENCY_LOCK_DEPOSIT && t('DEPOSITS')}{' '}
+                  {EMERGENCY_LOCK_DEPOSIT && EMERGENCY_LOCK_TRANSFER && t('AND')}{' '}
+                  {EMERGENCY_LOCK_TRANSFER && t('TRANSFERS')}
+                </Text>
+              )}
             </Flex>
           </Container>
         </AlertSystemStyle>
