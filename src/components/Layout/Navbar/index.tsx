@@ -35,7 +35,7 @@ export default function Component(props: ComponentProps) {
         <AlertSystemStyle $background={appTheme.colors.error15}>
           <Container>
             <Flex flex={1} justify="center" align="center">
-              {EMERGENCY_LOCK_SERVER_DISCLAIMER.length > 0 ? (
+              {EMERGENCY_LOCK_SERVER_DISCLAIMER?.length > 0 ? (
                 <Text color={appTheme.colors.error}>{EMERGENCY_LOCK_SERVER_DISCLAIMER}</Text>
               ) : (
                 <Text color={appTheme.colors.error}>
