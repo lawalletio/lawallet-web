@@ -38,7 +38,7 @@ export default function Page() {
 
   return (
     <>
-      <Navbar showBackPage={true} title={t('ACTIVITY')} />
+      <Navbar showBackPage={true} showHelpButton={true} title={t('ACTIVITY')} />
 
       <Container size="small">
         {/* <InfiniteScroll

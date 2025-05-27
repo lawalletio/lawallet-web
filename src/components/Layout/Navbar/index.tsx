@@ -8,21 +8,21 @@ import { useRouter } from '@/navigation';
 import { appTheme } from '@/config/exports';
 
 // Constans
-import { EMERGENCY_LOCK_DEPOSIT, EMERGENCY_LOCK_TRANSFER, EMERGENCY_LOCK_SERVER_DISCLAIMER } from '@/utils/constants';
-
+import { EMERGENCY_LOCK_DEPOSIT, EMERGENCY_LOCK_TRANSFER, SUPPORT_TELEGRAM_URL, EMERGENCY_LOCK_SERVER_DISCLAIMER } from '@/utils/constants';
 import { Navbar, Left, Right, AlertSystemStyle } from './style';
 import { Button } from '@/components/UI/button';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, CircleHelp } from 'lucide-react';
 
 interface ComponentProps {
   children?: ReactNode;
   title?: string;
   showBackPage?: boolean;
   overrideBack?: string;
+  showHelpButton?: boolean;
 }
 
 export default function Component(props: ComponentProps) {
-  const { children, showBackPage = false, title, overrideBack = '' } = props;
+  const { children, showBackPage = false, title, overrideBack = '', showHelpButton = false } = props;
 
   const router = useRouter();
   const t = useTranslations();
@@ -73,7 +73,21 @@ export default function Component(props: ComponentProps) {
             ) : (
               children
             )}
-            {onlyChildren && <Right></Right>}
+            {onlyChildren && (
+              <Right>
+                {showHelpButton && (
+                  <Button
+                    size="icon"
+                    variant="secondary"
+                    onClick={() => {
+                      router.push(SUPPORT_TELEGRAM_URL);
+                    }}
+                  >
+                    <CircleHelp />
+                  </Button>
+                )}
+              </Right>
+            )}
           </Flex>
         </Container>
       </Navbar>

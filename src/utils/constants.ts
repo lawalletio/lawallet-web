@@ -25,6 +25,7 @@ export const lightningAddresses = [
   'zbd.gg',
 ];
 
+export const SUPPORT_TELEGRAM_URL = 'https://t.me/lacryptaok';
 // export const EMERGENCY_LOCK_SERVER = false;
 export const EMERGENCY_LOCK_SERVER_DISCLAIMER = '';
 export const EMERGENCY_LOCK_DEPOSIT = false;
