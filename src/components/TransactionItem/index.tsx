@@ -51,7 +51,7 @@ export default function Component({ transaction }: ComponentProps) {
   const { status, type } = transaction;
 
   const {
-    props: { hideBalance, currency },
+    props: { currency },
   } = useSettings();
 
   const { pricesData, convertCurrency } = useCurrencyConverter();
@@ -133,34 +133,24 @@ export default function Component({ transaction }: ComponentProps) {
             <Flex direction="column" align="end">
               <Text
                 color={
-                  hideBalance
-                    ? appTheme.colors.text
-                    : transaction.status === TransactionStatus.ERROR ||
-                        transaction.status === TransactionStatus.REVERTED
-                      ? appTheme.colors.error
-                      : transaction.status === TransactionStatus.PENDING
-                        ? appTheme.colors.warning
-                        : isFromMe
-                          ? appTheme.colors.text
-                          : appTheme.colors.success
+                  transaction.status === TransactionStatus.ERROR || transaction.status === TransactionStatus.REVERTED
+                    ? appTheme.colors.error
+                    : transaction.status === TransactionStatus.PENDING
+                      ? appTheme.colors.warning
+                      : isFromMe
+                        ? appTheme.colors.text
+                        : appTheme.colors.success
                 }
               >
-                {hideBalance ? (
-                  '*****'
-                ) : (
-                  <>
-                    {!(
-                      transaction.status === TransactionStatus.ERROR ||
-                      transaction.status === TransactionStatus.REVERTED
-                    ) && <>{!isFromMe ? '+ ' : '- '}</>}
-                    {customFormat({ amount: satsAmount, currency: 'SAT' })} SAT
-                  </>
-                )}
+                <>
+                  {!(
+                    transaction.status === TransactionStatus.ERROR || transaction.status === TransactionStatus.REVERTED
+                  ) && <>{!isFromMe ? '+ ' : '- '}</>}
+                  {customFormat({ amount: satsAmount, currency: 'SAT' })} SAT
+                </>
               </Text>
               <Text size="small" color={appTheme.colors.gray50}>
-                {hideBalance
-                  ? '*****'
-                  : `$${customFormat({ amount: convertedFiatAmount, currency: currency === 'SAT' ? defaultCurrency : currency, minDecimals: 2 })} ${currency === 'SAT' ? defaultCurrency : currency}`}
+                {`$${customFormat({ amount: convertedFiatAmount, currency: currency === 'SAT' ? defaultCurrency : currency, minDecimals: 2 })} ${currency === 'SAT' ? defaultCurrency : currency}`}
               </Text>
             </Flex>
           </Flex>
