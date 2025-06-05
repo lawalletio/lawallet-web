@@ -25,7 +25,7 @@ export const lightningAddresses = [
   'zbd.gg',
 ];
 
-export const EMERGENCY_LOCK_SERVER = true;
-export const EMERGENCY_LOCK_SERVER_DISCLAIMER = 'Relay en mantenimiento';
-export const EMERGENCY_LOCK_DEPOSIT = true;
-export const EMERGENCY_LOCK_TRANSFER = true;
+// export const EMERGENCY_LOCK_SERVER = true;
+export const EMERGENCY_LOCK_SERVER_DISCLAIMER = '';
+export const EMERGENCY_LOCK_DEPOSIT = false;
+export const EMERGENCY_LOCK_TRANSFER = false;
