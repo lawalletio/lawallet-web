@@ -27,5 +27,5 @@ export const lightningAddresses = [
 
 export const EMERGENCY_LOCK_SERVER = true;
 export const EMERGENCY_LOCK_SERVER_DISCLAIMER = 'Relay en mantenimiento';
-export const EMERGENCY_LOCK_DEPOSIT = false;
-export const EMERGENCY_LOCK_TRANSFER = false;
+export const EMERGENCY_LOCK_DEPOSIT = true;
+export const EMERGENCY_LOCK_TRANSFER = true;
