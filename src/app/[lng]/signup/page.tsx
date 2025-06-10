@@ -9,6 +9,7 @@ import { LoaderCircle } from 'lucide-react';
 
 import { useRouter } from '@/navigation';
 import useErrors from '@/hooks/useErrors';
+import { EMERGENCY_LOCK_DEPOSIT, EMERGENCY_LOCK_SERVER_DISCLAIMER, EMERGENCY_LOCK_TRANSFER } from '@/utils/constants';
 
 import Logo from '@/components/Logo';
 import { CardV2 } from '@/components/CardV2';
@@ -17,6 +18,7 @@ import SignUpEmptyView from '@/components/Layout/EmptyView/SignUpEmptyView';
 import SpinnerView from '@/components/Spinner/SpinnerView';
 import { QRCode } from '@/components/UI';
 import { Button } from '@/components/UI/button';
+import { AlertSystemStyle } from '@/components/Layout/Navbar/style';
 
 import { appTheme } from '@/config/exports';
 
@@ -100,6 +102,7 @@ const SignUp = () => {
   );
 
   const requestPayment = useCallback(async () => {
+    if (EMERGENCY_LOCK_DEPOSIT || EMERGENCY_LOCK_TRANSFER) return null;
     setLoading(true);
 
     try {
@@ -229,6 +232,23 @@ const SignUp = () => {
 
   return (
     <>
+      {(EMERGENCY_LOCK_DEPOSIT || EMERGENCY_LOCK_TRANSFER) && (
+        <AlertSystemStyle $background={appTheme.colors.error15}>
+          <Container>
+            <Flex flex={1} justify="center" align="center">
+              {EMERGENCY_LOCK_SERVER_DISCLAIMER?.length > 0 ? (
+                <Text color={appTheme.colors.error}>{EMERGENCY_LOCK_SERVER_DISCLAIMER}</Text>
+              ) : (
+                <Text color={appTheme.colors.error}>
+                  {t('PAUSED')}: {EMERGENCY_LOCK_DEPOSIT && t('DEPOSITS')}{' '}
+                  {EMERGENCY_LOCK_DEPOSIT && EMERGENCY_LOCK_TRANSFER && t('AND')}{' '}
+                  {EMERGENCY_LOCK_TRANSFER && t('TRANSFERS')}
+                </Text>
+              )}
+            </Flex>
+          </Container>
+        </AlertSystemStyle>
+      )}
       <Divider y={60} />
       <Container size="small">
         <Flex direction="column" align="center" justify="center" flex={1}>
@@ -300,7 +320,11 @@ const SignUp = () => {
         <Divider y={16} />
 
         {!zapRequestInfo.invoice ? (
-          <Button className="w-full" onClick={requestPayment} disabled={loading}>
+          <Button
+            className="w-full"
+            onClick={requestPayment}
+            disabled={loading || EMERGENCY_LOCK_DEPOSIT || EMERGENCY_LOCK_TRANSFER}
+          >
             {loading ? <LoaderCircle className="size-4 animate-spin" /> : t('I_WANT_AN_ACCOUNT')}
           </Button>
         ) : nonce.length ? (
