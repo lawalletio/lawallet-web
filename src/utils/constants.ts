@@ -26,6 +26,6 @@ export const lightningAddresses = [
 ];
 
 // export const EMERGENCY_LOCK_SERVER = true;
-export const EMERGENCY_LOCK_SERVER_DISCLAIMER = '';
+export const EMERGENCY_LOCK_SERVER_DISCLAIMER = 'Support ending soon — please move your funds out';
 export const EMERGENCY_LOCK_DEPOSIT = true;
 export const EMERGENCY_LOCK_TRANSFER = false;
